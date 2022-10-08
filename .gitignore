@@ -1,0 +1,5 @@
+*.lock
+.vscode/*
+*.code-workspace
+.history/
+packs/*.db~
