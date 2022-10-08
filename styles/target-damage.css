@@ -8,6 +8,8 @@
 #target-damage-target-name {
     font-weight: bold;
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 #target-damage-damage-buttons + #target-damage-target-name {
