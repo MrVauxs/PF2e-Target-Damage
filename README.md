@@ -1,10 +1,10 @@
 # PF2e-Target-Damage
 
 A quality of life module that makes applying damage to targets easier in the Pathfinder 2e system.
-A direct successor to [Target-lock](https://github.com/WillNichols726/target-lock), which most of the buttons code originates from. The changes include:
+A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), which most of the buttons code originates from. The changes include:
 - Updating to V10
-- Active Development
 - Theoretically update-proof when it comes to formatting
+- Setting to hide non-player owned targets 
 
 ## Previews
 ![image](https://user-images.githubusercontent.com/32039708/194718006-378e53f2-9ddf-4880-b80e-3b4c24638b93.png)
