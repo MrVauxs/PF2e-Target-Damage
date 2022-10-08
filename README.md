@@ -11,5 +11,6 @@ A direct successor to [target-lock](https://github.com/WillNichols726/target-loc
 ![image](https://user-images.githubusercontent.com/32039708/194717944-a3746492-198d-4d72-b4f3-a6fe128c9226.png)
 
 With "Hide Original Damage Buttons" Setting
+
 ![image](https://user-images.githubusercontent.com/32039708/194721437-f6bd4d9d-c624-4d84-adde-5a7e25f51c86.png)
 
