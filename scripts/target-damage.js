@@ -1,0 +1,224 @@
+Hooks.on("init", async () => {
+    game.settings.register("pf2e-target-damage", "hideNPCs", {
+        scope: "world",
+        config: true,
+        name: "Hide non-Player Token Targets",
+        hint: "Hides not owned by players tokens from the target list of a damage roll.",
+        type: Boolean,
+        default: true
+    });
+});
+
+// Flag what targets were at the time of the roll
+Hooks.on("preCreateChatMessage", (message) => {
+    message.updateSource({
+        "flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
+            console.log(target)
+            return {
+                id: target.id,
+                name: target.name,
+                uuid: target.document.uuid,
+                img: target.document.texture.src,
+                hasPlayerOwner: target.data.hasPlayerOwner,
+            }
+        }),
+    });
+});
+
+Hooks.on("renderChatMessage",
+    async (message, html, data) => {
+        if (!message.isDamageRoll) return;
+
+        const targets = message.getFlag('pf2e-target-damage', 'targets') ?? Array.from(data.author.targets)
+        if (!targets.length) return;
+
+        html.append("<div class='message-content' id='target-damage-chat-window'></div>")
+
+        for (const target of targets.sort(function (x, y) {
+            // sort by hasPlayerOwner so that players are first
+            return (x.hasPlayerOwner === y.hasPlayerOwner) ? 0 : x.hasPlayerOwner ? -1 : 1;
+        })) {
+            console.log("target", target)
+            let tokenID = target.id
+
+            //render template
+            const innerHtml = $(await renderTemplate("systems/pf2e/templates/chat/damage/buttons.html", {
+                showTripleDamage: game.settings.get("pf2e", "critFumbleButtons"),
+            }));
+
+            innerHtml.attr('id', 'target-damage-damage-buttons');
+            if (!target.hasPlayerOwner) innerHtml.attr('data-visibility', 'gm');
+            // #region get elements to target
+            const full = innerHtml.find("button.full-damage");
+            const half = innerHtml.find("button.half-damage");
+            const double = innerHtml.find("button.double-damage");
+            const triple = innerHtml.find("button.triple-damage");
+            const heal = innerHtml.find("button.heal-damage");
+            const contentSelector = `li.chat-message[data-message-id="${message.id}"] div.hover-content`;
+            const $shield = innerHtml
+                .find("button.shield-block")
+                .attr({ "data-tooltip-content": contentSelector })
+                .tooltipster({
+                    animation: "fade",
+                    trigger: "click",
+                    arrow: false,
+                    contentAsHtml: true,
+                    interactive: true,
+                    side: ["top"],
+                    theme: "crb-hover",
+                });
+            $shield.tooltipster("disable");
+            innerHtml.find("button.shield-block").attr({ title: "localize 'PF2E.Actions.ShieldBlock.SelectAShield'" });
+
+            //Add click events to apply damage
+            full.on("click", (event) => {
+                applyDamage(message, tokenID, 1, 0, event.shiftKey);
+            });
+            full.removeClass('full-damage');
+
+            half.on("click", (event) => {
+                applyDamage(message, tokenID, 0.5, 0, event.shiftKey);
+            });
+            half.removeClass('half-damage');
+
+            double.on("click", (event) => {
+                applyDamage(message, tokenID, 2, 0, event.shiftKey);
+            });
+            double.removeClass('full-damage');
+
+            // triple === null || triple === void 0 ? void 0 : triple.on("click", (event) => {
+            //     applyDamage(message, tokenID, 3, 0, event.shiftKey);
+            // });
+            // triple.removeClass
+
+            heal.on("click", (event) => {
+                applyDamage(message, tokenID, -1, 0, event.shiftKey);
+            });
+            heal.removeClass('heal-button')
+
+            $shield.on("click", async (event) => {
+                console.info(`Toggle Shield for TokenID: ${tokenID}`);
+                const tokens = canvas.tokens.ownedTokens.filter((token) => token.data._id === tokenID && token.actor);
+                if (tokens.length === 0) {
+                    const errorMsg = "LocalizePF2e.translations.PF2E.UI.errorTargetToken";
+                    ui.notifications.error(errorMsg);
+                    event.stopPropagation();
+                    return;
+                }
+                // If the actor is wielding more than one shield, have the user pick which shield to block for blocking.
+                const actor = tokens[0].actor;
+                const heldShields = actor.itemTypes.armor.filter((armor) => armor.isEquipped && armor.isShield);
+                const nonBrokenShields = heldShields.filter((shield) => !shield.isBroken);
+                const multipleShields = tokens.length === 1 && nonBrokenShields.length > 1;
+                const shieldActivated = $shield.hasClass("shield-activated");
+                if (multipleShields && !shieldActivated) {
+                    $shield.tooltipster("enable");
+                    // Populate the list with the shield options
+                    const $list = $buttons.find("ul.shield-options");
+                    $list.children("li").remove();
+                    const $template = $list.children("template");
+                    for (const shield of nonBrokenShields) {
+                        const $listItem = $($template.innerHtml());
+                        $listItem.children("input.data").val(shield.id);
+                        $listItem.children("span.label").text(shield.name);
+                        const hardnessLabel = "LocalizePF2e.translations.PF2E.ShieldHardnessLabel";
+                        $listItem.children("span.tag").text(`${hardnessLabel}: ${shield.hardness}`);
+                        $list.append($listItem);
+                    }
+                    $list.find("li input").on("change", (event) => {
+                        const $input = $(event.currentTarget);
+                        $shield.attr({ "data-shield-id": $input.val() });
+                        $shield.tooltipster("close").tooltipster("disable");
+                        $shield.addClass("shield-activated");
+                        CONFIG.PF2E.chatDamageButtonShieldToggle = true;
+                    });
+                    $shield.tooltipster("open");
+                    return;
+                }
+                else {
+                    $shield.tooltipster("disable");
+                    $shield.removeAttr("data-shield-id");
+                    event.stopPropagation();
+                }
+                $shield.toggleClass("shield-activated");
+                CONFIG.PF2E.chatDamageButtonShieldToggle = !CONFIG.PF2E.chatDamageButtonShieldToggle;
+            });
+            $shield.removeClass("shield-block");
+
+            html.find('#target-damage-chat-window').append(`<div data-visibility='${game.settings.get('pf2e-target-damage', 'hideNPCs') ? !target.hasPlayerOwner ? "gm" : "all" : "all"}' id='target-damage-target-name'>Target: ${target.name}</div>`);
+            html.find('#target-damage-chat-window').append(innerHtml);
+        };
+
+        html.find(".select-shield").hide()
+        if (!game.user.isGM) html.find("[data-visibility=gm]").hide()
+        html.find("#target-damage-chat-window").find("div.chat-damage-buttons").first().remove();
+    });
+
+async function applyDamage(message, tokenID, multiplier, adjustment = 0, promptModifier = false) {
+    console.group("target-damage | Apply Damage");
+    console.info(`Message ID: ${message.id}`);
+    console.info(`Token ID: ${tokenID}`);
+    console.info(`Base Damage': ${message.rolls[0].total}`);
+    console.info(`Multiplier: ${multiplier}`);
+    console.info(`Adjustment: ${adjustment}`);
+    console.info(`Total Damage: ${message.rolls[0].total * multiplier + adjustment}`);
+    console.groupEnd();
+    var _a;
+    if (promptModifier)
+        return shiftModifyDamage(message, tokenID, multiplier);
+    //Modified here to include TokenID
+    const tokens = canvas.tokens.ownedTokens.filter((token) => token.document._id === tokenID && token.actor);
+    if (tokens.length === 0) {
+        const errorMsg = "LocalizePF2e.translations.PF2E.UI.errorTargetToken";
+        ui.notifications.error(errorMsg);
+        return;
+    }
+    const shieldBlockRequest = CONFIG.PF2E.chatDamageButtonShieldToggle;
+    const damage = message.rolls[0].total * multiplier + adjustment;
+    for (const token of tokens) {
+        await ((_a = token.actor) === null || _a === void 0 ? void 0 : _a.applyDamage(damage, token, shieldBlockRequest));
+    }
+    toggleOffShieldBlock(message.id);
+}
+
+function shiftModifyDamage(message, tokenID, multiplier) {
+    console.info("target-damage | Modify Damage");
+    new Dialog({
+        title: game.i18n.localize("PF2E.UI.shiftModifyDamageTitle"),
+        content: `<form>
+                <div class="form-group">
+                    <label>${game.i18n.localize("PF2E.UI.shiftModifyDamageLabel")}</label>
+                    <input type="number" name="modifier" value="" placeholder="0">
+                </div>
+                </form>
+                <script type="text/javascript">
+                $(function () {
+                    $(".form-group input").focus();
+                });
+                </script>`,
+        buttons: {
+            ok: {
+                label: "Ok",
+                callback: async ($dialog) => {
+                    // In case of healing, multipler will have negative sign. The user will expect that positive
+                    // modifier would increase healing value, while negative would decrease.
+                    const adjustment = (Number($dialog.find('[name="modifier"]').val()) || 0) * Math.sign(multiplier);
+                    applyDamage(message, tokenID, multiplier, adjustment);
+                },
+            },
+        },
+        default: "ok",
+        close: () => {
+            toggleOffShieldBlock(message.id);
+        },
+    }).render(true);
+}
+/** Toggle off the Shield Block button on a damage chat message */
+function toggleOffShieldBlock(messageId) {
+    console.info("target-damage | ToggleOffShieldBlock");
+    const $message = $(`#chat-log > li.chat-message[data-message-id="${messageId}"]`);
+    const $button = $message.find("button.shield-block");
+    $button.removeClass("shield-activated");
+    CONFIG.PF2E.chatDamageButtonShieldToggle = false;
+}
+
