@@ -74,27 +74,22 @@ Hooks.on("renderChatMessage",
             full.on("click", (event) => {
                 applyDamage(message, tokenID, 1, 0, event.shiftKey);
             });
-            full.removeClass('full-damage');
 
             half.on("click", (event) => {
                 applyDamage(message, tokenID, 0.5, 0, event.shiftKey);
             });
-            half.removeClass('half-damage');
 
             double.on("click", (event) => {
                 applyDamage(message, tokenID, 2, 0, event.shiftKey);
             });
-            double.removeClass('full-damage');
 
             // triple === null || triple === void 0 ? void 0 : triple.on("click", (event) => {
             //     applyDamage(message, tokenID, 3, 0, event.shiftKey);
             // });
-            // triple.removeClass
 
             heal.on("click", (event) => {
                 applyDamage(message, tokenID, -1, 0, event.shiftKey);
             });
-            heal.removeClass('heal-button')
 
             $shield.on("click", async (event) => {
                 console.info(`Toggle Shield for TokenID: ${tokenID}`);
@@ -143,7 +138,6 @@ Hooks.on("renderChatMessage",
                 $shield.toggleClass("shield-activated");
                 CONFIG.PF2E.chatDamageButtonShieldToggle = !CONFIG.PF2E.chatDamageButtonShieldToggle;
             });
-            $shield.removeClass("shield-block");
 
             html.find('#target-damage-chat-window').append(`<div data-visibility='${game.settings.get('pf2e-target-damage', 'hideNPCs') ? !target.hasPlayerOwner ? "gm" : "all" : "all"}' id='target-damage-target-name'>Target: ${target.name}</div>`);
             html.find('#target-damage-chat-window').append(innerHtml);
