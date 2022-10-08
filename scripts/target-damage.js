@@ -68,7 +68,7 @@ Hooks.on("renderChatMessage",
                     theme: "crb-hover",
                 });
             $shield.tooltipster("disable");
-            innerHtml.find("button.shield-block").attr({ title: "localize 'PF2E.Actions.ShieldBlock.SelectAShield'" });
+            innerHtml.find("button.shield-block").attr({ title: PF2E.Actions.ShieldBlock.SelectAShield });
 
             //Add click events to apply damage
             full.on("click", (event) => {
