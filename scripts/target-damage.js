@@ -7,6 +7,14 @@ Hooks.on("init", async () => {
         type: Boolean,
         default: true
     });
+    game.settings.register("pf2e-target-damage", "hideOGButtons", {
+        scope: "world",
+        config: true,
+        name: "Hide Original PF2e Damage Buttons",
+        hint: "Hides original PF2e system damage buttons for those from Damage Target.",
+        type: Boolean,
+        default: false
+    });
 });
 
 // Flag what targets were at the time of the roll
@@ -68,7 +76,7 @@ Hooks.on("renderChatMessage",
                     theme: "crb-hover",
                 });
             $shield.tooltipster("disable");
-            innerHtml.find("button.shield-block").attr({ title: PF2E.Actions.ShieldBlock.SelectAShield });
+            innerHtml.find("button.shield-block").attr({ title: game.i18n.localize("PF2E.Actions.ShieldBlock.SelectAShield") });
 
             //Add click events to apply damage
             full.on("click", (event) => {
@@ -146,6 +154,7 @@ Hooks.on("renderChatMessage",
         html.find(".select-shield").hide()
         if (!game.user.isGM) html.find("[data-visibility=gm]").hide()
         html.find("#target-damage-chat-window").find("div.chat-damage-buttons").first().remove();
+        if (game.settings.get('pf2e-target-damage', 'hideOGButtons')) html.find("div.chat-damage-buttons").first().remove();
     });
 
 async function applyDamage(message, tokenID, multiplier, adjustment = 0, promptModifier = false) {
