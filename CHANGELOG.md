@@ -1,3 +1,8 @@
+# 1.2.0
+- Add token mystification based on "Tokens determine NPC name visibility" system setting.
+- Added on hover and double click token selection on target names.
+- Removed debug console logs.
+
 # 1.1.1
 - Fix styling on hidden target names
 
