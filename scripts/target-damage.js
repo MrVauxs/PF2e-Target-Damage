@@ -173,7 +173,7 @@ Hooks.on("renderChatMessage",
                 CONFIG.PF2E.chatDamageButtonShieldToggle = !CONFIG.PF2E.chatDamageButtonShieldToggle;
             });
 
-            if (game.settings.get("pf2e", "metagame.tokenSetsNameVisibility") && !target.playersCanSeeName && !game.user.isGM) target.name = `Unknown Token ${index}`;
+            if (game.settings.get("pf2e", "metagame.tokenSetsNameVisibility") && !target.playersCanSeeName && !game.user.isGM) target.name = `Unknown Token ${index + 1}`;
             html.find('#target-damage-chat-window').append(`<div data-visibility='${game.settings.get('pf2e-target-damage', 'hideNPCs') ? !target.hasPlayerOwner ? "gm" : "all" : "all"}' id='target-damage-target-name'>Target: ${target.name}</div>`);
             html.find('#target-damage-chat-window').append(innerHtml);
             html.find('#target-damage-target-name').mouseenter(async () => onHoverIn(await fromUuid(target.uuid)));
