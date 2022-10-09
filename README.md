@@ -5,6 +5,8 @@ A direct successor to [target-lock](https://github.com/WillNichols726/target-loc
 - Updating to V10
 - Theoretically update-proof when it comes to formatting
 - Setting to hide non-player owned targets 
+- Abiding by "Tokens determine NPC name visibility" system setting
+- Selecting the target by hovering or clicking over name in chat
 
 ## Previews
 ![image](https://user-images.githubusercontent.com/32039708/194718006-378e53f2-9ddf-4880-b80e-3b4c24638b93.png)
