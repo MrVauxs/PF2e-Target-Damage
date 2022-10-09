@@ -21,17 +21,44 @@ Hooks.on("init", async () => {
 Hooks.on("preCreateChatMessage", (message) => {
     message.updateSource({
         "flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
-            console.log(target)
             return {
                 id: target.id,
                 name: target.name,
                 uuid: target.document.uuid,
                 img: target.document.texture.src,
                 hasPlayerOwner: target.data.hasPlayerOwner,
+                playersCanSeeName: target.data.playersCanSeeName,
             }
         }),
     });
 });
+
+// borrowed from PF2e system, document.ts#210
+function onHoverIn(token) {
+    if (!canvas.ready) return;
+    token = token?.object;
+    if (token?.isVisible && !token.controlled) {
+        token.emitHoverIn();
+    }
+}
+
+function onHoverOut(token) {
+    if (canvas.ready) token?.object?.emitHoverOut();
+}
+
+function onClickSender(token, event) {
+    if (!canvas) return;
+    token = token?.object;
+    if (token?.isVisible && token.isOwner) {
+        token.controlled ? token.release() : token.control({ releaseOthers: !event.shiftKey });
+        // If a double click, also pan to the token
+        if (event.type === "dblclick") {
+            const scale = Math.max(1, canvas.stage.scale.x);
+            canvas.animatePan({ ...token.center, scale, duration: 1000 });
+        }
+    }
+}
+// end
 
 Hooks.on("renderChatMessage",
     async (message, html, data) => {
@@ -42,11 +69,10 @@ Hooks.on("renderChatMessage",
 
         html.append("<div class='message-content' id='target-damage-chat-window'></div>")
 
-        for (const target of targets.sort(function (x, y) {
+        for (const [index, target] of targets.sort(function (x, y) {
             // sort by hasPlayerOwner so that players are first
             return (x.hasPlayerOwner === y.hasPlayerOwner) ? 0 : x.hasPlayerOwner ? -1 : 1;
-        })) {
-            console.log("target", target)
+        }).entries()) {
             let tokenID = target.id
 
             //render template
@@ -147,8 +173,12 @@ Hooks.on("renderChatMessage",
                 CONFIG.PF2E.chatDamageButtonShieldToggle = !CONFIG.PF2E.chatDamageButtonShieldToggle;
             });
 
+            if (game.settings.get("pf2e", "metagame.tokenSetsNameVisibility") && !target.playersCanSeeName && !game.user.isGM) target.name = `Unknown Token ${index}`;
             html.find('#target-damage-chat-window').append(`<div data-visibility='${game.settings.get('pf2e-target-damage', 'hideNPCs') ? !target.hasPlayerOwner ? "gm" : "all" : "all"}' id='target-damage-target-name'>Target: ${target.name}</div>`);
             html.find('#target-damage-chat-window').append(innerHtml);
+            html.find('#target-damage-target-name').mouseenter(async () => onHoverIn(await fromUuid(target.uuid)));
+            html.find('#target-damage-target-name').mouseleave(async () => onHoverOut(await fromUuid(target.uuid)));
+            html.find('#target-damage-target-name').dblclick(async (event) => onClickSender(await fromUuid(target.uuid), event));
         };
 
         html.find(".select-shield").hide()
