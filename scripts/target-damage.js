@@ -5,7 +5,7 @@ Hooks.on("init", async () => {
         name: "Hide non-Player Token Targets",
         hint: "Hides not owned by players tokens from the target list of a damage roll.",
         type: Boolean,
-        default: true
+        default: false
     });
     game.settings.register("pf2e-target-damage", "hideOGButtons", {
         scope: "world",
