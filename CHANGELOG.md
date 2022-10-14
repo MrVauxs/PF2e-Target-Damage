@@ -1,6 +1,6 @@
 # 1.3.0
 - Fixed an issue where damage buttons were shown to all players even if they didn't own the token, thus couldn't apply damage. Now the module hides damage buttons if you don't own the token itself, rather than having the token belong to *any* player.
-- Fixed only the first target being highlighted on hover (#5)
+- Fixed only the first target being highlighted on hover. (#5)
 - Made the module override ignore targeting if the message comes from [PF2e Persistent Damage](https://github.com/CarlosFdez/pf2e-persistent-damage). (#4)
   - Added a setting to replace the damage buttons with PF2e Target Damage buttons only for persistent damage.
 - Fixed some holdover localization issues from Target Lock.
