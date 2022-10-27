@@ -1,3 +1,6 @@
+# 1.3.1
+- Fixed the module not working on PF2e 4.3.0
+
 # 1.3.0
 - Fixed an issue where damage buttons were shown to all players even if they didn't own the token, thus couldn't apply damage. Now the module hides damage buttons if you don't own the token itself, rather than having the token belong to *any* player.
 - Fixed only the first target being highlighted on hover. (#5)
