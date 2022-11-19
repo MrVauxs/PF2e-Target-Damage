@@ -141,9 +141,9 @@ Hooks.on("renderChatMessage",
 					applyDamage(message, tokenID, 2, 0, event.shiftKey);
 				});
 
-				// triple === null || triple === void 0 ? void 0 : triple.on("click", (event) => {
-				//     applyDamage(message, tokenID, 3, 0, event.shiftKey);
-				// });
+				triple === null || triple === void 0 ? void 0 : triple.on("click", (event) => {
+				     applyDamage(message, tokenID, 3, 0, event.shiftKey);
+				});
 
 				heal.on("click", (event) => {
 					applyDamage(message, tokenID, -1, 0, event.shiftKey);
@@ -197,7 +197,7 @@ Hooks.on("renderChatMessage",
 					CONFIG.PF2E.chatDamageButtonShieldToggle = !CONFIG.PF2E.chatDamageButtonShieldToggle;
 				});
 
-				if (game.settings.get("pf2e", "metagame.tokenSetsNameVisibility") && !target.playersCanSeeName && !game.user.isGM) target.name = `Unknown Token ${index + 1}`;
+				if (game.settings.get("pf2e", "metagame_tokenSetsNameVisibility") && !target.playersCanSeeName && !game.user.isGM) target.name = `Unknown Token ${index + 1}`;
 
 				const nameHTML = $(`<div data-visibility='${game.settings.get('pf2e-target-damage', 'hideNPCs') ? !target.hasPlayerOwner ? "gm" : "all" : "all"}' id='target-damage-target-name'>Target: ${target.name}</div>`)
 				nameHTML.mouseenter(async (event) => onHoverIn(await fromUuid(target.uuid), event));
