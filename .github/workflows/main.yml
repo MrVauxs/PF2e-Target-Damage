@@ -47,6 +47,7 @@ jobs:
     # Publish to FoundryVTT
     - name: Publish to Foundry VTT Repo
       id: publish_foundry_repo
+      if: "!github.event.release.prerelease"
       run: npx @ghost-fvtt/foundry-publish
       env:
         FVTT_MANIFEST_PATH: 'module.json'
