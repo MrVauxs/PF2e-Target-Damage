@@ -73,7 +73,7 @@ Hooks.on("renderChatMessage",
 	async (message, html, data) => {
 		setTimeout(async () => {
 			if (!message.isDamageRoll) return;
-			let targets
+			let targets = []
 
 			// If message is from Persistent Damage module, there is only one target and that is the speaker
 			if (message.flags.persistent) {
