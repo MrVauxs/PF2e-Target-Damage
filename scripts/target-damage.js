@@ -86,7 +86,7 @@ Hooks.on("renderChatMessage",
 					playersCanSeeName: message.token.playersCanSeeName,
 				}]
 			} else {
-				targets = message.getFlag('pf2e-target-damage', 'targets')
+				targets = message.getFlag('pf2e-target-damage', 'targets') ?? []
 			}
 
 			if (!targets.length) return;
