@@ -35,8 +35,8 @@ Hooks.on("preCreateChatMessage", (message) => {
 				name: target.name,
 				uuid: target.document.uuid,
 				img: target.document.texture.src,
-				hasPlayerOwner: target.data.hasPlayerOwner,
-				playersCanSeeName: target.data.playersCanSeeName,
+				hasPlayerOwner: target.document.hasPlayerOwner,
+				playersCanSeeName: target.document.playersCanSeeName,
 			}
 		}),
 	});
@@ -105,7 +105,7 @@ Hooks.on("renderChatMessage",
 				}));
 
 				innerHtml.attr('id', 'target-damage-damage-buttons');
-				if (!(await fromUuid(target.uuid)).isOwner) innerHtml.attr('data-visibility', 'gm');
+				if (!((await fromUuid(target.uuid)).isOwner)) innerHtml.attr('data-visibility', 'gm');
 				// #region get elements to target
 				const full = innerHtml.find("button.full-damage");
 				const half = innerHtml.find("button.half-damage");
