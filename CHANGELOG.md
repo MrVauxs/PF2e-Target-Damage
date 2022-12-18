@@ -1,3 +1,9 @@
+# 1.3.4
+- Made the module no longer make Foundry complain about using `data` paths.
+
+# 1.3.3
+- Fixed #9 Targets is Undefined error on flag-less damage messages.
+
 # 1.3.2
 - Fixed the module not working on PF2e 4.4.0
 - Enabled previously commented out triple damage buttons.
