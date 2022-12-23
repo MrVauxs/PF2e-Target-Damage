@@ -38,7 +38,7 @@
 	"bugs": "https://github.com/MrVauxs/PF2e-Target-Damage/issues",
 	"changelog": "https://github.com/MrVauxs/PF2e-Target-Damage/blob/master/CHANGELOG.md",
 	"esmodules": [
-		"scripts/target-damage.js"
+		"module/target-damage.js"
 	],
 	"styles": [
 		"styles/target-damage.css"
