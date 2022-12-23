@@ -1,3 +1,7 @@
+# 1.4.0
+- Added a button to collapse the damage buttons.
+  - With that, improved "Hide original PF2e damage buttons" by allowing you to still access the buttons after they have been hidden. Now they are just automatically collappsed instead.
+
 # 1.3.5
 - Fixed release workflow.
 
