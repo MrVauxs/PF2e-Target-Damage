@@ -1,6 +1,6 @@
 {
 	"id": "pf2e-target-damage",
-	"title": "PF2e Damage Target",
+	"title": "PF2e Target Damage",
 	"description": "QoL module for improving damage application in Pathfinder 2e.",
 	"version": "This is replaced",
 	"authors": [
@@ -18,7 +18,7 @@
 			{
 				"id": "target-lock",
 				"type": "module",
-				"reason": "PF2e Damage Target is a successor to Target Lock, and borrows a most of its code from it. Target Lock has been unmaintained and enabling both modules is not recommended."
+				"reason": "PF2e Damage Target is a successor to Target Lock, and borrows a most of its code from it. Target Lock is unmaintained and enabling both modules is not recommended."
 			}
 		],
 		"systems": [
@@ -31,6 +31,12 @@
 			}
 		]
 	},
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "languages/en.json"
+		}],
 	"url": "https://github.com/MrVauxs/PF2e-Target-Damage",
 	"manifest": "This is replaced",
 	"download": "This is replaced",

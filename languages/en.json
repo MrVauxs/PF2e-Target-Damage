@@ -1,0 +1,22 @@
+{
+    "pf2e-target-damage": {
+        "settings": {
+            "hideNPCs": {
+                "name": "Hide non-Player Token Targets",
+                "hint": "Hides not owned by players tokens from the target list of a damage roll."
+            },
+            "hideTheHidingButtons": {
+                "name": "Hide Collapsible Buttons",
+                "hint": "Hides the added buttons to collapse damage button rows."
+            },
+            "hideOGButtons": {
+                "name": "Hide Original PF2e Damage Buttons",
+                "hint": "Hides the original PF2e system damage buttons."
+            },
+            "persistentDamageInt": {
+                "name": "Integrate with Persistent Damage",
+                "hint": "Hides the original PF2e system damage buttons, but only for the PF2e Persistent Damage damage rolls."
+            }
+        }
+    }
+}
