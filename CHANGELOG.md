@@ -1,3 +1,6 @@
+# 1.3.5
+- Fixed release workflow.
+
 # 1.3.4
 - Made the module no longer make Foundry complain about using `data` paths.
 - Fixed a bug when chat messages would error when a token that has been targeted no longer existed. ([#11](https://github.com/MrVauxs/PF2e-Target-Damage/issues/11))
