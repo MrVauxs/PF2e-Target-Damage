@@ -1,4 +1,5 @@
 #target-damage-chat-window {
+    position: relative;
     border: 2px solid #6f6c66;
     border-radius: 5px;
     padding: 5px;
@@ -18,3 +19,64 @@
 #target-damage-target-name + #target-damage-target-name {
     margin-top: 3px;
 }
+
+#target-damage-hide-button {
+    width: 0.7em;
+    padding: 7px;
+}
+
+.chat-damage-buttons.hidden {
+    float: left;
+    position: relative;
+}
+
+.chat-damage-buttons.hidden.right {
+    right: 1em;
+    padding: 0 7px 0 0;
+    top: -5px;
+    position: absolute;
+}
+
+.hidden.right #target-damage-hide-button {
+    z-index: 1;
+    margin: 8px 0 0 -1px;
+    height: 0.8em;
+    position: absolute;
+}
+
+.hidden #target-damage-hide-button {
+    left: 0;
+    z-index: 1;
+    margin: 10px 0 0 8px;
+    height: 0.8em;
+    position: absolute;
+}
+
+/* Dorako UI Tested
+.chat-damage-buttons.hidden {
+    float: left;
+    position: relative;
+}
+
+.chat-damage-buttons.hidden.right {
+    right: 1em;
+    padding: 0 7px 0 0;
+    top: -5px;
+    position: absolute;
+}
+
+.hidden.right #target-damage-hide-button {
+    z-index: 1;
+    margin: 2px 0 0 0;
+    height: 0.8em;
+    position: absolute;
+}
+
+.hidden #target-damage-hide-button {
+    left: 0;
+    z-index: 1;
+    margin: 5px 0 0 0;
+    height: 0.8em;
+    position: absolute;
+}
+*/

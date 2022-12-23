@@ -5,6 +5,7 @@ Hooks.on("init", async () => {
 		name: "Hide non-Player Token Targets",
 		hint: "Hides not owned by players tokens from the target list of a damage roll.",
 		type: Boolean,
+		requiresReload: true,
 		default: false
 	});
 	game.settings.register("pf2e-target-damage", "hideOGButtons", {
@@ -13,6 +14,7 @@ Hooks.on("init", async () => {
 		name: "Hide Original PF2e Damage Buttons",
 		hint: "Hides original PF2e system damage buttons for those from Damage Target.",
 		type: Boolean,
+		requiresReload: true,
 		default: false
 	});
 	game.settings.register("pf2e-target-damage", "persistentDamageInt", {
@@ -21,6 +23,7 @@ Hooks.on("init", async () => {
 		name: "Integrate with Persistent Damage",
 		hint: "Hides the original PF2e system damage buttons for those from Damage Target, but only for the PF2e Persistent Damage damage rolls.\nIs overriden by 'Hide Original PF2e Damage Buttons' setting.",
 		type: Boolean,
+		requiresReload: true,
 		default: true
 	});
 });
@@ -212,7 +215,45 @@ Hooks.on("renderChatMessage",
 			if (!game.user.isGM) html.find("[data-visibility=gm]").hide()
 
 			html.find("#target-damage-chat-window").find("div.chat-damage-buttons").not("#target-damage-damage-buttons").remove()
-			if (game.settings.get('pf2e-target-damage', 'hideOGButtons') || (message.flags.persistent && game.settings.get('pf2e-target-damage', 'persistentDamageInt'))) html.find("div.chat-damage-buttons").first().remove();
+
+			const hideDamageButton = $("<button id='target-damage-hide-button'></div>").click(function() {
+				// find the button, get it's parent, then get all the children of that parent that aren't the button, and toggle them.
+				$(this)
+					.parent()
+					.children()
+					.not("#target-damage-hide-button")
+				.toggle();
+
+				// Toggle the button's icon
+				$(this).find(".fa").toggleClass('fa-plus fa-minus');
+
+				// Toggle the parent's alignment and other things
+				$(this).parent().toggleClass('hidden');
+			}).append("<i class='fa fa-minus fa-2xs'></i>")
+
+			const hideDamageButtonRight = $("<button id='target-damage-hide-button'></div>").click(function() {
+				// find the button, get it's parent, then get all the children of that parent that aren't the button, and toggle them.
+				$(this)
+					.parent()
+					.children()
+					.not("#target-damage-hide-button")
+				.toggle();
+
+				// Toggle the button's icon
+				$(this).find(".fa").toggleClass('fa-plus fa-minus');
+
+				// Toggle the parent's alignment and other things
+				$(this).parent().toggleClass('hidden right');
+			}).append("<i class='fa fa-minus fa-2xs'></i>")
+
+			// Add a button to hide the damage buttons
+			html.find(".chat-damage-buttons:not(#target-damage-damage-buttons)").prepend(hideDamageButton)
+			html.find(".chat-damage-buttons#target-damage-damage-buttons").append(hideDamageButtonRight)
+
+			if (game.settings.get('pf2e-target-damage', 'hideOGButtons') || (message.flags.persistent && game.settings.get('pf2e-target-damage', 'persistentDamageInt'))) {
+				// Hide the original buttons, whether it's the main one or the persistent damage one.
+				html.find(hideDamageButton).trigger("click")
+			}
 		}, 0);
 	});
 
