@@ -1,3 +1,8 @@
+# 1.5.0
+- Updated compatibility with Pathfinder 2e system to 4.6.0, making it the new minimum version.
+- Integrated the "Apply Persistent Damage Condition" button from PF2e Persistent Damage with the module. Now you don't have to select a token to apply those conditions as well.
+- Fixed "Hide Collapsible Buttons" setting not actually hiding the buttons.
+
 # 1.4.1
 - Added localization.
 

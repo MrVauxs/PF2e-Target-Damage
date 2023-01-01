@@ -25,12 +25,12 @@
     padding: 7px;
 }
 
-.chat-damage-buttons.hidden {
+.damage-application.hidden {
     float: left;
     position: relative;
 }
 
-.chat-damage-buttons.hidden.right {
+.damage-application.hidden.right {
     right: 1em;
     padding: 0 7px 0 0;
     top: -5px;

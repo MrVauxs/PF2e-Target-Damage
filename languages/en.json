@@ -1,5 +1,8 @@
 {
     "pf2e-target-damage": {
+        "error": {
+            "cantFindToken": "Can't find token."
+        },
         "settings": {
             "hideNPCs": {
                 "name": "Hide non-Player Token Targets",
@@ -7,7 +10,7 @@
             },
             "hideTheHidingButtons": {
                 "name": "Hide Collapsible Buttons",
-                "hint": "Hides the added buttons to collapse damage button rows."
+                "hint": "Hides the added buttons to collapse damage button rows. If you enable any of the settings below, you won't be able to reveal the hidden buttons."
             },
             "hideOGButtons": {
                 "name": "Hide Original PF2e Damage Buttons",
@@ -15,7 +18,7 @@
             },
             "persistentDamageInt": {
                 "name": "Integrate with Persistent Damage",
-                "hint": "Hides the original PF2e system damage buttons, but only for the PF2e Persistent Damage damage rolls."
+                "hint": "Hides the original PF2e system damage buttons, but only Persistent Damage damage rolls."
             }
         }
     }

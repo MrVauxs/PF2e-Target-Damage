@@ -3,8 +3,7 @@
 A quality of life module that makes applying damage to targets easier in the Pathfinder 2e system.
 A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), which most of the buttons code originates from. The changes include:
 - Updating to V10
-- Theoretically update-proof when it comes to formatting
-- Setting to hide non-player owned targets 
+- Setting to hide non-player owned targets
 - Abiding by "Tokens determine NPC name visibility" system setting
 - Selecting the target by hovering or clicking over name in chat
 

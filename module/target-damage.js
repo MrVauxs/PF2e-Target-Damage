@@ -83,12 +83,12 @@ function onClickSender(token, event) {
 
 Hooks.on("renderChatMessage",
 	async (message, html, data) => {
+		if (!message.isDamageRoll) return;
 		setTimeout(async () => {
-			if (!message.isDamageRoll) return;
 			let targets = []
 
 			// If message is from Persistent Damage module, there is only one target and that is the speaker
-			if (message.flags.persistent) {
+			if (message.rolls[0].options.evaluatePersistent) {
 				targets = [{
 					id: message.token.id,
 					name: message.token.name,
@@ -100,19 +100,16 @@ Hooks.on("renderChatMessage",
 			} else {
 				targets = message.getFlag('pf2e-target-damage', 'targets') ?? []
 			}
-
 			if (!targets.length) return;
 
 			html.append("<div class='message-content' id='target-damage-chat-window'></div>")
 
-			for (const [index, target] of targets.sort(function (x, y) {
-				// sort by hasPlayerOwner so that players are first
-				return (x.hasPlayerOwner === y.hasPlayerOwner) ? 0 : x.hasPlayerOwner ? -1 : 1;
-			}).entries()) {
+			// sort by hasPlayerOwner so that players are first
+			for (const [index, target] of targets.sort((x, y) => (x.hasPlayerOwner === y.hasPlayerOwner) ? 0 : x.hasPlayerOwner ? -1 : 1).entries()) {
 				let tokenID = target.id
 
-				//render template
-				const innerHtml = $(await renderTemplate("systems/pf2e/templates/chat/damage/buttons.html", {
+				// render template
+				const innerHtml = await $(await renderTemplate("systems/pf2e/templates/dice/damage-roll.hbs", {
 					showTripleDamage: game.settings.get("pf2e", "critFumbleButtons"),
 				}));
 
@@ -162,7 +159,6 @@ Hooks.on("renderChatMessage",
 				});
 
 				$shield.on("click", async (event) => {
-					// console.info(`Toggle Shield for TokenID: ${tokenID}`);
 					const tokens = canvas.tokens.ownedTokens.filter((token) => token.data._id === tokenID && token.actor);
 					if (tokens.length === 0) {
 						const errorMsg = game.i18n.localize("PF2E.UI.errorTargetToken");
@@ -216,14 +212,53 @@ Hooks.on("renderChatMessage",
 				nameHTML.mouseleave(async (event) => onHoverOut(await fromUuid(target.uuid), event));
 				nameHTML.dblclick(async (event) => onClickSender(await fromUuid(target.uuid), event));
 
-				html.find('#target-damage-chat-window').append(nameHTML)
+				html.find('#target-damage-chat-window').append(nameHTML);
 				html.find('#target-damage-chat-window').append(innerHtml);
+
+				setTimeout(async () => {
+					// Persistent Damage Integration
+					if (game.modules.get("pf2e-persistent-damage")?.active && message.rolls[0].instances.some((i) => i.persistent) && !("evaluatePersistent" in roll.options)) {
+						let applyConditionButton = html.find(".pf2e-pd-card").eq(index + 1).children().children()
+
+						if (!applyConditionButton.length) {
+							const template = await renderTemplate("modules/pf2e-persistent-damage/templates/chat/apply-persistent-button.html");
+							html.find("#target-damage-chat-window").append(template);
+							applyConditionButton = html.find(".pf2e-pd-card").eq(index + 1).children().children()
+						}
+
+						applyConditionButton.on("click", async (evt) => {
+							evt.preventDefault();
+							const token = await fromUuid(target.uuid);
+							const instances = message.rolls[0].instances.filter((i) => i.persistent);
+							const conditions = instances.map((instance) => {
+								const damageType = instance.type;
+								const formula = instance.head.expression;
+								const dc = 15; // from a message, the dc is always 15
+
+								return {
+									type: "condition",
+									name: "Persistent Damage",
+									system: {
+										slug: "persistent-damage",
+										removable: true,
+										persistent: {
+											damageType, formula, dc
+										}
+									}
+								}
+							});
+
+							token.actor?.createEmbeddedDocuments("Item", conditions);
+						})
+					}
+				}, 50);
 			};
 
 			html.find(".select-shield").hide()
-			if (!game.user.isGM) html.find("[data-visibility=gm]").hide()
+			if (!game.user.isGM) html.find("[data-visibility=gm]").hide();
 
-			html.find("#target-damage-chat-window").find("div.chat-damage-buttons").not("#target-damage-damage-buttons").remove()
+			html.find("#target-damage-chat-window").find(".dice-roll.damage-roll").remove()
+			html.find("#target-damage-chat-window").find("div.damage-application").not("#target-damage-damage-buttons").remove()
 
 			const hideDamageButton = $("<button id='target-damage-hide-button'></div>").click(function() {
 				// find the button, get it's parent, then get all the children of that parent that aren't the button, and toggle them.
@@ -231,6 +266,13 @@ Hooks.on("renderChatMessage",
 					.parent()
 					.children()
 					.not("#target-damage-hide-button")
+				.toggle();
+
+				// find the pf2e persistent damage button
+				$(this)
+					.parent()
+					.parent()
+					.find(".pf2e-pd-card")
 				.toggle();
 
 				// Toggle the button's icon
@@ -248,6 +290,13 @@ Hooks.on("renderChatMessage",
 					.not("#target-damage-hide-button")
 				.toggle();
 
+				// find the pf2e persistent damage button
+				$(this)
+					.parent()
+					.parent()
+					.find(".pf2e-pd-card")
+				.toggle();
+
 				// Toggle the button's icon
 				$(this).find(".fa").toggleClass('fa-plus fa-minus');
 
@@ -256,44 +305,52 @@ Hooks.on("renderChatMessage",
 			}).append("<i class='fa fa-minus fa-2xs'></i>")
 
 			// Add a button to hide the damage buttons
-			html.find(".chat-damage-buttons:not(#target-damage-damage-buttons)").prepend(hideDamageButton)
-			html.find(".chat-damage-buttons#target-damage-damage-buttons").append(hideDamageButtonRight)
+			html.find(".damage-application:not(#target-damage-damage-buttons)").prepend(hideDamageButton)
+			html.find(".damage-application#target-damage-damage-buttons").append(hideDamageButtonRight)
 
-			if (game.settings.get('pf2e-target-damage', 'hideOGButtons') || (message.flags.persistent && game.settings.get('pf2e-target-damage', 'persistentDamageInt'))) {
-				// Hide the original buttons, whether it's the main one or the persistent damage one.
-				html.find(hideDamageButton).trigger("click")
+			if (game.settings.get('pf2e-target-damage', 'hideTheHidingButtons')) {
+				// REMOVE the original buttons, whether it's the main one or the persistent damage one.
+				html.find("[id*=target-damage-hide-button]").remove()
 			}
+
+			// Hide buttons after HOPEFULLY EVERYTHING has been RENDERED
+			setTimeout(() => {
+				if (game.settings.get('pf2e-target-damage', 'hideOGButtons') || (message.rolls[0].options.evaluatePersistent && game.settings.get('pf2e-target-damage', 'persistentDamageInt'))) {
+					// Hide the original buttons, whether it's the main one or the persistent damage one.
+					html.find("#target-damage-hide-button").first().trigger("click")
+				}
+			}, 100);
 		}, 0);
-	});
+	}
+);
 
 async function applyDamage(message, tokenID, multiplier, adjustment = 0, promptModifier = false) {
-	// console.group("target-damage | Apply Damage");
-	// console.info(`Message ID: ${message.id}`);
-	// console.info(`Token ID: ${tokenID}`);
-	// console.info(`Base Damage': ${message.rolls[0].total}`);
-	// console.info(`Multiplier: ${multiplier}`);
-	// console.info(`Adjustment: ${adjustment}`);
-	// console.info(`Total Damage: ${message.rolls[0].total * multiplier + adjustment}`);
-	// console.groupEnd();
-	var _a;
 	if (promptModifier) return shiftModifyDamage(message, tokenID, multiplier);
-	//Modified here to include TokenID
+	// Modified here to include TokenID
 	const tokens = canvas.tokens.ownedTokens.filter((token) => token.document._id === tokenID && token.actor);
 	if (tokens.length === 0) {
-		const errorMsg = game.i18n.localize("PF2E.UI.errorTargetToken");
+		const errorMsg = game.i18n.localize("pf2e-target-damage.error.cantFindToken");
 		ui.notifications.error(errorMsg);
 		return;
 	}
+
 	const shieldBlockRequest = CONFIG.PF2E.chatDamageButtonShieldToggle;
-	const damage = message.rolls[0].total * multiplier + adjustment;
+	const roll = message.rolls.find((r) => r.constructor.name === "DamageRoll");
+
+	if (!roll) throw Error("Unexpected error retrieving damage roll");
 	for (const token of tokens) {
-		await ((_a = token.actor) === null || _a === void 0 ? void 0 : _a.applyDamage(damage, token, shieldBlockRequest));
-	}
+        await token.actor?.applyDamage({
+            damage: roll,
+            token: token.document,
+            adjustment,
+            multiplier,
+            shieldBlockRequest,
+        });
+    }
 	toggleOffShieldBlock(message.id);
 }
 
 function shiftModifyDamage(message, tokenID, multiplier) {
-	// console.info("target-damage | Modify Damage");
 	new Dialog({
 		title: game.i18n.localize("PF2E.UI.shiftModifyDamageTitle"),
 		content: `<form>
@@ -326,7 +383,6 @@ function shiftModifyDamage(message, tokenID, multiplier) {
 }
 /** Toggle off the Shield Block button on a damage chat message */
 function toggleOffShieldBlock(messageId) {
-	// console.info("target-damage | ToggleOffShieldBlock");
 	const $message = $(`#chat-log > li.chat-message[data-message-id="${messageId}"]`);
 	const $button = $message.find("button.shield-block");
 	$button.removeClass("shield-activated");
