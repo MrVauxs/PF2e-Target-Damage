@@ -1,3 +1,6 @@
+# 1.5.1
+- Fixed an issue with Persistent Damage condition application.
+
 # 1.5.0
 - Updated compatibility with Pathfinder 2e system to 4.6.0, making it the new minimum version.
 - Integrated the "Apply Persistent Damage Condition" button from PF2e Persistent Damage with the module. Now you don't have to select a token to apply those conditions as well.
