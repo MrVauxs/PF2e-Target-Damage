@@ -36,7 +36,8 @@
 			"lang": "en",
 			"name": "English",
 			"path": "languages/en.json"
-		}],
+		}
+	],
 	"url": "https://github.com/MrVauxs/PF2e-Target-Damage",
 	"manifest": "This is replaced",
 	"download": "This is replaced",
@@ -44,6 +45,7 @@
 	"bugs": "https://github.com/MrVauxs/PF2e-Target-Damage/issues",
 	"changelog": "https://github.com/MrVauxs/PF2e-Target-Damage/blob/master/CHANGELOG.md",
 	"esmodules": [
+		"module/settings.js",
 		"module/target-damage.js"
 	],
 	"styles": [
