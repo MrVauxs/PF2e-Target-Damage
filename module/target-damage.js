@@ -1,6 +1,6 @@
 // Flag what targets were at the time of the roll
 Hooks.on("preCreateChatMessage", (message) => {
-	if (message.flags.persistent) return;
+	if (message.flags.persistent || message.flags["pf2e-target-damage"].targets) return;
 	message.updateSource({
 		"flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
 			return {
@@ -46,6 +46,7 @@ Hooks.on("renderChatMessage",
 	async (message, html, data) => {
 		if (!message.isDamageRoll) return;
 		setTimeout(async () => {
+			if (!message.isDamageRoll) return;
 			let targets = []
 
 			// If message is from Persistent Damage module, there is only one target and that is the speaker
