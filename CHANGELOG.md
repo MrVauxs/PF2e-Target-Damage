@@ -1,3 +1,9 @@
+# 1.5.3
+- Fixed typo.
+
+# 1.5.2
+- Added support for macros modifying the target flags, allowing the manipulating of what targets the module renders.
+
 # 1.5.1
 - Fixed an issue with Persistent Damage condition application.
 
