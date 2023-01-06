@@ -302,10 +302,9 @@ async function applyDamage(message, tokenID, multiplier, adjustment = 0, promptM
 	if (!roll) throw Error("Unexpected error retrieving damage roll");
 	for (const token of tokens) {
         await token.actor?.applyDamage({
-            damage: roll,
+            damage: roll.alter(multiplier, adjustment),
             token: token.document,
-            adjustment,
-            multiplier,
+			skipIWR: multiplier <= 0,
             shieldBlockRequest,
         });
     }
