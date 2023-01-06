@@ -1,5 +1,7 @@
 # 1.5.4
-- Fixed damage application not being up to date to v4.6.3 of the Pathfinder 2e system.
+- Fixed damage application not being up to date to v4.6.3 of the Pathfinder 2e system. ([#18](https://github.com/MrVauxs/PF2e-Target-Damage/issues/18))
+- Fixed Persistent Damage Conditions being applied to both the target and a selected token. ([#17](https://github.com/MrVauxs/PF2e-Target-Damage/issues/17))
+
 
 # 1.5.3
 - Fixed typo.

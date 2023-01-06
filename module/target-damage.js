@@ -187,7 +187,7 @@ Hooks.on("renderChatMessage",
 							html.find("#target-damage-chat-window").append(template);
 							applyConditionButton = html.find(".pf2e-pd-card").eq(index + 1).children().children()
 						}
-
+						applyConditionButton.off("click");
 						applyConditionButton.on("click", async (evt) => {
 							evt.preventDefault();
 							const token = await fromUuid(target.uuid);
@@ -270,16 +270,15 @@ Hooks.on("renderChatMessage",
 			html.find(".damage-application:not(#target-damage-damage-buttons)").prepend(hideDamageButton)
 			html.find(".damage-application#target-damage-damage-buttons").append(hideDamageButtonRight)
 
-			if (game.settings.get('pf2e-target-damage', 'hideTheHidingButtons')) {
-				// REMOVE the original buttons, whether it's the main one or the persistent damage one.
-				html.find("[id*=target-damage-hide-button]").remove()
-			}
-
 			// Hide buttons after HOPEFULLY EVERYTHING has been RENDERED
 			setTimeout(() => {
 				if (game.settings.get('pf2e-target-damage', 'hideOGButtons') || (message.rolls[0].options.evaluatePersistent && game.settings.get('pf2e-target-damage', 'persistentDamageInt'))) {
 					// Hide the original buttons, whether it's the main one or the persistent damage one.
 					html.find("#target-damage-hide-button").first().trigger("click")
+				}
+				if (game.settings.get('pf2e-target-damage', 'hideTheHidingButtons')) {
+					// REMOVE the original buttons, whether it's the main one or the persistent damage one.
+					html.find("[id*=target-damage-hide-button]").remove()
 				}
 			}, 100);
 		}, 0);
