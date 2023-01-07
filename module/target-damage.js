@@ -71,7 +71,7 @@ Hooks.on("renderChatMessage",
 				let tokenID = target.id
 
 				// render template
-				const innerHtml = await $(await renderTemplate("systems/pf2e/templates/dice/damage-roll.hbs", {
+				const innerHtml = await $(await renderTemplate("modules/pf2e-target-damage/templates/buttons.html", {
 					showTripleDamage: game.settings.get("pf2e", "critFumbleButtons"),
 				}));
 
