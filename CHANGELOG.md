@@ -1,3 +1,6 @@
+# 1.5.5 a.k.a. "Can I leave this module alone for 5 minutes?!"
+- Fixed damage application not being up to date to v4.6.4 of the Pathfinder 2e system. ([#20](https://github.com/MrVauxs/PF2e-Target-Damage/issues/20))
+
 # 1.5.4
 - Fixed damage application not being up to date to v4.6.3 of the Pathfinder 2e system. ([#18](https://github.com/MrVauxs/PF2e-Target-Damage/issues/18))
 - Fixed Persistent Damage Conditions being applied to both the target and a selected token. ([#17](https://github.com/MrVauxs/PF2e-Target-Damage/issues/17))

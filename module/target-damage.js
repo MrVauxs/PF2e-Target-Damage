@@ -300,10 +300,11 @@ async function applyDamage(message, tokenID, multiplier, adjustment = 0, promptM
 
 	if (!roll) throw Error("Unexpected error retrieving damage roll");
 	for (const token of tokens) {
-        await token.actor?.applyDamage({
-            damage: roll.alter(multiplier, adjustment),
+		await token.actor?.applyDamage({
+            damage: multiplier < 0 ? multiplier * roll.total + adjustment : roll.alter(multiplier, adjustment),
             token: token.document,
-			skipIWR: multiplier <= 0,
+            skipIWR: multiplier <= 0,
+            rollOptions: new Set(message.flags.pf2e.context?.options ?? []),
             shieldBlockRequest,
         });
     }
