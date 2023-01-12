@@ -51,6 +51,10 @@
     margin: 0px;
 }
 
+.pf2e-td.damage-application {
+    gap: 1px;
+}
+
 .pf2e-td.name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
     display: flex;
     padding: 0px 2px 0px 0px;
