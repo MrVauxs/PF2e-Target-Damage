@@ -155,7 +155,7 @@ function shiftModifyDamage(message, tokenID, multiplier, rollIndex) {
 /** Toggle off the Shield Block button on a damage chat message */
 function toggleOffShieldBlock(messageId) {
 	const $message = $(`#chat-log > li.chat-message[data-message-id="${messageId}"]`);
-	const $button = $message.find("button.shield-block");
+	const $button = $message.find("button.pf2e-td-shield-block");
 	$button.removeClass("shield-activated");
 	CONFIG.PF2E.chatDamageButtonShieldToggle = false;
 }
@@ -180,7 +180,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 				const splashSection = $(html.find(`.dice-roll.damage-roll`)[index]);
 				splashSection.find(".dice-total").prepend(
 					$(
-						`<button class='pf2e-td splash-button' title="${game.i18n.localize(
+						`<button class='pf2e-td splash-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.splashButton.hint"
 						)}"><i class='fa-solid fa-bomb fa-fw'></i></button>`
 					).on({
@@ -237,8 +237,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 				// Add hiding buttons
 				damageSection.find(".dice-total").append(
 					$(
-						`<button class='pf2e-td hide-button' title="${game.i18n.localize(
-							"aaaaaaaaaaaaaa"
+						`<button class='pf2e-td hide-button small-button' title="${game.i18n.localize(
+							"pf2e-target-damage.hideButton"
 						)}"><i class='fa fa-minus fa-fw'></i></button>`
 					).click(function (e) {
 						html.find($('section[data-roll-index="' + index + '"]')).slideToggle(350);
@@ -327,7 +327,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					});
 
 					$shield.on("click", async (event) => {
-						const tokens = canvas.tokens.ownedTokens.filter((token) => token.data._id === tokenID && token.actor);
+						const tokens = canvas.tokens.ownedTokens.filter((token) => token.id === tokenID && token.actor);
 						if (tokens.length === 0) {
 							const errorMsg = game.i18n.localize("PF2E.UI.errorTargetToken");
 							ui.notifications.error(errorMsg);
