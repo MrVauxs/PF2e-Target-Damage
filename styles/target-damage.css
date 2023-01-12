@@ -1,4 +1,4 @@
-.splash-button {
+.pf2e-td.splash-button {
     top: 0;
     left: 0;
     padding: 1px 0px 0px 0px;
@@ -9,7 +9,7 @@
     font-size: var(--font-size-15);
 }
 
-.hide-button {
+.pf2e-td.hide-button {
     top: 0;
     right: 0;
     display: flex;
@@ -21,15 +21,16 @@
     font-size: var(--font-size-15);
 }
 
-.hide-button .fa-fw {
+.pf2e-td.hide-button .fa-fw {
     margin-top: 25%;
 }
-.splash-button .fa-fw {
+
+.pf2e-td.splash-button .fa-fw {
     top: -4px;
     position: relative;
 }
 
-.pf2e-td-name {
+.pf2e-td.name {
     word-break: break-all;
     text-align: center;
     display: flex;
@@ -38,18 +39,23 @@
     align-items: center;
     justify-content: center;
     margin: 1px;
-    max-width: 4em;
-    min-width: 4em;
+    max-width: 44px;
+    min-width: 44px;
     max-height: var(--font-size-34);
+    font-size: var(--font-size-10);
     overflow: auto;
+    cursor: pointer;
 }
 
-.pf2e-td-name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
+.pf2e-td.damage-application button {
+    margin: 0px;
+}
+
+.pf2e-td.name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
     display: flex;
     padding: 0px 2px 0px 0px;
 }
 
-.pf2e-td-heal-damage .fa-stack {
+.pf2e-td.heal-damage .fa-stack {
     font-size: .5em;
 }
-
