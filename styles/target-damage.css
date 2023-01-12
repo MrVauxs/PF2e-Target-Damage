@@ -1,33 +1,29 @@
-.pf2e-td.splash-button {
-    top: 0;
-    left: 0;
-    padding: 1px 0px 0px 0px;
-    margin: 1px;
-    position: absolute;
-    width: var(--font-size-22);
-    height: var(--font-size-22);
-    font-size: var(--font-size-15);
-}
-
-.pf2e-td.hide-button {
-    top: 0;
-    right: 0;
+.pf2e-td.small-button {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin: 1px;
+    width: 22px;
+    height: 22px;
     position: absolute;
-    width: var(--font-size-22);
-    height: 24px;
-    font-size: var(--font-size-15);
 }
 
-.pf2e-td.hide-button .fa-fw {
-    margin-top: 25%;
+.pf2e-td.small-button.splash-button {
+    top: 0;
+    left: 0;
 }
 
-.pf2e-td.splash-button .fa-fw {
-    top: -4px;
-    position: relative;
+.pf2e-td.small-button.hide-button {
+    top: 0;
+    right: 0;
+}
+
+.pf2e-td.damage-application {
+    gap: 1px;
+}
+
+.pf2e-td.damage-application .label {
+    font-size: var(--font-size-8);
 }
 
 .pf2e-td.name {
@@ -38,7 +34,6 @@
     padding: 0px 2px 0px 0px;
     align-items: center;
     justify-content: center;
-    margin: 1px;
     max-width: 44px;
     min-width: 44px;
     max-height: var(--font-size-34);
