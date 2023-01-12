@@ -1,3 +1,16 @@
+# 2.0.2
+- Fixed bug the Shield button not turning off once used.
+- Removed part of the module that referred to outdated `data` property.
+- "aaaaaaaaaaaaaa" is now properly translated.
+
+# 2.0.1
+- Fixed release workflow not including template files.
+
+# 2.0.0
+- Rewritten the module.
+- Needs some more CSS touch ups.
+- Makes use of the latest PF2e system (v4.6.5).
+
 # 1.5.5 a.k.a. "Can I leave this module alone for 5 minutes?!"
 - Fixed damage application not being up to date to v4.6.4 of the Pathfinder 2e system. ([#20](https://github.com/MrVauxs/PF2e-Target-Damage/issues/20))
 

@@ -155,7 +155,7 @@ function shiftModifyDamage(message, tokenID, multiplier, rollIndex) {
 /** Toggle off the Shield Block button on a damage chat message */
 function toggleOffShieldBlock(messageId) {
 	const $message = $(`#chat-log > li.chat-message[data-message-id="${messageId}"]`);
-	const $button = $message.find("button.shield-block");
+	const $button = $message.find("button.pf2e-td-shield-block");
 	$button.removeClass("shield-activated");
 	CONFIG.PF2E.chatDamageButtonShieldToggle = false;
 }
@@ -173,14 +173,14 @@ Hooks.on("renderChatMessage",
 	(message, html) => {
 		setTimeout(() => {
 			html = html.find(".message-content")
-			const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target));
+			const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target)) || [];
 			const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
 
 			rolls.forEach(async (roll, index, array) => {
 				if (roll.options.splashOnly) {
 					const splashSection = $(html.find(`.dice-roll.damage-roll`)[index]);
 					splashSection.find(".dice-total")
-						.prepend($(`<button class='splash-button' title="${game.i18n.localize("pf2e-target-damage.splashButton.hint")}"><i class='fa-solid fa-bomb fa-fw'></i></button>`).on({
+						.prepend($(`<button class='splash-button pf2e-td' title="${game.i18n.localize("pf2e-target-damage.splashButton.hint")}"><i class='fa-solid fa-bomb fa-fw'></i></button>`).on({
 							click: (e) => {
 								const target = (targets.map(t => t.token.object) ?? Array.from(game.user.targets))[0];
 								if (!target) return;
@@ -230,7 +230,7 @@ Hooks.on("renderChatMessage",
 
 					// Add hiding buttons
 					damageSection.find(".dice-total")
-						.append($(`<button class='hide-button' title="${game.i18n.localize("aaaaaaaaaaaaaa")}"><i class='fa fa-minus fa-fw'></i></button>`).click(function(e) {
+						.append($(`<button class='hide-button pf2e-td' title="${game.i18n.localize("pf2e-target-damage.hideButton")}"><i class='fa fa-minus fa-fw'></i></button>`).click(function(e) {
 							html.find($('section[data-roll-index="' + index + '"]')).slideToggle(350);
 							html.find($('hr.pf2e-td')).slideToggle(500);
 							$(this).find(".fa").toggleClass('fa-plus fa-minus');
@@ -313,7 +313,7 @@ Hooks.on("renderChatMessage",
 						});
 
 						$shield.on("click", async (event) => {
-							const tokens = canvas.tokens.ownedTokens.filter((token) => token.data._id === tokenID && token.actor);
+							const tokens = canvas.tokens.ownedTokens.filter((token) => token.id === tokenID && token.actor);
 							if (tokens.length === 0) {
 								const errorMsg = game.i18n.localize("PF2E.UI.errorTargetToken");
 								ui.notifications.error(errorMsg);
