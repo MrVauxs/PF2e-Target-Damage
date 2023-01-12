@@ -1,4 +1,4 @@
-Hooks.on("init", async () => {
+Hooks.once("init", () => {
 	game.settings.register("pf2e-target-damage", "hideNPCs", {
 		scope: "world",
 		config: true,
