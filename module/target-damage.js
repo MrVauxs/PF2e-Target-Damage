@@ -180,7 +180,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 				const splashSection = $(html.find(`.dice-roll.damage-roll`)[index]);
 				splashSection.find(".dice-total").prepend(
 					$(
-						`<button class='pf2e-td splash-button' title="${game.i18n.localize(
+						`<button class='pf2e-td splash-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.splashButton.hint"
 						)}"><i class='fa-solid fa-bomb fa-fw'></i></button>`
 					).on({
@@ -237,7 +237,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 				// Add hiding buttons
 				damageSection.find(".dice-total").append(
 					$(
-						`<button class='pf2e-td hide-button' title="${game.i18n.localize(
+						`<button class='pf2e-td hide-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.hideButton"
 						)}"><i class='fa fa-minus fa-fw'></i></button>`
 					).click(function (e) {
