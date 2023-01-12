@@ -1,53 +1,55 @@
-#target-damage-chat-window {
-    position: relative;
-    border: 2px solid #6f6c66;
-    border-radius: 5px;
-    padding: 5px;
-    margin-top: 3px;
+.splash-button {
+    top: 0;
+    left: 0;
+    padding: 1px 0px 0px 0px;
+    margin: 1px;
+    position: absolute;
+    width: var(--font-size-22);
+    height: var(--font-size-22);
+    font-size: var(--font-size-15);
 }
 
-#target-damage-target-name {
-    font-weight: bold;
-    text-align: center;
+.hide-button {
+    top: 0;
+    right: 0;
     display: flex;
     justify-content: center;
+    margin: 1px;
+    position: absolute;
+    width: var(--font-size-22);
+    height: 24px;
+    font-size: var(--font-size-15);
 }
 
-#target-damage-damage-buttons + #target-damage-target-name {
-    margin-top: 3px;
+.hide-button .fa-fw {
+    margin-top: 25%;
 }
-#target-damage-target-name + #target-damage-target-name {
-    margin-top: 3px;
-}
-
-#target-damage-hide-button {
-    width: 0.7em;
-    padding: 7px;
-}
-
-.damage-application.hidden {
-    float: left;
+.splash-button .fa-fw {
+    top: -4px;
     position: relative;
 }
 
-.damage-application.hidden.right {
-    right: 1em;
-    padding: 0 7px 0 0;
-    top: -5px;
-    position: absolute;
+.pf2e-td-name {
+    word-break: break-all;
+    text-align: center;
+    display: flex;
+    font-weight: 800;
+    padding: 0px 2px 0px 0px;
+    align-items: center;
+    justify-content: center;
+    margin: 1px;
+    max-width: 4em;
+    min-width: 4em;
+    max-height: var(--font-size-34);
+    overflow: auto;
 }
 
-.hidden.right #target-damage-hide-button {
-    z-index: 1;
-    margin: 8px 0 0 -1px;
-    height: 0.8em;
-    position: absolute;
+.pf2e-td-name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
+    display: flex;
+    padding: 0px 2px 0px 0px;
 }
 
-.hidden #target-damage-hide-button {
-    left: 0;
-    z-index: 1;
-    margin: 10px 0 0 8px;
-    height: 0.8em;
-    position: absolute;
+.pf2e-td-heal-damage .fa-stack {
+    font-size: .5em;
 }
+
