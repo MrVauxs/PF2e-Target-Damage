@@ -4,7 +4,7 @@
     align-items: center;
     margin: 1px;
     width: 22px;
-    height: 22px;
+    height: calc(100% - 2px);
     position: absolute;
 }
 
