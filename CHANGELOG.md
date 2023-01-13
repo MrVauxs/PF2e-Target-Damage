@@ -2,6 +2,7 @@
 - Fixed bug the Shield button not turning off once used.
 - Removed part of the module that referred to outdated `data` property.
 - "aaaaaaaaaaaaaa" is now properly translated.
+- Fixed "Needs some more CSS touch ups" from 2.0.0. Thank you Dorako for the contribution!
 
 # 2.0.1
 - Fixed release workflow not including template files.
