@@ -35,4 +35,13 @@ Hooks.once("init", () => {
 		requiresReload: true,
 		default: true
 	});
+	game.settings.register("pf2e-target-damage", "classic", {
+		scope: "user",
+		config: true,
+		name: game.i18n.localize("pf2e-target-damage.settings.classic.name"),
+		hint: game.i18n.localize("pf2e-target-damage.settings.classic.hint"),
+		type: Boolean,
+		requiresReload: true,
+		default: false
+	});
 });

@@ -25,6 +25,10 @@ class TargetDamageTarget {
 		return game.settings.get("pf2e", "metagame_tokenSetsNameVisibility") ? this.token.playersCanSeeName : true;
 	}
 
+	get isOwner() {
+		return this.token.isOwner;
+	}
+
 	get name() {
 		// If tokens set name visibility and the players can't see the name and the user isn't a GM, hide the name.
 		return !this.mystified && !game.user.isGM
@@ -80,8 +84,12 @@ function onHoverOut(token, event) {
 function onClickSender(token, event) {
 	if (!canvas) return;
 	token = token?.object;
-	if (token?.isVisible && token.isOwner) {
-		token.controlled ? token.release() : token.control({ releaseOthers: !event.shiftKey });
+	if (token?.isVisible) {
+		if (token.isOwner) {
+			token.controlled ? token.release() : token.control({ releaseOthers: !event.shiftKey });
+		} else {
+			token.setTarget(!token.isTargeted, { releaseOthers: !event.shiftKey })
+		}
 		// If a double click, also pan to the token
 		if (event.type === "dblclick") {
 			const scale = Math.max(1, canvas.stage.scale.x);
@@ -258,6 +266,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 				// Add button template for each target to buttonTemplates
 				for (let i = 0; i < targets.length; i++) {
+					const index = i;
 					const target = targets[i];
 					const targetTemplate = $(buttonTemplate.clone());
 					const nameHTML = targetTemplate.find(".pf2e-td.name");
@@ -267,6 +276,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					nameHTML.text(target.name);
 					nameHTML.mouseenter((e) => onHoverIn(target.token, e));
 					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
+					nameHTML.click((e) => onClickSender(target.token, e));
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
 					targetTemplate.find(".pf2e-td.image").attr("src", target.img);
 					targetTemplate.find(".pf2e-td.image").attr("title", target.name);
@@ -280,6 +290,16 @@ Hooks.on("renderChatMessage", (message, html) => {
 						}
 					} else {
 						if (!target.visibility) return;
+					}
+
+					if (game.settings.get("pf2e-target-damage", "classic")) {
+						nameHTML.addClass("classic");
+					}
+
+					if (!target.isOwner) {
+						targetTemplate.find("button.pf2e-td").remove();
+						targetTemplate.find("hover-content").remove();
+						nameHTML.addClass("classic");
 					}
 
 					//#region The Buttons
@@ -377,6 +397,15 @@ Hooks.on("renderChatMessage", (message, html) => {
 					// push
 					buttonTemplates.push(targetTemplate);
 				}
+
+				// Sort the buttons by the number of buttons they have, so that the ones with the most buttons are at the top.
+				buttonTemplates.sort((a, b) => {
+					const aButtons = a.find("button.pf2e-td").length;
+					const bButtons = b.find("button.pf2e-td").length;
+
+					console.log(123, bButtons, aButtons, bButtons - aButtons)
+					return bButtons - aButtons;
+				});
 
 				html.find($('hr[data-roll-index="' + index + '"]')).after(buttonTemplates);
 			}

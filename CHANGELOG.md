@@ -1,3 +1,11 @@
+# 2.1.0
+- Added a "Classic" formatting client setting, putting the names on top of the buttons.
+- Removed buttons from the chat message if the token is not owned by the player, i.e. cannot apply damage to it anyway.
+- Clicking the names now will either:
+  - Select the token if owned by the player.
+  - Target the token if not owned by the player.
+  - Pan to the token if double clicked.
+
 # 2.0.2
 - Fixed bug the Shield button not turning off once used.
 - Removed part of the module that referred to outdated `data` property.

@@ -32,6 +32,10 @@
             "persistentDamageInt": {
                 "name": "Integrate with Persistent Damage",
                 "hint": "Hides the original PF2e system damage buttons, but only Persistent Damage damage rolls."
+            },
+            "classic": {
+                "name": "Use Classic Name Layout",
+                "hint": "Puts names on top of the buttons instead of it being compact on the left."
             }
         }
     }
