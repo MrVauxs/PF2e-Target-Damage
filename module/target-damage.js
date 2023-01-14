@@ -293,13 +293,13 @@ Hooks.on("renderChatMessage", (message, html) => {
 					}
 
 					if (game.settings.get("pf2e-target-damage", "classic")) {
-						nameHTML.addClass("classic");
+						targetTemplate.find("wrapper.pf2e-td").addClass("name-top");
 					}
 
 					if (!target.isOwner) {
 						targetTemplate.find("button.pf2e-td").remove();
 						targetTemplate.find("hover-content").remove();
-						nameHTML.addClass("classic");
+						targetTemplate.find("wrapper.pf2e-td").addClass("name-top");
 					}
 
 					//#region The Buttons

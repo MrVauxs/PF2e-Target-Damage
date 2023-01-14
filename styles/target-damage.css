@@ -42,15 +42,6 @@
     cursor: pointer;
 }
 
-.pf2e-td.name.classic {
-    max-width: 100%;
-    min-width: 100%;
-    max-height: var(--font-size-34);
-    font-size: var(--font-size-14);
-    overflow: auto;
-    cursor: pointer;
-}
-
 .pf2e-td.damage-application button {
     margin: 0px;
 }
