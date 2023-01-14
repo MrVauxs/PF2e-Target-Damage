@@ -20,6 +20,7 @@
 
 .pf2e-td.damage-application {
     gap: 1px;
+    margin-top: 0px;
 }
 
 .pf2e-td.damage-application .label {
@@ -31,11 +32,7 @@
     text-align: center;
     display: flex;
     font-weight: 800;
-    padding: 0px 2px 0px 0px;
-    align-items: center;
     justify-content: center;
-    max-width: 44px;
-    min-width: 44px;
     max-height: var(--font-size-34);
     font-size: var(--font-size-10);
     overflow: auto;
@@ -57,4 +54,40 @@
 
 .pf2e-td.heal-damage .fa-stack {
     font-size: .5em;
+}
+
+.chat-message .message-content .pf2e-td.damage-application {
+    margin-top: 0px;
+}
+
+wrapper.pf2e-td {
+    display: flex;
+    margin-top: 3px;
+    align-items: center;
+    gap: 2px;
+}
+
+wrapper.pf2e-td.name-left {
+    flex-direction: row;
+}
+
+wrapper.pf2e-td.name-left .pf2e-td.name {
+    display: flex;
+    flex: 50px 1 1;
+}
+
+wrapper.pf2e-td.name-left .pf2e-td.damage-application {
+    flex: 235px 1 0;
+}
+
+wrapper.pf2e-td.name-top {
+    flex-direction: column;
+}
+
+wrapper.pf2e-td.name-top .pf2e-td.name {
+    font-size: var(--font-size-14);
+}
+
+wrapper.pf2e-td.name-top .pf2e-td.damage-application {
+    width: 100%;
 }
