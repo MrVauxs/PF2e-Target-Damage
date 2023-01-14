@@ -284,22 +284,24 @@ Hooks.on("renderChatMessage", (message, html) => {
 					// this is really just to let the GM know the targets are mystified or hidden
 					if (game.user.isGM) {
 						if (!target.visibility) {
-							$(targetTemplate[0]).attr("data-visibility", "gm");
+							targetTemplate.find(".damage-application").attr("data-visibility", "gm");
 						} else if (!target.mystified) {
-							targetTemplate.find(".pf2e-td-name").attr("data-visibility", "gm");
+							targetTemplate.find(".pf2e-td.name").attr("data-visibility", "gm");
 						}
 					} else {
 						if (!target.visibility) return;
 					}
 
 					if (game.settings.get("pf2e-target-damage", "classic")) {
-						targetTemplate.find("wrapper.pf2e-td").addClass("name-top");
+						$(targetTemplate[0]).addClass("name-top");
+					} else {
+						$(targetTemplate[0]).addClass("name-left");
 					}
 
 					if (!target.isOwner) {
 						targetTemplate.find("button.pf2e-td").remove();
 						targetTemplate.find("hover-content").remove();
-						targetTemplate.find("wrapper.pf2e-td").addClass("name-top");
+						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
 					}
 
 					//#region The Buttons
@@ -363,15 +365,17 @@ Hooks.on("renderChatMessage", (message, html) => {
 						if (multipleShields && !shieldActivated) {
 							$shield.tooltipster("enable");
 							// Populate the list with the shield options
-							const $list = $buttons.find("ul.shield-options");
+							const $list = targetTemplate.find("ul.shield-options");
 							$list.children("li").remove();
 							const $template = $list.children("template");
 							for (const shield of nonBrokenShields) {
-								const $listItem = $($template.targetTemplate());
+								const $listItem = $($template.html());
+
 								$listItem.children("input.data").val(shield.id);
 								$listItem.children("span.label").text(shield.name);
 								const hardnessLabel = game.i18n.localize("PF2E.ShieldHardnessLabel");
 								$listItem.children("span.tag").text(`${hardnessLabel}: ${shield.hardness}`);
+
 								$list.append($listItem);
 							}
 							$list.find("li input").on("change", (event) => {
