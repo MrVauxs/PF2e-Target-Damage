@@ -1,5 +1,5 @@
 # 2.1.0
-- Added a "Classic" formatting client setting, putting the names on top of the buttons.
+- Added a "Classic" formatting client setting, putting the names on top of the buttons. Thank you Dorako for the help!
 - Removed buttons from the chat message if the token is not owned by the player, i.e. cannot apply damage to it anyway.
 - Clicking the names now will either:
   - Select the token if owned by the player.
@@ -10,7 +10,7 @@
 - Fixed bug the Shield button not turning off once used.
 - Removed part of the module that referred to outdated `data` property.
 - "aaaaaaaaaaaaaa" is now properly translated.
-- Fixed "Needs some more CSS touch ups" from 2.0.0. Thank you Dorako for the contribution!
+- Fixed "Needs some more CSS touch ups" from 2.0.0. Thank you Dorako for the help!
 
 # 2.0.1
 - Fixed release workflow not including template files.
