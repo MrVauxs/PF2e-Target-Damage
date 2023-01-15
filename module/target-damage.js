@@ -180,7 +180,7 @@ const DamageRoll = CONFIG.Dice.rolls.find((R) => R.name === "DamageRoll");
 Hooks.on("renderChatMessage", (message, html) => {
 	setTimeout(() => {
 		html = html.find(".message-content");
-		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target));
+		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target)) ?? [];
 		const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
 
 		rolls.forEach(async (roll, index, array) => {
@@ -415,11 +415,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 			}
 		});
 
-		if (
-			targets.length &&
-			(game.settings.get("pf2e-target-damage", "hideOGButtons") ||
-				(message.rolls[0].options.evaluatePersistent && game.settings.get("pf2e-target-damage", "persistentDamageInt")))
-		) {
+		if (targets.length && (game.settings.get("pf2e-target-damage", "hideOGButtons") || (message.rolls[0]?.options.evaluatePersistent && game.settings.get("pf2e-target-damage", "persistentDamageInt")))) {
 			// Hide the original buttons, whether it's the main one or the persistent damage one.
 			html.find(".pf2e-td.hide-button").first().trigger("click");
 		}
