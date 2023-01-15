@@ -1,3 +1,6 @@
+# 2.1.1
+- Fix errors in console.
+
 # 2.1.0
 - Added a "Classic" formatting client setting, putting the names on top of the buttons. Thank you Dorako for the help!
 - Removed buttons from the chat message if the token is not owned by the player, i.e. cannot apply damage to it anyway.
