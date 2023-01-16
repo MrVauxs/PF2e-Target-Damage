@@ -1,5 +1,8 @@
+# 2.1.2
+- Added support for Expanded Splash feat in the Select Splashed Tokens button. With the feat, the default is now 10 feet.
+
 # 2.1.1
-- Fix errors in console.
+- Fixed errors in console.
 
 # 2.1.0
 - Added a "Classic" formatting client setting, putting the names on top of the buttons. Thank you Dorako for the help!

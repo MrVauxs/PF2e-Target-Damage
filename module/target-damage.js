@@ -199,13 +199,15 @@ Hooks.on("renderChatMessage", (message, html) => {
 							// Increase Radius Dialogue
 							let multiplier = 5;
 
+							if (message.flags.pf2e?.context?.options.includes("feat:expanded-splash")) multiplier = 10;
+
 							if (e.shiftKey) {
 								new Dialog({
 									title: game.i18n.localize("pf2e-target-damage.splashButton.radiusDialog.title"),
 									content: `<form>
 												<div class="form-group">
 													<label>${game.i18n.localize("pf2e-target-damage.splashButton.radiusDialog.content")}</label>
-													<input type="number" name="modifier" value="" placeholder="5">
+													<input type="number" name="modifier" value="" placeholder="${multiplier} feet">
 												</div>
 												</form>
 												<script type="text/javascript">
