@@ -9,7 +9,6 @@
                 "title": "Modify Radius",
                 "content": "Splash Radius:"
             },
-            "feet": "Within {radius} feet of {target}",
             "hint": "[Click] Select tokens for splash damage.\n[Shift-Click] Adjust radius before selecting."
         },
         "hideButton": "Hide the system damage buttons.",

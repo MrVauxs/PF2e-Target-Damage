@@ -186,21 +186,20 @@ Hooks.on("renderChatMessage", (message, html) => {
 		rolls.forEach(async (roll, index, array) => {
 			if (roll.options.splashOnly) {
 				const splashSection = $(html.find(`.dice-roll.damage-roll`)[index]);
-
-				let multiplier = 5;
-				if (message.flags.pf2e?.context?.options.includes("feat:expanded-splash")) multiplier = 10;
-				const target = (targets.map((t) => t.token.object) ?? Array.from(game.user.targets))[0];
-
 				splashSection.find(".dice-total").prepend(
 					$(
-						`<button
-							class='pf2e-td splash-button small-button'
-							title="${game.i18n.localize("pf2e-target-damage.splashButton.hint")}"
-							data-tooltip="${game.i18n.format("pf2e-target-damage.splashButton.feet", { range: multiplier, target: target})}"
-						><i class='fa-solid fa-bomb fa-fw'></i></button>`
+						`<button class='pf2e-td splash-button small-button' title="${game.i18n.localize(
+							"pf2e-target-damage.splashButton.hint"
+						)}"><i class='fa-solid fa-bomb fa-fw'></i></button>`
 					).on({
 						click: (e) => {
+							const target = (targets.map((t) => t.token.object) ?? Array.from(game.user.targets))[0];
 							if (!target) return;
+
+							// Increase Radius Dialogue
+							let multiplier = 5;
+
+							if (message.flags.pf2e?.context?.options.includes("feat:expanded-splash")) multiplier = 10;
 
 							if (e.shiftKey) {
 								new Dialog({
