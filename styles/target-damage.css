@@ -28,6 +28,7 @@
 }
 
 .pf2e-td.name {
+    user-select: none !important;
     word-break: break-all;
     text-align: center;
     display: flex;
@@ -72,6 +73,7 @@ wrapper.pf2e-td.name-left {
 }
 
 wrapper.pf2e-td.name-left .pf2e-td.name {
+    user-select: none !important;
     display: flex;
     flex: 50px 1 1;
 }
@@ -85,6 +87,7 @@ wrapper.pf2e-td.name-top {
 }
 
 wrapper.pf2e-td.name-top .pf2e-td.name {
+    user-select: none !important;
     font-size: var(--font-size-14);
 }
 
