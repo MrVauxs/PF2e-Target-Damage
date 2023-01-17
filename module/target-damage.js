@@ -268,7 +268,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 				// Add button template for each target to buttonTemplates
 				for (let i = 0; i < targets.length; i++) {
-					const index = i;
 					const target = targets[i];
 					const targetTemplate = $(buttonTemplate.clone());
 					const nameHTML = targetTemplate.find(".pf2e-td.name");
@@ -329,25 +328,25 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					// Add click events to apply damage
 					full.on("click", (event) => {
-						applyDamage(message, tokenID, 1, 0, event.shiftKey);
+						applyDamage(message, tokenID, 1, 0, event.shiftKey, index);
 					});
 
 					half.on("click", (event) => {
-						applyDamage(message, tokenID, 0.5, 0, event.shiftKey);
+						applyDamage(message, tokenID, 0.5, 0, event.shiftKey, index);
 					});
 
 					double.on("click", (event) => {
-						applyDamage(message, tokenID, 2, 0, event.shiftKey);
+						applyDamage(message, tokenID, 2, 0, event.shiftKey, index);
 					});
 
 					triple === null || triple === void 0
 						? void 0
 						: triple.on("click", (event) => {
-							applyDamage(message, tokenID, 3, 0, event.shiftKey);
+							applyDamage(message, tokenID, 3, 0, event.shiftKey, index);
 						});
 
 					heal.on("click", (event) => {
-						applyDamage(message, tokenID, -1, 0, event.shiftKey);
+						applyDamage(message, tokenID, -1, 0, event.shiftKey, index);
 					});
 
 					$shield.on("click", async (event) => {
@@ -419,7 +418,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 		if (targets.length && (game.settings.get("pf2e-target-damage", "hideOGButtons") || (message.rolls[0]?.options.evaluatePersistent && game.settings.get("pf2e-target-damage", "persistentDamageInt")))) {
 			// Hide the original buttons, whether it's the main one or the persistent damage one.
-			html.find(".pf2e-td.hide-button").first().trigger("click");
+			html.find(".pf2e-td.hide-button").trigger("click");
 		}
 		if (game.settings.get("pf2e-target-damage", "hideTheHidingButtons")) {
 			// REMOVE the original buttons, whether it's the main one or the persistent damage one.

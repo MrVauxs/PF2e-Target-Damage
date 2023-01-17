@@ -1,5 +1,7 @@
 # 2.1.2
 - Added support for Expanded Splash feat in the Select Splashed Tokens button. With the feat, the default is now 10 feet.
+- Fixed multi-damage roll messages only applying damage from the first roll.
+- Fixed multi-damage roll messages only collapsing the first row of system buttons.
 
 # 2.1.1
 - Fixed errors in console.
