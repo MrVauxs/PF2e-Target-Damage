@@ -14,8 +14,5 @@ A direct successor to [target-lock](https://github.com/WillNichols726/target-loc
 
 ![image](https://user-images.githubusercontent.com/32039708/213246433-c774b600-7856-452a-aff6-ff7f5e863c35.png)
 ![image](https://user-images.githubusercontent.com/32039708/213247077-d8dc995f-c133-4659-a5bc-e5d00644113d.png)
-
-### Vanilla FoundryVTT Styling
-
 ![image](https://user-images.githubusercontent.com/32039708/213247421-ce7d62c1-aa54-489d-8e52-9bc34b43961b.png)
 ![image](https://user-images.githubusercontent.com/32039708/213247244-a62d652a-ffe4-4e1a-9b22-86703664ba81.png)
