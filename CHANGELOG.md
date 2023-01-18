@@ -1,3 +1,6 @@
+# 2.1.3
+- Adjusted how long target names overflow and wrap around the message.
+
 # 2.1.2
 - Added support for Expanded Splash feat in the Select Splashed Tokens button. With the feat, the default is now 10 feet.
 - Fixed multi-damage roll messages only applying damage from the first roll.

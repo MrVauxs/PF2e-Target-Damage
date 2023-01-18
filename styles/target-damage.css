@@ -36,7 +36,6 @@
     justify-content: center;
     max-height: var(--font-size-34);
     font-size: var(--font-size-10);
-    overflow: auto;
     cursor: pointer;
 }
 
@@ -73,6 +72,7 @@ wrapper.pf2e-td.name-left {
 }
 
 wrapper.pf2e-td.name-left .pf2e-td.name {
+    overflow: auto;
     user-select: none !important;
     display: flex;
     flex: 50px 1 1;
@@ -87,6 +87,7 @@ wrapper.pf2e-td.name-top {
 }
 
 wrapper.pf2e-td.name-top .pf2e-td.name {
+    word-break: break-word;
     user-select: none !important;
     font-size: var(--font-size-14);
 }
