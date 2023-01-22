@@ -1,11 +1,21 @@
 Hooks.once("init", () => {
+	function reRenderDamageButtons() {
+		const messages = game.messages
+			.filter((w) => w instanceof ChatMessage) // Is a message
+			.filter((w) => w.getFlag("pf2e-target-damage", "targets")?.length); // Is actually affected by pf2e-target-damage
+		for (const message of messages) {
+			ui.chat.updateMessage(message)
+		}
+	}
 	game.settings.register("pf2e-target-damage", "hideNPCs", {
 		scope: "world",
 		config: true,
 		name: game.i18n.localize("pf2e-target-damage.settings.hideNPCs.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.hideNPCs.hint"),
 		type: Boolean,
-		requiresReload: true,
+		onChange: () => {
+			reRenderDamageButtons();
+		},
 		default: false
 	});
 	game.settings.register("pf2e-target-damage", "hideTheHidingButtons", {
@@ -14,7 +24,9 @@ Hooks.once("init", () => {
 		name: game.i18n.localize("pf2e-target-damage.settings.hideTheHidingButtons.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.hideTheHidingButtons.hint"),
 		type: Boolean,
-		requiresReload: true,
+		onChange: () => {
+			reRenderDamageButtons();
+		},
 		default: false
 	});
 	game.settings.register("pf2e-target-damage", "hideOGButtons", {
@@ -23,7 +35,9 @@ Hooks.once("init", () => {
 		name: game.i18n.localize("pf2e-target-damage.settings.hideOGButtons.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.hideOGButtons.hint"),
 		type: Boolean,
-		requiresReload: true,
+		onChange: () => {
+			reRenderDamageButtons();
+		},
 		default: false
 	});
 	game.settings.register("pf2e-target-damage", "persistentDamageInt", {
@@ -32,7 +46,9 @@ Hooks.once("init", () => {
 		name: game.i18n.localize("pf2e-target-damage.settings.persistentDamageInt.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.persistentDamageInt.hint"),
 		type: Boolean,
-		requiresReload: true,
+		onChange: () => {
+			reRenderDamageButtons();
+		},
 		default: true
 	});
 	game.settings.register("pf2e-target-damage", "classic", {
@@ -41,7 +57,9 @@ Hooks.once("init", () => {
 		name: game.i18n.localize("pf2e-target-damage.settings.classic.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.classic.hint"),
 		type: Boolean,
-		requiresReload: true,
+		onChange: () => {
+			reRenderDamageButtons();
+		},
 		default: false
 	});
 });

@@ -1,3 +1,6 @@
+# 2.2.0
+- Updated the settings to no longer require a refresh when changing them, the module now refreshes every damage roll that is affected by PF2e Damage Target.
+
 # 2.1.3
 - Adjusted how long target names overflow and wrap around the message.
 
