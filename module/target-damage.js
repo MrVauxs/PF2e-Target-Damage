@@ -219,15 +219,15 @@ Hooks.on("renderChatMessage", (message, html) => {
 										ok: {
 											label: game.i18n.localize("CONTROLS.CanvasSelectAll"),
 											callback: async ($dialog) => {
-												multiplier = Number($dialog.find('[name="modifier"]').val()) || 5;
-												tokensInRange(target, multiplier).forEach((x) => x.control({ releaseOthers: false }));
+												multiplier = Number($dialog.find('[name="modifier"]').val()) || multiplier;
+												tokensInRange(target, multiplier).filter(x => x !== target).forEach((x) => x.control({ releaseOthers: false }));
 											},
 										},
 									},
 									default: "ok",
 								}).render(true);
 							} else {
-								tokensInRange(target, multiplier).forEach((x) => x.control({ releaseOthers: false }));
+								tokensInRange(target, multiplier).filter(x => x !== target).forEach((x) => x.control({ releaseOthers: false }));
 							}
 						},
 						// Doesn't highlight everything
