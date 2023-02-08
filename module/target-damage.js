@@ -408,7 +408,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 					const aButtons = a.find("button.pf2e-td").length;
 					const bButtons = b.find("button.pf2e-td").length;
 
-					console.log(123, bButtons, aButtons, bButtons - aButtons)
 					return bButtons - aButtons;
 				});
 
@@ -424,5 +423,12 @@ Hooks.on("renderChatMessage", (message, html) => {
 			// REMOVE the original buttons, whether it's the main one or the persistent damage one.
 			html.find(".pf2e-td.hide-button").remove();
 		}
+		setTimeout(() => {
+			// Scroll down to the last roll
+			const lastRoll = html.find("wrapper.pf2e-td").last();
+			if (lastRoll.length) {
+				lastRoll[0].scrollIntoView({behavior: "smooth"});
+			}
+		}, 0);
 	}, 0);
 });
