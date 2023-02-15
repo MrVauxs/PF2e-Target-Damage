@@ -1,4 +1,4 @@
-# PF2e-Target-Damage
+# PF2e Target Damage
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dflat%26url%3Dhttps://raw.githubusercontent.com/MrVauxs/PF2e-Target-Damage/master/module.json)
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fsystem%3FnameType%3Dfull%26showVersion%3D1%26style%3Dflat%26url%3Dhttps://raw.githubusercontent.com/MrVauxs/PF2e-Target-Damage/master/module.json)
 
