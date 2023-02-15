@@ -8,4 +8,4 @@
 [![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2FPF2e-Target-Damage%2Fshield%2Fendorsements)](https://www.foundryvtt-hub.com/package/PF2e-Target-Damage/)
 
 A quality of life module that makes applying damage to targets and tracking saving throws easier in the Pathfinder 2e system.
-A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), having been rewritten from the ground up.
+A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), at first a copy and then having been rewritten from the ground up.
