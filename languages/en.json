@@ -4,6 +4,9 @@
             "cantFindToken": "Can't find token."
         },
         "hidden": "Unknown Token",
+        "targetButton": {
+            "hint": "[Click] Update the message with the affected tokens."
+        },
         "splashButton": {
             "radiusDialog": {
                 "title": "Modify Radius",

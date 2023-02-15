@@ -1,6 +1,7 @@
 class TargetDamageTarget {
 	constructor(target) {
 		this.id = target.id;
+		this.roll = target.roll;
 		this.tokenUuid = target.tokenUuid;
 		this.actorUuid = target.actorUuid;
 	}
@@ -43,8 +44,8 @@ class TargetDamageTarget {
 
 // Flag what targets were at the time of the roll
 Hooks.on("preCreateChatMessage", (message) => {
-	if (!message.isDamageRoll || message?.flags?.["pf2e-target-damage"]?.targets) return;
-	if (message.rolls[0].options.evaluatePersistent) {
+	if (message?.flags?.["pf2e-target-damage"]?.targets) return;
+	if (message.rolls[0]?.options.evaluatePersistent) {
 		message.updateSource({
 			"flags.pf2e-target-damage.targets": [message.token.object].map((target) => {
 				return {
@@ -64,6 +65,26 @@ Hooks.on("preCreateChatMessage", (message) => {
 				};
 			}),
 		});
+	}
+});
+
+Hooks.on("createChatMessage", (message) => {
+	if (!game.user.isGM) return;
+	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td"))
+	if (rollOption?.length > 0) {
+		rollOption.forEach((option) => {
+			const id = option.split("pf2e-td-")[1];
+			const saveMessage = game.messages.get(id);
+
+			const newFlag = saveMessage.flags["pf2e-target-damage"].targets;
+			const index = newFlag.findIndex((target) => target.id === message.token.id)
+			newFlag[index].roll = message.id;
+
+			saveMessage.update({
+				"flags.pf2e-target-damage.targets": newFlag
+			});
+			ui.chat.updateMessage(saveMessage, true)
+		})
 	}
 });
 
@@ -180,7 +201,7 @@ const DamageRoll = CONFIG.Dice.rolls.find((R) => R.name === "DamageRoll");
 Hooks.on("renderChatMessage", (message, html) => {
 	setTimeout(() => {
 		html = html.find(".message-content");
-		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target)) ?? [];
+		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target)) || [];
 		const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
 
 		rolls.forEach(async (roll, index, array) => {
@@ -279,8 +300,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
 					nameHTML.click((e) => onClickSender(target.token, e));
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
-					targetTemplate.find(".pf2e-td.image").attr("src", target.img);
-					targetTemplate.find(".pf2e-td.image").attr("title", target.name);
+					// targetTemplate.find(".pf2e-td.image").attr("src", target.img);
+					// targetTemplate.find(".pf2e-td.image").attr("title", target.name);
 
 					// this is really just to let the GM know the targets are mystified or hidden
 					if (game.user.isGM) {
@@ -423,11 +444,151 @@ Hooks.on("renderChatMessage", (message, html) => {
 			// REMOVE the original buttons, whether it's the main one or the persistent damage one.
 			html.find(".pf2e-td.hide-button").remove();
 		}
+
+		// Not a damage roll, proceed with Target Saves
+		if (rolls.length < 1) {
+			const targetSection = $(html.find(`[data-action="spellTemplate"]`));
+			targetSection.before(
+				$(
+					`<button class='pf2e-td small-button target-button' title="${game.i18n.localize(
+						"pf2e-target-damage.targetButton.hint"
+					)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
+				).on({
+					click: (e) => {
+						e.stopPropagation();
+						message.update({
+							"flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
+								return {
+									id: target.id,
+									tokenUuid: target.document.uuid,
+									actorUuid: target.actor.uuid,
+								};
+							}),
+						});
+					}
+				})
+			);
+			if (message.flags?.pf2e?.origin?.type === "spell") {
+				const spell = fromUuidSync(message.flags.pf2e.origin.uuid);
+				const save = spell.system?.save?.value
+				if (!save) return; // Not a saving throw spell
+
+				const buttonTemplate = $(`<wrapper class="pf2e-td"><span class="pf2e-td name"></span><button class="pf2e-td save"></button></wrapper>`);
+
+				const buttonTemplates = []
+
+				for (let i = 0; i < targets.length; i++) {
+					const target = targets[i];
+					const targetTemplate = $(buttonTemplate.clone());
+					const nameHTML = targetTemplate.find(".pf2e-td.name");
+					const saveHTML = targetTemplate.find(".pf2e-td.save");
+
+					// replace stuff in template
+					nameHTML.text(target.name);
+					nameHTML.mouseenter((e) => onHoverIn(target.token, e));
+					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
+					nameHTML.click((e) => onClickSender(target.token, e));
+					nameHTML.dblclick((e) => onClickSender(target.token, e));
+
+					if (target.roll && game.messages.get(target.roll)) {
+						const outcome = game.messages.get(target.roll).flags.pf2e.context.outcome;
+						saveHTML.text(outcome ? game.i18n.localize(`PF2E.Check.Result.Degree.Check.${outcome}`) : "Error!");
+						saveHTML.addClass(outcome)
+					} else {
+						saveHTML.text(game.i18n.format("PF2E.SavingThrowWithName", { saveName: game.i18n.localize(`PF2E.Saves${save.charAt(0).toUpperCase() + save.slice(1)}`)}))
+					}
+
+					saveHTML.click((e) => {
+						const item = spell;
+						const actor = target.actor;
+
+						const saveType = item.system.save.value;
+
+						const dc = Number(html.find('[data-action="save"]').attr("data-dc") ?? item.system);
+            			const itemTraits = item.system.traits?.value ?? [];
+
+						const save = actor?.saves?.[saveType];
+                		if (!save) return;
+
+						const rollOptions = [];
+						if (item.isOfType("spell")) {
+							rollOptions.push("magical", "spell");
+							if (Object.keys(item.system.damage.value).length > 0) {
+								rollOptions.push("damaging-effect");
+							}
+						}
+
+						rollOptions.push(...itemTraits);
+
+						rollOptions.push("pf2e-td-" + message.id)
+
+						function eventToRollParams(event) {
+							var skipDefault = !game.user.settings.showRollDialogs;
+							if (!event)
+								return { skipDialog: skipDefault };
+							var params = { skipDialog: event.shiftKey ? !skipDefault : skipDefault };
+							if (event.ctrlKey || event.metaKey)
+								params.rollMode = "blindroll";
+							return params;
+						}
+
+						const rollParams = {
+							...eventToRollParams(e),
+							dc: Number.isInteger(dc) ? { value: Number(dc) } : null,
+							item,
+							origin: actor,
+							extraRollOptions: rollOptions,
+						};
+
+						console.log(rollParams)
+						save.check.roll(rollParams);
+					})
+
+					// this is really just to let the GM know the targets are mystified or hidden
+					if (game.user.isGM) {
+						if (!target.visibility) {
+							targetTemplate.find("wrapper.pf2e-td").attr("data-visibility", "gm");
+						} else if (!target.mystified) {
+							targetTemplate.find(".pf2e-td.name").attr("data-visibility", "gm");
+						}
+					} else {
+						if (!target.visibility) return;
+					}
+
+					if (game.settings.get("pf2e-target-damage", "classic")) {
+						$(targetTemplate[0]).addClass("name-top");
+					} else {
+						$(targetTemplate[0]).addClass("name-left");
+					}
+
+					if (!target.isOwner) {
+						targetTemplate.find("button.pf2e-td").remove();
+						targetTemplate.find("hover-content").remove();
+						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
+					}
+
+					buttonTemplates.sort((a, b) => {
+						const aButtons = a.find("button.pf2e-td").length;
+						const bButtons = b.find("button.pf2e-td").length;
+
+						return bButtons - aButtons;
+					});
+
+					buttonTemplates.push(targetTemplate)
+				}
+				const originalHeight = html.height();
+				html.find(".card-buttons").append(buttonTemplates)
+				$(document).find("#chat-log")[0].scrollBy(0, (html.height() - originalHeight), { behavior: "smooth" })
+			}
+		}
+
+		// Scroll down to the last roll
 		setTimeout(() => {
-			// Scroll down to the last roll
-			const lastRoll = html.find("wrapper.pf2e-td").last();
-			if (lastRoll.length) {
-				lastRoll[0].scrollIntoView({behavior: "smooth"});
+			if (rolls.length > 0) { // Only on damage rolls
+				const lastRoll = html.find("wrapper.pf2e-td").last();
+				if (lastRoll.length) {
+					lastRoll[0].scrollIntoView({ behavior: "smooth" });
+				}
 			}
 		}, 0);
 	}, 0);
