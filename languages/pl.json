@@ -1,0 +1,42 @@
+{
+	"pf2e-target-damage": {
+		"error": {
+			"cantFindToken": "Nie można znaleźć token."
+		},
+		"hidden": "Nieznany Token",
+		"splashButton": {
+			"radiusDialog": {
+				"title": "Zmień Zasięg",
+				"content": "Zasięg Plusku:"
+			},
+			"hint": "[Klik] Wybierz tokeny dla obrażeń plusku.\n[Shift-Klik] Wyreguluj promień przed wybraniem."
+		},
+		"hideButton": "Schowaj domyślne przyciski obrażeń.",
+		"settings": {
+			"hideNPCs": {
+				"name": "Schowaj celowane nie należące do graczy tokeny",
+				"hint": "Chowa nie należące do graczy tokeny z listy celów w rzucie obrażeń."
+			},
+			"splashButton": {
+				"name": "Odwróć jak działa przycisk prysku",
+				"hint": "Odwraca jak działa przycisk plusku poprzez celowanie (zamiast zaznaczania) tokenów dookoła celów."
+			},
+			"hideTheHidingButtons": {
+				"name": "Schowaj Przyciski Składania",
+				"hint": "Chowa dodany przycisk chowające domyślne przyciski zadawania obrażeń. Jeżeli włączono którekolwiek z poniższych ustawień, nie będzie można pokazać już schowane przyciski."
+			},
+			"hideOGButtons": {
+				"name": "Schowaj domyślne przyciski obrażeń",
+				"hint": "Chowa domyślne przyciski zadawania obrażeń."
+			},
+			"persistentDamageInt": {
+				"name": "Integracja z obrażeniami okresowymi",
+				"hint": "Chowa domyślne przyciski zadawania obrażeń tylko dla rzutów obrażeń okresowych."
+			},
+			"classic": {
+				"name": "Używaj Klasycznego Ułożenia Imion",
+				"hint": "Przesuwa imienia na górę przycisków niż zwięźlej po lewej stronie."
+			}
+		}
+	}
+}
