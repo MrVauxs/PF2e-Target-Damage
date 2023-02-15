@@ -124,25 +124,28 @@ function updateMessageWithFlags(event, message) {
 	event.stopPropagation();
 	const targetsFlags = message.flags["pf2e-target-damage"].targets;
 	const targetsCurrent = Array.from(game.user.targets);
-	const targetsFinal = [];
+	let targetsFinal = [];
 
 	if (!targetsCurrent.length) return;
 
+	targetsFinal.push(...targetsFlags);
+	targetsFinal.push(...targetsCurrent);
+
 	if (game.settings.get("pf2e-target-damage", "targetButton")) {
-		if (event.shiftKey) {
-			targetsFinal.push(...targetsFlags);
-			targetsFinal.push(...targetsCurrent);
-		} else {
-			targetsFinal.push(...targetsCurrent);
+		// Replace by default, Shift to Add
+		if (!event.shiftKey) {
+			// Removes non-current targets
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
 		}
 	} else {
+		// Add by default, Shift to Replace
 		if (event.shiftKey) {
-			targetsFinal.push(...targetsCurrent);
-		} else {
-			targetsFinal.push(...targetsFlags);
-			targetsFinal.push(...targetsCurrent);
+			// Removes non-current targets
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
 		}
 	}
+
+	targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
 
 	message.update({
 		"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
@@ -150,6 +153,7 @@ function updateMessageWithFlags(event, message) {
 				id: target.id,
 				tokenUuid: target.tokenUuid || target.document.uuid,
 				actorUuid: target.actorUuid || target.actor.uuid,
+				roll: target.roll,
 			};
 		}),
 	});
@@ -531,7 +535,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					saveHTML.click((e) => {
 						const item = spell;
-						const actor = target.actor;
+						const actor = target.actor?.actor ?? target.actor;
 
 						const saveType = item.system.save.value;
 
