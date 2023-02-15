@@ -1,0 +1,42 @@
+{
+	"pf2e-target-damage": {
+		"splashButton": {
+			"radiusDialog": {
+				"content": "Rayon d'éclaboussure :",
+				"title": "Modifier le rayon"
+			},
+			"hint": "[Clic] Choisir les jetons pour les dégâts d'éclaboussure.\n[Shift-Clic] Ajuster le rayon avant de choisir."
+		},
+		"hideButton": "Cacher les boutons de dégâts du système.",
+		"settings": {
+			"hideNPCs": {
+				"name": "Cacher les cibles des jetons non joueur",
+				"hint": "Cache les jetons qui n'appartiennent pas aux joueur de la liste des cibles sur un jet de dégâts."
+			},
+			"splashButton": {
+				"name": "Inverser le comportement du bouton éclaboussure",
+				"hint": "inverse le comportement du bouton éclaboussure pour choisir les jetons autour des cibles plutôt que de choisir les jetons autour du jeton sélectionné."
+			},
+			"hideTheHidingButtons": {
+				"name": "Masquer les boutons repliables",
+				"hint": "Cache les boutons ajoutés pour replier les rangées de boutons de dégâts. Si vous activez l'un des paramètres ci-dessous, vous ne serez pas en mesure de révéler les boutons cachés."
+			},
+			"hideOGButtons": {
+				"name": "Cacher les boutons de dégâts originaux de PF2e",
+				"hint": "Cache les boutons de dégâts du système original PF2e."
+			},
+			"persistentDamageInt": {
+				"name": "Intégrer avec les dégâts persistants",
+				"hint": "Cache les boutons de dégâts du système original PF2e, mais uniquement les jets de dégâts de Dégâts persistants."
+			},
+			"classic": {
+				"name": "Utiliser la disposition classique des noms",
+				"hint": "Place les noms au-dessus des boutons au lieu d'être compacts sur la gauche."
+			}
+		},
+		"error": {
+			"cantFindToken": "Ne peut trouver le jeton."
+		},
+		"hidden": "Jeton inconnu"
+	}
+}
