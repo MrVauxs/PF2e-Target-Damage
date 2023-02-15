@@ -293,9 +293,17 @@ Hooks.on("renderChatMessage", (message, html) => {
 				);
 				return;
 			}
-			if (targets.length) {
-				const damageSection = $(html.find(`.dice-roll.damage-roll`)[index]);
 
+			const damageSection = $(html.find(`.dice-roll.damage-roll`)[index]);
+			damageSection.find(".dice-total").prepend(
+				$(
+					`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
+						"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
+					)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
+				).click((e) => updateMessageWithFlags(e, message))
+			);
+
+			if (targets.length) {
 				html
 					.find($('section[data-roll-index="' + index + '"]'))
 					.after(`<hr class='pf2e-td' data-roll-index="${index}"></hr>`);
@@ -312,14 +320,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 						$(this).find(".fa").toggleClass("fa-plus fa-minus");
 						e.stopPropagation();
 					})
-				);
-
-				damageSection.find(".dice-total").prepend(
-					$(
-						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
-							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
-						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-					).click((e) => updateMessageWithFlags(e, message))
 				);
 
 				const buttonTemplate = $(
