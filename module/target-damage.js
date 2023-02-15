@@ -299,13 +299,17 @@ Hooks.on("renderChatMessage", (message, html) => {
 			}
 
 			const damageSection = $(html.find(`.dice-roll.damage-roll`)[index]);
-			damageSection.find(".dice-total").prepend(
-				$(
-					`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
-						"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
-					)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-				).click((e) => updateMessageWithFlags(e, message))
-			);
+
+			// Add the target button
+			if (message.isOwner) {
+				damageSection.find(".dice-total").prepend(
+					$(
+						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
+							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
+						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
+					).click((e) => updateMessageWithFlags(e, message))
+				)
+			};
 
 			if (targets.length) {
 				html
@@ -498,13 +502,18 @@ Hooks.on("renderChatMessage", (message, html) => {
 		if (rolls.length < 1) {
 			const targetSection = $(html.find(`[data-action="spellTemplate"]`));
 			targetSection.parent().addClass("pf2e-td target-section");
-			targetSection.before(
-				$(
-					`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
-						"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
-					)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-				).click((e) => updateMessageWithFlags(e, message))
-			);
+
+			// Add the target button
+			if (message.isOwner) {
+				targetSection.before(
+					$(
+						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
+							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
+						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
+					).click((e) => updateMessageWithFlags(e, message))
+				)
+			};
+
 			if (message.flags?.pf2e?.origin?.type === "spell") {
 				const spell = fromUuidSync(message.flags.pf2e.origin.uuid);
 				const save = spell.system?.save?.value
