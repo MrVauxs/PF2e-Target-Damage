@@ -1,5 +1,6 @@
 # 2.3.0
 - Added support for Saving Throws.
+- Updated localization files.
 
 # 2.2.2
 - Fixed the target token being selected when clicking the Splash button. The splash damage is already calculated into the target damage by the system.
