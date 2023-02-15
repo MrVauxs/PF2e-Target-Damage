@@ -373,6 +373,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
 					}
 
+					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
+
 					//#region The Buttons
 					const full = targetTemplate.find("button.pf2e-td.full-damage");
 					const half = targetTemplate.find("button.pf2e-td.half-damage");
@@ -600,6 +602,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 						targetTemplate.find("hover-content").remove();
 						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
 					}
+
+					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
 
 					buttonTemplates.sort((a, b) => {
 						const aButtons = a.find("button.pf2e-td").length;
