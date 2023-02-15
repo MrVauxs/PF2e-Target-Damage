@@ -120,6 +120,41 @@ function onClickSender(token, event) {
 }
 //#endregion
 
+function updateMessageWithFlags(event, message) {
+	event.stopPropagation();
+	const targetsFlags = message.flags["pf2e-target-damage"].targets;
+	const targetsCurrent = Array.from(game.user.targets);
+	const targetsFinal = [];
+
+	if (!targetsCurrent.length) return;
+
+	if (game.settings.get("pf2e-target-damage", "targetButton")) {
+		if (event.shiftKey) {
+			targetsFinal.push(...targetsFlags);
+			targetsFinal.push(...targetsCurrent);
+		} else {
+			targetsFinal.push(...targetsCurrent);
+		}
+	} else {
+		if (event.shiftKey) {
+			targetsFinal.push(...targetsCurrent);
+		} else {
+			targetsFinal.push(...targetsFlags);
+			targetsFinal.push(...targetsCurrent);
+		}
+	}
+
+	message.update({
+		"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
+			return {
+				id: target.id,
+				tokenUuid: target.tokenUuid || target.document.uuid,
+				actorUuid: target.actorUuid || target.actor.uuid,
+			};
+		}),
+	});
+}
+
 async function applyDamage(message, tokenID, multiplier, addend = 0, promptModifier = false, rollIndex = 0) {
 	if (promptModifier) return shiftModifyDamage(message, tokenID, multiplier, rollIndex);
 	// Modified here to include TokenID
@@ -265,7 +300,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					.find($('section[data-roll-index="' + index + '"]'))
 					.after(`<hr class='pf2e-td' data-roll-index="${index}"></hr>`);
 
-				// Add hiding buttons
+				// Add target and hiding buttons
 				damageSection.find(".dice-total").append(
 					$(
 						`<button class='pf2e-td hide-button small-button' title="${game.i18n.localize(
@@ -277,6 +312,14 @@ Hooks.on("renderChatMessage", (message, html) => {
 						$(this).find(".fa").toggleClass("fa-plus fa-minus");
 						e.stopPropagation();
 					})
+				);
+
+				damageSection.find(".dice-total").prepend(
+					$(
+						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
+							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
+						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
+					).click((e) => updateMessageWithFlags(e, message))
 				);
 
 				const buttonTemplate = $(
@@ -448,25 +491,13 @@ Hooks.on("renderChatMessage", (message, html) => {
 		// Not a damage roll, proceed with Target Saves
 		if (rolls.length < 1) {
 			const targetSection = $(html.find(`[data-action="spellTemplate"]`));
+			targetSection.parent().addClass("pf2e-td target-section");
 			targetSection.before(
 				$(
-					`<button class='pf2e-td small-button target-button' title="${game.i18n.localize(
-						"pf2e-target-damage.targetButton.hint"
+					`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
+						"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
 					)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-				).on({
-					click: (e) => {
-						e.stopPropagation();
-						message.update({
-							"flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
-								return {
-									id: target.id,
-									tokenUuid: target.document.uuid,
-									actorUuid: target.actor.uuid,
-								};
-							}),
-						});
-					}
-				})
+				).click((e) => updateMessageWithFlags(e, message))
 			);
 			if (message.flags?.pf2e?.origin?.type === "spell") {
 				const spell = fromUuidSync(message.flags.pf2e.origin.uuid);
@@ -504,7 +535,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 						const saveType = item.system.save.value;
 
-						const dc = Number(html.find('[data-action="save"]').attr("data-dc") ?? item.system);
+						const dc = Number(html.find('[data-action="save"]').attr("data-dc") ?? "NaN");
             			const itemTraits = item.system.traits?.value ?? [];
 
 						const save = actor?.saves?.[saveType];
@@ -540,7 +571,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 							extraRollOptions: rollOptions,
 						};
 
-						console.log(rollParams)
 						save.check.roll(rollParams);
 					})
 

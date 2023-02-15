@@ -1,123 +1,134 @@
 .pf2e-td.small-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1px;
-    width: 22px;
-    height: calc(100% - 2px);
-    position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 1px;
+	width: 22px;
+	height: calc(100% - 2px);
+	position: absolute;
 }
 
 .pf2e-td.small-button.splash-button {
-    top: 0;
-    left: 0;
+	top: 0;
+	left: 0;
 }
 
 .pf2e-td.small-button.target-button {
-    top: 0;
-    right: 0;
+	top: 0;
+	left: 0;
+}
+
+.spell-button .pf2e-td.target-button {
+	height: calc(100% - 12px);
+	top: 4px;
+	left: 4px;
+	width: 24px;
+}
+
+.pf2e-td.target-section {
+	position: relative;
 }
 
 .pf2e-td.small-button.hide-button {
-    top: 0;
-    right: 0;
+	top: 0;
+	right: 0;
 }
 
 .pf2e-td.damage-application {
-    gap: 1px;
-    margin-top: 0px;
+	gap: 1px;
+	margin-top: 0px;
 }
 
 .pf2e-td.damage-application .label {
-    font-size: var(--font-size-8);
+	font-size: var(--font-size-8);
 }
 
 .pf2e-td.name {
-    line-height: revert !important;
-    border: none !important;
-    user-select: none !important;
-    word-break: break-all;
-    text-align: center;
-    display: flex;
-    font-weight: 800;
-    justify-content: center;
-    max-height: var(--font-size-34);
-    font-size: var(--font-size-10);
-    cursor: pointer;
+	line-height: revert !important;
+	border: none !important;
+	user-select: none !important;
+	word-break: break-all;
+	text-align: center;
+	display: flex;
+	font-weight: 800;
+	justify-content: center;
+	max-height: var(--font-size-34);
+	font-size: var(--font-size-10);
+	cursor: pointer;
 }
 
 .pf2e-td.save button,
 .pf2e-td.damage-application button {
-    margin: 0px;
+	margin: 0px;
 }
 
 .pf2e-td.save,
 .pf2e-td.damage-application {
-    gap: 1px;
+	gap: 1px;
 }
 
 .pf2e-td.name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
-    display: flex;
-    padding: 0px 2px 0px 0px;
+	display: flex;
+	padding: 0px 2px 0px 0px;
 }
 
 .pf2e-td.heal-damage .fa-stack {
-    font-size: .5em;
+	font-size: .5em;
 }
 
 .chat-message .message-content .pf2e-td.save,
 .chat-message .message-content .pf2e-td.damage-application {
-    margin-top: 0px;
+	margin-top: 0px;
 }
 
 .pf2e-td.criticalSuccess {
-    background-color: rgb(0, 128, 0, 0.3);
+	background-color: rgb(0, 128, 0, 0.3);
 }
 
 .pf2e-td.success {
-    background-color: rgb(0, 0, 255, 0.3);
+	background-color: rgb(0, 0, 255, 0.3);
 }
 
 .pf2e-td.failure {
-    background-color: rgb(255, 69, 0, 0.3);
+	background-color: rgb(255, 69, 0, 0.3);
 }
 
 .pf2e-td.criticalFailure {
-    background-color: rgb(255, 0, 0, 0.3);
+	background-color: rgb(255, 0, 0, 0.3);
 }
 
 wrapper.pf2e-td {
-    display: flex;
-    margin-top: 3px;
-    align-items: center;
-    gap: 2px;
+	display: flex;
+	margin-top: 3px;
+	align-items: center;
+	gap: 2px;
 }
 
 wrapper.pf2e-td.name-left {
-    flex-direction: row;
+	flex-direction: row;
 }
 
 wrapper.pf2e-td.name-left .pf2e-td.name {
-    overflow: auto;
-    user-select: none !important;
-    display: flex;
-    flex: 50px 1 1;
+	overflow: auto;
+	user-select: none !important;
+	display: flex;
+	flex: 50px 1 1;
 }
 
 wrapper.pf2e-td.name-left .pf2e-td.damage-application {
-    flex: 235px 1 0;
+	flex: 235px 1 0;
 }
 
 wrapper.pf2e-td.name-top {
-    flex-direction: column;
+	flex-direction: column;
 }
 
 wrapper.pf2e-td.name-top .pf2e-td.name {
-    word-break: break-word;
-    user-select: none !important;
-    font-size: var(--font-size-14);
+	word-break: break-word;
+	user-select: none !important;
+	font-size: var(--font-size-14);
 }
 
 wrapper.pf2e-td.name-top .pf2e-td.damage-application {
-    width: 100%;
+	width: 100%;
 }

@@ -5,7 +5,8 @@
         },
         "hidden": "Unknown Token",
         "targetButton": {
-            "hint": "[Click] Update the message with the affected tokens."
+            "hint-false": "[Click] Add current targets to the message.\n[Shift-Click] Replace the targets in the message with current targets.",
+            "hint-true": "[Click] Replace the targets in the message with current targets.\n[Shift-Click] Add current targets to the message."
         },
         "splashButton": {
             "radiusDialog": {
@@ -20,9 +21,9 @@
                 "name": "Hide non-Player Token Targets",
                 "hint": "Hides not owned by players tokens from the target list of a damage roll."
             },
-            "splashButton": {
-                "name": "Flip Splash Button Behavior",
-                "hint": "Flips the Splash Button Behavior to select the tokens around the targets, rather than selecting tokens around the selected token."
+            "targetButton": {
+                "name": "Flip Target Button Behavior",
+                "hint": "Flips the Target Button Behavior to replace the existing targets, rather than adding up to the existing list."
             },
             "hideTheHidingButtons": {
                 "name": "Hide Collapsible Buttons",
