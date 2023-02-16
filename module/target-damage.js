@@ -556,8 +556,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 		// Not a damage roll, proceed with Target Saves
 		if (rolls.length < 1) {
-			const targetSection = $(html.find(`[data-action="spellTemplate"]`));
-			targetSection.parent().addClass("pf2e-td target-section");
+			const targetSection = $(html.find('[data-action="save"]'));
+			targetSection.wrap('<div class="spell-button pf2e-td target-section"></div>');
 
 			// Add the target button
 			if (message.isAuthor || message.isOwner) {
