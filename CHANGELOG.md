@@ -2,7 +2,7 @@
 - Created a socket so that players can actually update the saving throw message.
 - Fixed Saving Throw buttons not respecting private rolls. The buttons now will only update with the result if the roll is visible to the user in chat.
 - Fixed Saving Throw buttons not appearing on castings of a spell from Scrolls and Wands.
-- Fixed Saving Throw buttons in spells with Variants.
+- Fixed Saving Throw buttons in spells with Variants. The buttons disappear if there is no saving throw present in the variant. The saving throw results are persistent, so if you come back to another variant and then go back to one with a saving throw, the buttons will re-appear as normal with the previous results.
 
 # 2.3.0
 - Added support for Saving Throws in spells.
