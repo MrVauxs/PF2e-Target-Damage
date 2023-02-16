@@ -1,5 +1,5 @@
 # 2.3.2
-- Changed the location of the Target Button for saving throws to be inside the Saving Throw button instead of the Template placement button. As such, now AoE-less spells can make use of the post-targeting feature.
+- Changed the location of the Target Button for saving throws to be inside the Saving Throw button instead of the Template placement button. As such, now Template-less spells can make use of the post-targeting feature.
 
 # 2.3.1
 - Created a socket so that players can actually update the saving throw message.
