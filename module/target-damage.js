@@ -1,3 +1,42 @@
+self.pf2eTargetDamage = {
+	/**
+	 * Updates a message with an array of targets.
+	 * It adds the targets to the current ones by default, or replaces them if opts.replace is true.
+	 * @param {ChatMessage} message Message to update
+	 * @param {Array} targets Array of targets
+	 * @param {Object} opts Options
+	 * @param {boolean} opts.replace Whether to replace the current targets with the new ones
+	 */
+	updateFlags: (message, targets, opts = {}) => {
+		const targetsFlags = message.flags?.["pf2e-target-damage"]?.targets;
+		const targetsCurrent = targets || [];
+		let targetsFinal = [];
+
+		targetsFinal.push(...targetsFlags);
+		targetsFinal.push(...targetsCurrent);
+
+		// Remove anything that doesn't already exist
+		if (opts.replace) {
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+		}
+
+		// Remove duplicates
+		targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
+
+		message.update({
+			"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
+				return {
+					id: target.id,
+					tokenUuid: target.tokenUuid || target.document.uuid,
+					actorUuid: target.actorUuid || target.actor.uuid,
+					roll: target.roll,
+				};
+			}),
+		});
+	},
+	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, {...opts, replace: true }),
+};
+
 class TargetDamageTarget {
 	constructor(target) {
 		this.id = target.id;
@@ -641,42 +680,3 @@ Hooks.on("renderChatMessage", (message, html) => {
 		}, 0);
 	}, 0);
 });
-
-self.pf2eTargetDamage = {
-	/**
-	 * Updates a message with an array of targets.
-	 * It adds the targets to the current ones by default, or replaces them if opts.replace is true.
-	 * @param {ChatMessage} message Message to update
-	 * @param {Array} targets Array of targets
-	 * @param {Object} opts Options
-	 * @param {boolean} opts.replace Whether to replace the current targets with the new ones
-	 */
-	updateFlags: (message, targets, opts = {}) => {
-		const targetsFlags = message.flags?.["pf2e-target-damage"]?.targets;
-		const targetsCurrent = targets || [];
-		let targetsFinal = [];
-
-		targetsFinal.push(...targetsFlags);
-		targetsFinal.push(...targetsCurrent);
-
-		// Remove anything that doesn't already exist
-		if (opts.replace) {
-			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
-		}
-
-		// Remove duplicates
-		targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
-
-		message.update({
-			"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
-				return {
-					id: target.id,
-					tokenUuid: target.tokenUuid || target.document.uuid,
-					actorUuid: target.actorUuid || target.actor.uuid,
-					roll: target.roll,
-				};
-			}),
-		});
-	},
-	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, {...opts, replace: true }),
-};
