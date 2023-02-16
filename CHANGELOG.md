@@ -1,5 +1,6 @@
 # 2.3.0
 - Added support for Saving Throws.
+- Added hover tooltips to compact names.
 - Updated localization files.
 
 # 2.2.2
