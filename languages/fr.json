@@ -44,7 +44,7 @@
 		"hidden": "Jeton inconnu",
 		"targetButton": {
 			"hint-false": "[Clic] Ajouter les cibles actuelles au message.\n[Shift-Clic] Remplacer les cibles du message par les cibles actuelles.",
-			"hint-true": "[Cliquer] Remplacez les cibles du message par les cibles actuelles.\n[Shift-Clic] Ajouter les cibles actuelles au message."
+			"hint-true": "[Clic] Remplacez les cibles du message par les cibles actuelles.\n[Shift-Clic] Ajouter les cibles actuelles au message."
 		}
 	}
 }
