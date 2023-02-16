@@ -30,6 +30,7 @@ self.pf2eTargetDamage = {
 					tokenUuid: target.tokenUuid || target.document.uuid,
 					actorUuid: target.actorUuid || target.actor.uuid,
 					roll: target.roll,
+					private: target.private,
 				};
 			}),
 		});
@@ -109,24 +110,39 @@ Hooks.on("preCreateChatMessage", (message) => {
 
 // Link the saving throw to the message that caused it
 Hooks.on("createChatMessage", (message) => {
-	if (!game.user.isGM) return;
+	if (game.user.isGM) {
+		updateSaveWithRoll(message);
+	} else {
+		game.socket.emit("module.pf2e-target-damage", message);
+	}
+});
+
+Hooks.on("ready", () => {
+	game.socket.on("module.pf2e-target-damage", message => updateSaveWithRoll(message));
+});
+
+function updateSaveWithRoll(message) {
 	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td"))
 	if (rollOption?.length > 0) {
 		rollOption.forEach((option) => {
 			const id = option.split("pf2e-td-")[1];
 			const saveMessage = game.messages.get(id);
 
-			const newFlag = saveMessage.flags["pf2e-target-damage"].targets;
-			const index = newFlag.findIndex((target) => target.id === message.token.id)
-			newFlag[index].roll = message.id;
+			console.log(saveMessage, message)
+			if (!(saveMessage.isAuthor || saveMessage.isOwner)) return;
 
+			const newFlag = saveMessage.flags["pf2e-target-damage"].targets;
+			const index = newFlag.findIndex((target) => target.id === message.speaker.token)
+			newFlag[index].roll = message._id || message.id;
+
+			console.log(newFlag)
 			saveMessage.update({
 				"flags.pf2e-target-damage.targets": newFlag
 			});
 			ui.chat.updateMessage(saveMessage, true)
 		})
 	}
-});
+}
 
 //#region borrowed from PF2e system, document.ts#210
 function onHoverIn(token, event) {
@@ -341,7 +357,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 			const damageSection = $(html.find(`.dice-roll.damage-roll`)[index]);
 
 			// Add the target button
-			if (message.isOwner) {
+			if (message.isAuthor || message.isOwner) {
 				damageSection.find(".dice-total").prepend(
 					$(
 						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
@@ -544,7 +560,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 			targetSection.parent().addClass("pf2e-td target-section");
 
 			// Add the target button
-			if (message.isOwner) {
+			if (message.isAuthor || message.isOwner) {
 				targetSection.before(
 					$(
 						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
@@ -555,8 +571,9 @@ Hooks.on("renderChatMessage", (message, html) => {
 			};
 
 			if (message.flags?.pf2e?.origin?.type === "spell") {
-				const spell = fromUuidSync(message.flags.pf2e.origin.uuid);
-				const save = spell.system?.save?.value
+				const spell = message.item || fromUuidSync(message.flags.pf2e.origin.uuid);
+				const save = spell?.system?.save?.value
+				if (!html.find('[data-action="save"]').attr("data-dc")) return; // Message has no saving throw button
 				if (!save) return; // Not a saving throw spell
 
 				const buttonTemplate = $(`<wrapper class="pf2e-td"><span class="pf2e-td name"></span><button class="pf2e-td save"></button></wrapper>`);
@@ -576,7 +593,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					nameHTML.click((e) => onClickSender(target.token, e));
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
 
-					if (target.roll && game.messages.get(target.roll)) {
+					if (target.roll && game.messages.get(target.roll)?.isContentVisible) {
 						const outcome = game.messages.get(target.roll).flags.pf2e.context.outcome;
 						saveHTML.text(outcome ? game.i18n.localize(`PF2E.Check.Result.Degree.Check.${outcome}`) : "Error!");
 						saveHTML.addClass(outcome)
@@ -584,7 +601,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						saveHTML.text(game.i18n.format("PF2E.SavingThrowWithName", { saveName: game.i18n.localize(`PF2E.Saves${save.charAt(0).toUpperCase() + save.slice(1)}`)}))
 					}
 
-					saveHTML.click((e) => {
+					if (target.isOwner) saveHTML.click((e) => {
 						const item = spell;
 						const actor = target.actor?.actor ?? target.actor;
 
@@ -627,7 +644,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						};
 
 						save.check.roll(rollParams);
-					})
+					});
 
 					// this is really just to let the GM know the targets are mystified or hidden
 					if (game.user.isGM) {
@@ -646,12 +663,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 						$(targetTemplate[0]).addClass("name-left");
 					}
 
-					if (!target.isOwner) {
-						targetTemplate.find("button.pf2e-td").remove();
-						targetTemplate.find("hover-content").remove();
-						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
-					}
-
 					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
 
 					buttonTemplates.sort((a, b) => {
@@ -665,7 +676,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 				}
 				const originalHeight = html.height();
 				html.find(".card-buttons").append(buttonTemplates)
-				$(document).find("#chat-log")[0].scrollBy(0, (html.height() - originalHeight), { behavior: "smooth" })
+				$(document).find("#chat-log")[0]?.scrollBy(0, (html.height() - originalHeight), { behavior: "smooth" })
 			}
 		}
 
