@@ -1,5 +1,5 @@
 # 2.3.0
-- Added support for Saving Throws.
+- Added support for Saving Throws in spells.
 - Added hover tooltips to compact names.
 - Added an exposed `pf2eTargetDamage` object containing functions to update a message's target flags, for ease of use in macros and other modules.
   - Currently the only functions that exist are `updateFlags` and `replaceFlags`. The latter of which is just a shortcut for `updateFlags` with `opts.replace = true`.
