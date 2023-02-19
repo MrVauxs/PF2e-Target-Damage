@@ -1,3 +1,8 @@
+# 2.3.3
+- Made the Target Button able to reset your targets list to 0 in replace mode ("Shift-Click" by default). If you try adding a target without having one, the module will let you know.
+- Added Roll All and Roll NPCs buttons. Only available for GMs.
+- Fixed the issue of jumping messages when adding targets and improved the fix for having to scroll down to see added targets in new messages by scrolling down only if the last message is affected by the module.
+
 # 2.3.2
 - Changed the location of the Target Button for saving throws to be inside the Saving Throw button instead of the Template placement button. As such, now Template-less spells can make use of the post-targeting feature.
 

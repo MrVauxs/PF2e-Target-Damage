@@ -18,6 +18,10 @@
 	left: 0;
 }
 
+.pf2e-td.quick-buttons {
+	margin-top: 0px;
+}
+
 .spell-button .pf2e-td.target-button {
 	height: calc(100% - 12px);
 	top: 4px;

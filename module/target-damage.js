@@ -128,14 +128,12 @@ function updateSaveWithRoll(message) {
 			const id = option.split("pf2e-td-")[1];
 			const saveMessage = game.messages.get(id);
 
-			console.log(saveMessage, message)
 			if (!(saveMessage.isAuthor || saveMessage.isOwner)) return;
 
 			const newFlag = saveMessage.flags["pf2e-target-damage"].targets;
 			const index = newFlag.findIndex((target) => target.id === message.speaker.token)
 			newFlag[index].roll = message._id || message.id;
 
-			console.log(newFlag)
 			saveMessage.update({
 				"flags.pf2e-target-damage.targets": newFlag
 			});
@@ -182,8 +180,6 @@ function updateMessageWithFlags(event, message) {
 	const targetsCurrent = Array.from(game.user.targets);
 	let targetsFinal = [];
 
-	if (!targetsCurrent.length) return;
-
 	targetsFinal.push(...targetsFlags);
 	targetsFinal.push(...targetsCurrent);
 
@@ -192,12 +188,16 @@ function updateMessageWithFlags(event, message) {
 		if (!event.shiftKey) {
 			// Removes non-current targets
 			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+		} else if (!targetsCurrent.length) {
+			return ui.notifications.error(game.i18n.localize("pf2e-target-damage.noTargets"))
 		}
 	} else {
 		// Add by default, Shift to Replace
 		if (event.shiftKey) {
 			// Removes non-current targets
 			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+		} else if (!targetsCurrent.length) {
+			return ui.notifications.error(game.i18n.localize("pf2e-target-damage.noTargets"))
 		}
 	}
 
@@ -570,7 +570,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 				)
 			};
 
-			if (message.flags?.pf2e?.origin?.type === "spell") {
+			if (message.flags?.pf2e?.origin?.type === "spell" && targets.length) {
 				const spell = message.item || fromUuidSync(message.flags.pf2e.origin.uuid);
 				const save = spell?.system?.save?.value
 				if (!html.find('[data-action="save"]').attr("data-dc")) return; // Message has no saving throw button
@@ -592,6 +592,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
 					nameHTML.click((e) => onClickSender(target.token, e));
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
+
+					saveHTML.attr("data-target-type", target.actor.hasPlayerOwner ? "pc" : "npc");
 
 					if (target.roll && game.messages.get(target.roll)?.isContentVisible) {
 						const outcome = game.messages.get(target.roll).flags.pf2e.context.outcome;
@@ -676,13 +678,32 @@ Hooks.on("renderChatMessage", (message, html) => {
 				}
 				const originalHeight = html.height();
 				html.find(".card-buttons").append(buttonTemplates)
-				$(document).find("#chat-log")[0]?.scrollBy(0, (html.height() - originalHeight), { behavior: "smooth" })
+
+				const quickButtons = $(`<wrapper class="pf2e-td quick-buttons"><button class="pf2e-td quick-button all">${game.i18n.localize("COMBAT.RollAll")}</button><button class="pf2e-td quick-button npc">${game.i18n.localize("COMBAT.RollNPC")}</button></wrapper>`);
+
+				quickButtons.find(".npc").click((e) => {
+					html.find(".pf2e-td.save").each((i, button) => {
+						if ($(button).hasClass("success") || $(button).hasClass("failure") || $(button).hasClass("criticalFailure") || $(button).hasClass("criticalSuccess")) return;
+						if ($(button).attr("data-target-type") === "npc") {
+							$(button).trigger(e);
+						}
+					})
+				})
+
+				quickButtons.find(".all").click((e) => {
+					html.find(".pf2e-td.save").each((i, button) => {
+						if ($(button).hasClass("success") || $(button).hasClass("failure") || $(button).hasClass("criticalFailure") || $(button).hasClass("criticalSuccess")) return;
+						$(button).trigger(e);
+					})
+				})
+
+				if (game.user.isGM) html.find(".card-buttons").append(quickButtons);
 			}
 		}
 
 		// Scroll down to the last roll
 		setTimeout(() => {
-			if (rolls.length > 0) { // Only on damage rolls
+			if (game.messages.contents.at(-1).id === message.id) { // Only on last message
 				const lastRoll = html.find("wrapper.pf2e-td").last();
 				if (lastRoll.length) {
 					lastRoll[0].scrollIntoView({ behavior: "smooth" });

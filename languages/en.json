@@ -3,6 +3,7 @@
         "error": {
             "cantFindToken": "Can't find token."
         },
+        "noTargets": "No tokens have been targeted.",
         "hidden": "Unknown Token",
         "targetButton": {
             "hint-false": "[Click] Add current targets to the message.\n[Shift-Click] Replace the targets in the message with current targets.",
