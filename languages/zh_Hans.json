@@ -1,0 +1,47 @@
+{
+	"pf2e-target-damage": {
+		"noTargets": "没有指示物被选为目标",
+		"hidden": "未知指示物",
+		"targetButton": {
+			"hint-true": "[单击] 用当前目标替换聊天中的目标；\n[Shift+单击] 将当前目标发送至聊天",
+			"hint-false": "[单击] 将当前目标发送至聊天；\n[Shift+单击] 用当前目标替换聊天中的目标"
+		},
+		"splashButton": {
+			"radiusDialog": {
+				"title": "修改半径",
+				"content": "溅射半径："
+			},
+			"hint": "[单击] 选择受到溅射伤害的指示物\n[Shift+单击] 选择指示物前调整半径"
+		},
+		"hideButton": "隐藏系统伤害按键",
+		"settings": {
+			"hideNPCs": {
+				"hint": "在伤害目标列表中隐藏玩家未拥有的指示物",
+				"name": "隐藏NPC指示物的目标"
+			},
+			"hideTheHidingButtons": {
+				"name": "隐藏可折叠按钮",
+				"hint": "隐藏或添加折叠伤害选项。如果你启用了以下设置，已隐藏选项不会再显示。"
+			},
+			"targetButton": {
+				"name": "按下目标按钮行为",
+				"hint": "按下目标按钮行为会替换现存目标，而不是继续追加现存目标"
+			},
+			"hideOGButtons": {
+				"name": "隐藏PF2e系统伤害按钮",
+				"hint": "隐藏PF2e原系统的伤害按钮"
+			},
+			"persistentDamageInt": {
+				"name": "和Persistent Damage联动",
+				"hint": "隐藏PF2e原系统伤害按钮，但仅限Persistent Damage的掷骰。"
+			},
+			"classic": {
+				"name": "使用经典名称布局",
+				"hint": "将名称置于伤害按钮上方，而非左侧"
+			}
+		},
+		"error": {
+			"cantFindToken": "无法找到指示物"
+		}
+	}
+}
