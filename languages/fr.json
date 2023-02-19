@@ -45,6 +45,7 @@
 		"targetButton": {
 			"hint-false": "[Clic] Ajouter les cibles actuelles au message.\n[Shift-Clic] Remplacer les cibles du message par les cibles actuelles.",
 			"hint-true": "[Clic] Remplacez les cibles du message par les cibles actuelles.\n[Shift-Clic] Ajouter les cibles actuelles au message."
-		}
+		},
+		"noTargets": "Aucun jeton n'a été ciblé."
 	}
 }
