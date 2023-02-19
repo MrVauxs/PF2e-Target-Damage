@@ -32,11 +32,19 @@
 			"classic": {
 				"name": "Utiliser la disposition classique des noms",
 				"hint": "Place les noms au-dessus des boutons au lieu d'être compacts sur la gauche."
+			},
+			"targetButton": {
+				"name": "Inverser le comportement du bouton cibler",
+				"hint": "Inverse le comportement du bouton cible pour remplacer les cibles existantes, plutôt que de les ajouter à la liste existante."
 			}
 		},
 		"error": {
 			"cantFindToken": "Ne peut trouver le jeton."
 		},
-		"hidden": "Jeton inconnu"
+		"hidden": "Jeton inconnu",
+		"targetButton": {
+			"hint-false": "[Clic] Ajouter les cibles actuelles au message.\n[Shift-Clic] Remplacer les cibles du message par les cibles actuelles.",
+			"hint-true": "[Clic] Remplacez les cibles du message par les cibles actuelles.\n[Shift-Clic] Ajouter les cibles actuelles au message."
+		}
 	}
 }
