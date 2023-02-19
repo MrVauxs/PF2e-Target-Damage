@@ -36,7 +36,16 @@
 			"classic": {
 				"name": "Używaj Klasycznego Ułożenia Imion",
 				"hint": "Przesuwa imienia na górę przycisków niż zwięźlej po lewej stronie."
+			},
+			"targetButton": {
+				"name": "Zamień Użycie Przycisku Celowania",
+				"hint": "Odwraca jak przycisk celowania działa poprzez ustawianie wymienianie celów jako domyślną funkcję, zamiast dodawania do istniejącej listy celów."
 			}
+		},
+		"noTargets": "Nie ma żadnych celów.",
+		"targetButton": {
+			"hint-false": "[Klik] Dodaj cele do wiadomości.\n[Shift-Klik] Wymień cele w wiadomości na teraźniejsze.",
+			"hint-true": "[Klik] Wymień cele w wiadomości na teraźniejsze.\n[Shift-Klik] Dodaj cele do wiadomości."
 		}
 	}
 }
