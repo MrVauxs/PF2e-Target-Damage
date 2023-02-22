@@ -706,7 +706,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 			if (game.messages.contents.at(-1).id === message.id) { // Only on last message
 				const lastRoll = html.find("wrapper.pf2e-td").last();
 				if (lastRoll.length) {
-					lastRoll[0].scrollIntoView({ behavior: "smooth" });
+					lastRoll[0].scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
 				}
 			}
 		}, 0);
