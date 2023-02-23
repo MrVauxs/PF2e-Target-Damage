@@ -1,5 +1,6 @@
 # 2.4.0
 - Updated localization files (French, Polish, Simplified Chinese).
+- Made the modules errors more readable, and made an erroring token not stop the entire rendering process, allowing other targets to be shown.
 
 # 2.3.3
 - Made the Target Button able to reset your targets list to 0 in replace mode ("Shift-Click" by default). If you try adding a target without having one, the module will let you know.

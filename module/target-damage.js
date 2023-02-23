@@ -39,21 +39,30 @@ self.pf2eTargetDamage = {
 };
 
 class TargetDamageTarget {
-	constructor(target) {
+	constructor(target, message) {
 		this.id = target.id;
 		this.roll = target.roll;
 		this.tokenUuid = target.tokenUuid;
 		this.actorUuid = target.actorUuid;
+		this.messageUuid = message;
 	}
 
 	// returns the DOCUMENT
 	get token() {
-		return fromUuidSync(this.tokenUuid);
+		try {
+			return fromUuidSync(this.tokenUuid);
+		} catch (error) {
+			console.error(`PF2e Target Damage | "${this.tokenUuid}" Token UUID was not found in "${this.messageUuid}" chat message.`);
+		}
 	}
 
 	// returns the DOCUMENT
 	get actor() {
-		return fromUuidSync(this.actorUuid);
+		try {
+			return fromUuidSync(this.actorUuid);
+		} catch (error) {
+			console.error(`PF2e Target Damage | "${this.actorUuid}" Actor UUID was not found in "${this.messageUuid}" Chat Message.`);
+		}
 	}
 
 	get visibility() {
@@ -78,7 +87,7 @@ class TargetDamageTarget {
 	}
 
 	get img() {
-		return fromUuidSync(this.tokenUuid)?.texture.src ?? fromUuidSync(this.actorUuid)?.prototypeToken.texture.src;
+		return this.token?.texture.src ?? this.actor?.prototypeToken.texture.src;
 	}
 }
 
@@ -296,7 +305,7 @@ const DamageRoll = CONFIG.Dice.rolls.find((R) => R.name === "DamageRoll");
 Hooks.on("renderChatMessage", (message, html) => {
 	setTimeout(() => {
 		html = html.find(".message-content");
-		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target)) || [];
+		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target, message.uuid)) || [];
 		const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
 
 		rolls.forEach(async (roll, index, array) => {
@@ -399,7 +408,9 @@ Hooks.on("renderChatMessage", (message, html) => {
 					const target = targets[i];
 					const targetTemplate = $(buttonTemplate.clone());
 					const nameHTML = targetTemplate.find(".pf2e-td.name");
-					const tokenID = target.token.id;
+					const tokenID = target.token?.id;
+
+					if (!tokenID) continue; // Even if the target errors, we still want to show the other targets
 
 					// replace stuff in template
 					nameHTML.text(target.name);
@@ -676,7 +687,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					buttonTemplates.push(targetTemplate)
 				}
-				const originalHeight = html.height();
 				html.find(".card-buttons").append(buttonTemplates)
 
 				const quickButtons = $(`<wrapper class="pf2e-td quick-buttons"><button class="pf2e-td quick-button all">${game.i18n.localize("COMBAT.RollAll")}</button><button class="pf2e-td quick-button npc">${game.i18n.localize("COMBAT.RollNPC")}</button></wrapper>`);
