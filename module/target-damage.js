@@ -425,9 +425,25 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					// replace stuff in template
 					nameHTML.text(target.name);
-					nameHTML.mouseenter((e) => onHoverIn(target.token, e));
-					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
-					nameHTML.click((e) => onClickSender(target.token, e));
+					nameHTML.mouseenter(function (e) {
+						onHoverIn(target.token, e)
+						if (e.ctrlKey) {
+							$(this).attr("data-tooltip", game.i18n.localize("pf2e-target-damage.removeTarget"));
+						}
+					});
+					nameHTML.mouseleave(function (e) {
+						onHoverOut(target.token, e)
+						if (e.ctrlKey) {
+							$(this).attr("data-tooltip", target.name);
+						}
+					});
+					nameHTML.click(function (e) {
+						if (!($(this).attr("data-tooltip") === target.name)) {
+							message.update({ flags: { "pf2e-target-damage": { targets: targets.filter(t => t.token.id !== tokenID) } } });
+							$(document).find("#tooltip").removeClass("active");
+						}
+						onClickSender(target.token, e)
+					});
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
 					// targetTemplate.find(".pf2e-td.image").attr("src", target.img);
 					// targetTemplate.find(".pf2e-td.image").attr("title", target.name);
@@ -635,9 +651,25 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					// replace stuff in template
 					nameHTML.text(target.name);
-					nameHTML.mouseenter((e) => onHoverIn(target.token, e));
-					nameHTML.mouseleave((e) => onHoverOut(target.token, e));
-					nameHTML.click((e) => onClickSender(target.token, e));
+					nameHTML.mouseenter(function (e) {
+						onHoverIn(target.token, e)
+						if (e.ctrlKey) {
+							$(this).attr("data-tooltip", game.i18n.localize("pf2e-target-damage.removeTarget"));
+						}
+					});
+					nameHTML.mouseleave(function (e) {
+						onHoverOut(target.token, e)
+						if (e.ctrlKey) {
+							$(this).attr("data-tooltip", target.name);
+						}
+					});
+					nameHTML.click(function (e) {
+						if (!($(this).attr("data-tooltip") === target.name)) {
+							message.update({ flags: { "pf2e-target-damage": { targets: targets.filter(t => t.token.id !== target.token.id) } } });
+							$(document).find("#tooltip").removeClass("active");
+						}
+						onClickSender(target.token, e)
+					});
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
 
 					saveHTML.attr("data-target-type", target.actor.hasPlayerOwner ? "pc" : "npc");
