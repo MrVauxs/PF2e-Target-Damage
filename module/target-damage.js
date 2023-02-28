@@ -459,7 +459,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
 
-					if (target.wasDealtDamage) {
+					if (target.wasDealtDamage && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
 						targetTemplate.find(".damage-application").addClass("applied");
 						if (targetTemplate.hasClass("name-top")) {
 							$(`<i class="fa-solid fa-check pf2e-td name-icon" data-tooltip="${game.i18n.localize("pf2e-target-damage.applied")}"></i>`)
