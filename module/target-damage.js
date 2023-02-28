@@ -30,21 +30,24 @@ self.pf2eTargetDamage = {
 					tokenUuid: target.tokenUuid || target.document.uuid,
 					actorUuid: target.actorUuid || target.actor.uuid,
 					roll: target.roll,
-					private: target.private,
+					applied: target.applied,
+					debugOwner: target.debugOwner,
 				};
 			}),
 		});
 	},
-	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, {...opts, replace: true }),
+	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, { ...opts, replace: true }),
 };
 
 class TargetDamageTarget {
 	constructor(target, message) {
-		this.id = target.id;
-		this.roll = target.roll;
-		this.tokenUuid = target.tokenUuid;
-		this.actorUuid = target.actorUuid;
-		this.messageUuid = message;
+		this.id = target?.id;
+		this.roll = target?.roll;
+		this.tokenUuid = target?.tokenUuid;
+		this.actorUuid = target?.actorUuid;
+		this.applied = target?.applied;
+		this.messageUuid = message?.uuid;
+		this.debugOwner = target?.debugOwner; // For testing purposes
 	}
 
 	// returns the DOCUMENT
@@ -76,7 +79,7 @@ class TargetDamageTarget {
 	}
 
 	get isOwner() {
-		return this.token.isOwner;
+		return this.debugOwner ?? this.token.isOwner;
 	}
 
 	get name() {
@@ -88,6 +91,10 @@ class TargetDamageTarget {
 
 	get img() {
 		return this.token?.texture.src ?? this.actor?.prototypeToken.texture.src;
+	}
+
+	get wasDealtDamage() {
+		return !!this.applied;
 	}
 }
 
@@ -196,7 +203,7 @@ function updateMessageWithFlags(event, message) {
 		// Replace by default, Shift to Add
 		if (!event.shiftKey) {
 			// Removes non-current targets
-			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current?.id === target?.id));
 		} else if (!targetsCurrent.length) {
 			return ui.notifications.error(game.i18n.localize("pf2e-target-damage.noTargets"))
 		}
@@ -204,12 +211,13 @@ function updateMessageWithFlags(event, message) {
 		// Add by default, Shift to Replace
 		if (event.shiftKey) {
 			// Removes non-current targets
-			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current?.id === target?.id));
 		} else if (!targetsCurrent.length) {
 			return ui.notifications.error(game.i18n.localize("pf2e-target-damage.noTargets"))
 		}
 	}
 
+	// De-duplicate
 	targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
 
 	message.update({
@@ -219,6 +227,8 @@ function updateMessageWithFlags(event, message) {
 				tokenUuid: target.tokenUuid || target.document.uuid,
 				actorUuid: target.actorUuid || target.actor.uuid,
 				roll: target.roll,
+				applied: target.applied,
+				debugOwner: target.debugOwner,
 			};
 		}),
 	});
@@ -305,7 +315,7 @@ const DamageRoll = CONFIG.Dice.rolls.find((R) => R.name === "DamageRoll");
 Hooks.on("renderChatMessage", (message, html) => {
 	setTimeout(() => {
 		html = html.find(".message-content");
-		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target, message.uuid)) || [];
+		const targets = message.flags["pf2e-target-damage"]?.targets?.map((target) => new TargetDamageTarget(target, message)) || [];
 		const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
 
 		rolls.forEach(async (roll, index, array) => {
@@ -387,9 +397,10 @@ Hooks.on("renderChatMessage", (message, html) => {
 						`<button class='pf2e-td hide-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.hideButton"
 						)}"><i class='fa fa-minus fa-fw'></i></button>`
-					).click(function (e) {
-						html.find($('section[data-roll-index="' + index + '"]')).slideToggle(350);
-						html.find($("hr.pf2e-td")).slideToggle(500);
+					).click(function (e, auto = false) {
+						const slideToggleSpeed = auto ? [0, 0] : [350, 500];
+						html.find($('section[data-roll-index="' + index + '"]')).slideToggle(slideToggleSpeed[0]);
+						html.find($("hr.pf2e-td")).slideToggle(slideToggleSpeed[1]);
 						$(this).find(".fa").toggleClass("fa-plus fa-minus");
 						e.stopPropagation();
 					})
@@ -432,12 +443,14 @@ Hooks.on("renderChatMessage", (message, html) => {
 						if (!target.visibility) return;
 					}
 
+					// Classic style
 					if (game.settings.get("pf2e-target-damage", "classic")) {
 						$(targetTemplate[0]).addClass("name-top");
 					} else {
 						$(targetTemplate[0]).addClass("name-left");
 					}
 
+					// Hide damage buttons if you can't do anything with them
 					if (!target.isOwner) {
 						targetTemplate.find("button.pf2e-td").remove();
 						targetTemplate.find("hover-content").remove();
@@ -445,6 +458,14 @@ Hooks.on("renderChatMessage", (message, html) => {
 					}
 
 					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
+
+					if (target.wasDealtDamage) {
+						targetTemplate.find(".damage-application").addClass("applied");
+						if (targetTemplate.hasClass("name-top")) {
+							$(`<i class="fa-solid fa-check pf2e-td name-icon" data-tooltip="${game.i18n.localize("pf2e-target-damage.applied")}"></i>`)
+								.appendTo(targetTemplate.find(".pf2e-td.name"));
+						}
+					}
 
 					//#region The Buttons
 					const full = targetTemplate.find("button.pf2e-td.full-damage");
@@ -467,27 +488,42 @@ Hooks.on("renderChatMessage", (message, html) => {
 						});
 					$shield.tooltipster("disable");
 
+					function updateDealtDamage() {
+						const newTargets = targets.map((target) => {
+							if (target.token?.id === tokenID) {
+								target.applied = true;
+							}
+							return target;
+						});
+						message.update({ flags: { "pf2e-target-damage": { targets: newTargets } } })
+					}
+
 					// Add click events to apply damage
 					full.on("click", (event) => {
 						applyDamage(message, tokenID, 1, 0, event.shiftKey, index);
+						updateDealtDamage()
 					});
 
 					half.on("click", (event) => {
 						applyDamage(message, tokenID, 0.5, 0, event.shiftKey, index);
+						updateDealtDamage()
 					});
 
 					double.on("click", (event) => {
 						applyDamage(message, tokenID, 2, 0, event.shiftKey, index);
+						updateDealtDamage()
 					});
 
 					triple === null || triple === void 0
 						? void 0
 						: triple.on("click", (event) => {
 							applyDamage(message, tokenID, 3, 0, event.shiftKey, index);
+							updateDealtDamage()
 						});
 
 					heal.on("click", (event) => {
 						applyDamage(message, tokenID, -1, 0, event.shiftKey, index);
+						updateDealtDamage()
 					});
 
 					$shield.on("click", async (event) => {
@@ -558,7 +594,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 		if (targets.length && (game.settings.get("pf2e-target-damage", "hideOGButtons") || (message.rolls[0]?.options.evaluatePersistent && game.settings.get("pf2e-target-damage", "persistentDamageInt")))) {
 			// Hide the original buttons, whether it's the main one or the persistent damage one.
-			html.find(".pf2e-td.hide-button").trigger("click");
+			html.find(".pf2e-td.hide-button").trigger("click", true);
 		}
 		if (game.settings.get("pf2e-target-damage", "hideTheHidingButtons")) {
 			// REMOVE the original buttons, whether it's the main one or the persistent damage one.
@@ -611,7 +647,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						saveHTML.text(outcome ? game.i18n.localize(`PF2E.Check.Result.Degree.Check.${outcome}`) : "Error!");
 						saveHTML.addClass(outcome)
 					} else {
-						saveHTML.text(game.i18n.format("PF2E.SavingThrowWithName", { saveName: game.i18n.localize(`PF2E.Saves${save.charAt(0).toUpperCase() + save.slice(1)}`)}))
+						saveHTML.text(game.i18n.format("PF2E.SavingThrowWithName", { saveName: game.i18n.localize(`PF2E.Saves${save.charAt(0).toUpperCase() + save.slice(1)}`) }))
 					}
 
 					if (target.isOwner) saveHTML.click((e) => {
@@ -621,10 +657,10 @@ Hooks.on("renderChatMessage", (message, html) => {
 						const saveType = item.system.save.value;
 
 						const dc = Number(html.find('[data-action="save"]').attr("data-dc") ?? "NaN");
-            			const itemTraits = item.system.traits?.value ?? [];
+						const itemTraits = item.system.traits?.value ?? [];
 
 						const save = actor?.saves?.[saveType];
-                		if (!save) return;
+						if (!save) return;
 
 						const rollOptions = [];
 						if (item.isOfType("spell")) {

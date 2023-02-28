@@ -1,5 +1,6 @@
 {
     "pf2e-target-damage": {
+        "applied": "The target has been processed.",
         "error": {
             "cantFindToken": "Can't find token."
         },
