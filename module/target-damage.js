@@ -1,44 +1,3 @@
-self.pf2eTargetDamage = {
-	/**
-	 * Updates a message with an array of targets.
-	 * It adds the targets to the current ones by default, or replaces them if opts.replace is true.
-	 * @param {ChatMessage} message Message to update
-	 * @param {Array} targets Array of targets
-	 * @param {Object} opts Options
-	 * @param {boolean} opts.replace Whether to replace the current targets with the new ones
-	 */
-	updateFlags: (message, targets, opts = {}) => {
-		const targetsFlags = message.flags?.["pf2e-target-damage"]?.targets;
-		const targetsCurrent = targets || [];
-		let targetsFinal = [];
-
-		targetsFinal.push(...targetsFlags);
-		targetsFinal.push(...targetsCurrent);
-
-		// Remove anything that doesn't already exist
-		if (opts.replace) {
-			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
-		}
-
-		// Remove duplicates
-		targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
-
-		message.update({
-			"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
-				return {
-					id: target.id,
-					tokenUuid: target.tokenUuid || target.document.uuid,
-					actorUuid: target.actorUuid || target.actor.uuid,
-					roll: target.roll,
-					applied: target.applied,
-					debugOwner: target.debugOwner,
-				};
-			}),
-		});
-	},
-	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, { ...opts, replace: true }),
-};
-
 class TargetDamageTarget {
 	constructor(target, message) {
 		this.id = target?.id;
@@ -127,33 +86,44 @@ Hooks.on("preCreateChatMessage", (message) => {
 // Link the saving throw to the message that caused it
 Hooks.on("createChatMessage", (message) => {
 	if (game.user.isGM) {
-		updateSaveWithRoll(message);
+		linkRolls(message);
 	} else {
 		game.socket.emit("module.pf2e-target-damage", message);
 	}
 });
 
 Hooks.on("ready", () => {
-	game.socket.on("module.pf2e-target-damage", message => updateSaveWithRoll(message));
+	game.socket.on("module.pf2e-target-damage", message => linkRolls(message));
 });
 
-function updateSaveWithRoll(message) {
-	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td"))
+function linkRolls(message) {
+	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td-"))
 	if (rollOption?.length > 0) {
 		rollOption.forEach((option) => {
 			const id = option.split("pf2e-td-")[1];
 			const saveMessage = game.messages.get(id);
 
-			if (!(saveMessage.isAuthor || saveMessage.isOwner)) return;
+			if (!(saveMessage?.isAuthor || saveMessage?.isOwner)) return;
 
-			const newFlag = saveMessage.flags["pf2e-target-damage"].targets;
+			const newFlag = saveMessage.flags["pf2e-target-damage"].targets || [];
+
+			if (!newFlag.length) return;
+
 			const index = newFlag.findIndex((target) => target.id === message.speaker.token)
-			newFlag[index].roll = message._id || message.id;
 
-			saveMessage.update({
-				"flags.pf2e-target-damage.targets": newFlag
-			});
-			ui.chat.updateMessage(saveMessage, true)
+			if (message.isDamageRoll) {
+				newFlag[index].damage = message._id || message.id;
+				saveMessage.update({
+					"flags.pf2e-target-damage.targets": newFlag
+				});
+				ui.chat.updateMessage(saveMessage, true)
+			} else {
+				newFlag[index].roll = message._id || message.id;
+				saveMessage.update({
+					"flags.pf2e-target-damage.targets": newFlag
+				});
+				ui.chat.updateMessage(saveMessage, true)
+			}
 		})
 	}
 }
@@ -190,8 +160,8 @@ function onClickSender(token, event) {
 }
 //#endregion
 
-function updateMessageWithFlags(event, message) {
-	event.stopPropagation();
+function updateMessageWithFlags(message, event) {
+	if (event) event.stopPropagation();
 	const targetsFlags = message.flags["pf2e-target-damage"].targets;
 	const targetsCurrent = Array.from(game.user.targets);
 	let targetsFinal = [];
@@ -221,16 +191,21 @@ function updateMessageWithFlags(event, message) {
 	targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
 
 	message.update({
-		"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
-			return {
-				id: target.id,
-				tokenUuid: target.tokenUuid || target.document.uuid,
-				actorUuid: target.actorUuid || target.actor.uuid,
-				roll: target.roll,
-				applied: target.applied,
-				debugOwner: target.debugOwner,
-			};
-		}),
+		"flags": {
+			"pf2e-target-damage": {
+				"targets": targetsFinal.map((target) => {
+					return {
+						id: target.id,
+						tokenUuid: target.tokenUuid || target.document.uuid,
+						actorUuid: target.actorUuid || target.actor.uuid,
+						roll: target.roll,
+						damage: target.damage,
+						applied: target.applied,
+						debugOwner: target.debugOwner,
+					};
+				})
+			}
+		},
 	});
 }
 
@@ -382,7 +357,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
 						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-					).click((e) => updateMessageWithFlags(e, message))
+					).click((e) => updateMessageWithFlags(message, e))
 				)
 			};
 
@@ -413,6 +388,10 @@ Hooks.on("renderChatMessage", (message, html) => {
 				);
 
 				const buttonTemplates = [];
+
+				const originID = message.flags.pf2e.context.options.filter(x => x.includes("pf2e-td"))[0]?.replace(/.+pf2e-td-/g, "")
+				if (originID) origin = game.messages.get(originID);
+				const originTargets = origin?.flags?.["pf2e-target-damage"]?.targets ?? [];
 
 				// Add button template for each target to buttonTemplates
 				for (let i = 0; i < targets.length; i++) {
@@ -592,6 +571,20 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					//#endregion
 
+					// Check the origin message if the token has done saving throws.
+					// If so, highlight the appropriate button to damage / heal with.
+					if (originTargets.length > 0) {
+						originTargets.map(t => new TargetDamageTarget(t)).filter((target) => target.token?.id === tokenID).forEach((target) => {
+							const outcome = game.messages.get(target.roll)?.flags?.pf2e?.context?.outcome;
+							switch (outcome) {
+								case "criticalSuccess": targetTemplate.find(".damage-application").addClass("applied"); break;
+								case "success": full.addClass("select"); break;
+								case "failure": half.addClass("select"); break;
+								case "criticalFailure": double.addClass("select"); break;
+							}
+						});
+					}
+
 					// push
 					buttonTemplates.push(targetTemplate);
 				}
@@ -629,7 +622,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						`<button class='pf2e-td target-button small-button' title="${game.i18n.localize(
 							"pf2e-target-damage.targetButton.hint-" + game.settings.get("pf2e-target-damage", "targetButton")
 						)}"><i class='fa-solid fa-crosshairs-simple fa-fw'></i></button>`
-					).click((e) => updateMessageWithFlags(e, message))
+					).click((e) => updateMessageWithFlags(message, e))
 				)
 			};
 
@@ -703,8 +696,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 						}
 
 						rollOptions.push(...itemTraits);
-
-						rollOptions.push("pf2e-td-" + message.id)
 
 						function eventToRollParams(event) {
 							var skipDefault = !game.user.settings.showRollDialogs;
@@ -790,3 +781,45 @@ Hooks.on("renderChatMessage", (message, html) => {
 		}, 0);
 	}, 0);
 });
+
+self.pf2eTargetDamage = {
+	/**
+	 * Updates a message with an array of targets.
+	 * It adds the targets to the current ones by default, or replaces them if opts.replace is true.
+	 * @param {ChatMessage} message Message to update
+	 * @param {Array} targets Array of targets
+	 * @param {Object} opts Options
+	 * @param {boolean} opts.replace Whether to replace the current targets with the new ones
+	 */
+	updateFlags: (message, targets, opts = {}) => {
+		const targetsFlags = message.flags?.["pf2e-target-damage"]?.targets;
+		const targetsCurrent = targets || [];
+		let targetsFinal = [];
+
+		targetsFinal.push(...targetsFlags);
+		targetsFinal.push(...targetsCurrent);
+
+		// Remove anything that doesn't already exist
+		if (opts.replace) {
+			targetsFinal = targetsFinal.filter((target) => targetsCurrent.find((current) => current.id === target.id));
+		}
+
+		// Remove duplicates
+		targetsFinal = [...new Set(targetsFinal.map((target) => target.id))].map((id) => targetsFinal.find((target) => target.id === id));
+
+		message.update({
+			"flags.pf2e-target-damage.targets": targetsFinal.map((target) => {
+				return {
+					id: target.id,
+					tokenUuid: target.tokenUuid || target.document.uuid,
+					actorUuid: target.actorUuid || target.actor.uuid,
+					roll: target.roll,
+					damage: target.damage,
+					applied: target.applied,
+					debugOwner: target.debugOwner,
+				};
+			}),
+		});
+	},
+	replaceFlags: (message, targets, opts = {}) => pf2eTargetDamage.updateFlags(message, targets, { ...opts, replace: true }),
+};
