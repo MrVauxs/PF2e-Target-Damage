@@ -22,11 +22,11 @@
 }
 
 .pf2e-td.name-icon {
-    display: flex;
-    right: 0;
-    width: 28px;
-    margin: 2px;
-    position: absolute;
+	display: flex;
+	right: 0;
+	width: 28px;
+	margin: 2px;
+	position: absolute;
 }
 
 .pf2e-td.small-button.splash-button {
@@ -101,24 +101,38 @@
 	font-size: .5em;
 }
 
+.pf2e-td.select {
+	filter: drop-shadow(1px 4px 5px black);
+}
+
+.pf2e-td.select span {
+	background: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
+	border-radius: 3px;
+	padding: 1px 4px;
+}
+
 .chat-message .message-content .pf2e-td.save,
 .chat-message .message-content .pf2e-td.damage-application {
 	margin-top: 0px;
 }
 
 .pf2e-td.criticalSuccess {
+	transition: background-color 0.5s ease;
 	background-color: rgb(0, 128, 0, 0.3);
 }
 
 .pf2e-td.success {
+	transition: background-color 0.5s ease;
 	background-color: rgb(0, 0, 255, 0.3);
 }
 
 .pf2e-td.failure {
+	transition: background-color 0.5s ease;
 	background-color: rgb(255, 69, 0, 0.3);
 }
 
 .pf2e-td.criticalFailure {
+	transition: background-color 0.5s ease;
 	background-color: rgb(255, 0, 0, 0.3);
 }
 

@@ -60,6 +60,17 @@ class TargetDamageTarget {
 // Flag what targets were at the time of the roll
 Hooks.on("preCreateChatMessage", (message) => {
 	if (message?.flags?.["pf2e-target-damage"]?.targets) return;
+
+	if (message?.item?.traits?.filter((trait) => trait.includes("pf2e-td-")).size > 0) {
+		const messageID = Array.from(message?.item?.traits?.filter((trait) => trait.includes("pf2e-td-")))[0].split("pf2e-td-")[1];
+		const saveMessage = game.messages.get(messageID);
+
+		if (saveMessage) {
+			return message.updateSource({
+				"flags.pf2e-target-damage.targets": saveMessage?.flags?.["pf2e-target-damage"]?.targets,
+			})
+		}
+	}
 	if (message.rolls[0]?.options.evaluatePersistent) {
 		message.updateSource({
 			"flags.pf2e-target-damage.targets": [message.token.object].map((target) => {
@@ -123,6 +134,11 @@ function linkRolls(message) {
 					"flags.pf2e-target-damage.targets": newFlag
 				});
 				ui.chat.updateMessage(saveMessage, true)
+
+				// Also update the damage to account for reroll
+				if (newFlag[index].damage) {
+					ui.chat.updateMessage(game.messages.get(newFlag[index].damage), true)
+				}
 			}
 		})
 	}
@@ -769,6 +785,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 				if (game.user.isGM) html.find(".card-buttons").append(quickButtons);
 			}
 		}
+
+		html.find(".tag:contains('pf2e-td')", ".tag[data-trait*='pf2e-td']").remove();
 
 		// Scroll down to the last roll
 		setTimeout(() => {

@@ -62,7 +62,8 @@
 	"changelog": "https://github.com/MrVauxs/PF2e-Target-Damage/blob/master/CHANGELOG.md",
 	"esmodules": [
 		"module/settings.js",
-		"module/target-damage.js"
+		"module/target-damage.js",
+		"module/system-modifier.js"
 	],
 	"styles": [
 		"styles/target-damage.css"
