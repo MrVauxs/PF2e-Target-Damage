@@ -1,13 +1,15 @@
 // Init cannot be changed or else buttons stop linking after a refresh
-Hooks.once("init", () => {
-    Object.defineProperty(CONFIG.ChatMessage.documentClass.prototype, "oldItem", Object.getOwnPropertyDescriptors(CONFIG.ChatMessage.documentClass.prototype).item)
+Hooks.once("init", async () => {
+    await Object.defineProperty(CONFIG.ChatMessage.documentClass.prototype, "oldItem", Object.getOwnPropertyDescriptors(CONFIG.ChatMessage.documentClass.prototype).item)
 
-    Object.defineProperty(CONFIG.ChatMessage.documentClass.prototype, "item", {
+    await Object.defineProperty(CONFIG.ChatMessage.documentClass.prototype, "item", {
         get() {
             try {
                 let newItem = this.oldItem
+                console.log(this.id)
+                const trait = "pf2e-td-" + this.id;
                 if (!newItem?.system?.traits?.value.find(x => x.includes("pf2e-td-"))) { // The Item already has a Target Damage Trait
-                    newItem?.system?.traits?.value?.push("pf2e-td-" + this.id)
+                    newItem?.system?.traits?.value?.push(trait)
                 }
                 return newItem;
             } catch (error) {

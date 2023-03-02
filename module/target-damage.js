@@ -594,8 +594,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 							const outcome = game.messages.get(target.roll)?.flags?.pf2e?.context?.outcome;
 							switch (outcome) {
 								case "criticalSuccess": targetTemplate.find(".damage-application").addClass("applied"); break;
-								case "success": full.addClass("select"); break;
-								case "failure": half.addClass("select"); break;
+								case "success": half.addClass("select"); break;
+								case "failure": full.addClass("select"); break;
 								case "criticalFailure": double.addClass("select"); break;
 							}
 						});
@@ -786,7 +786,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 			}
 		}
 
-		html.find(".tag:contains('pf2e-td')", ".tag[data-trait*='pf2e-td']").remove();
+		html.find(".tag:contains('pf2e-td'), .tag[data-trait*='pf2e-td']").remove();
 
 		// Scroll down to the last roll
 		setTimeout(() => {
