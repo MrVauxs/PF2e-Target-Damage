@@ -1,6 +1,10 @@
 # 2.4.0
 - Updated localization files (French, Polish, Simplified Chinese).
 - Made the modules errors more readable, and made an erroring token not stop the entire rendering process, allowing other targets to be shown.
+- Added a censor to Damage Buttons that have already been pressed (#34)
+- On Basic Saves, the appropriate damage button will now be highlighted depending on the saving throw of the target.
+- When rolling damage, the module will automatically add the save card targets to that damage roll.
+- Added the ability to remove specific targets with Ctrl-Click on their name.
 
 # 2.3.3
 - Made the Target Button able to reset your targets list to 0 in replace mode ("Shift-Click" by default). If you try adding a target without having one, the module will let you know.
