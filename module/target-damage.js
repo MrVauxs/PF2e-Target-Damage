@@ -153,7 +153,7 @@ function linkRolls(message) {
 
 				// Also update the damage to account for reroll
 				if (newFlag[index].damage) {
-					ui.chat.updateMessage(game.messages.get(newFlag[index].damage))
+					if (game.messages.get(newFlag[index].damage)?.id) ui.chat.updateMessage(game.messages.get(newFlag[index].damage));
 				}
 			}
 		})
