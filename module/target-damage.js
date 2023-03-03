@@ -84,15 +84,26 @@ Hooks.on("preCreateChatMessage", (message) => {
 });
 
 // Link the saving throw to the message that caused it
-Hooks.on("createChatMessage", (message) => {
-	setTimeout(() => {
-		if (game.user.isGM) {
-			linkRolls(message);
-		} else {
-			game.socket.emit("module.pf2e-target-damage", message);
-		}
-	}, 0);
-});
+Hooks.on("ready", () => {
+	if (game.modules.get("dice-so-nice")?.active) {
+		Hooks.on("diceSoNiceRollComplete", async (message) => {
+			message = game.messages.get(message);
+			if (game.user.isGM) {
+				await linkRolls(message);
+			} else {
+				game.socket.emit("module.pf2e-target-damage", message);
+			}
+		});
+	} else {
+		Hooks.on("createChatMessage", async (message) => {
+			if (game.user.isGM) {
+				await linkRolls(message);
+			} else {
+				game.socket.emit("module.pf2e-target-damage", message);
+			}
+		});
+	}
+})
 
 Hooks.on("deleteChatMessage", (message) => {
 	if (message.flags?.pf2e?.context?.options.find(x => x.includes("pf2e-td-"))) {
@@ -101,7 +112,7 @@ Hooks.on("deleteChatMessage", (message) => {
 			const id = option.split("pf2e-td-")[1];
 			const saveMessage = game.messages.get(id);
 			if (saveMessage?.id) ui.chat.updateMessage(saveMessage);
-			if (saveMessage.flags["pf2e-target-damage"].targets.length > 0) {
+			if (saveMessage?.flags["pf2e-target-damage"].targets.length > 0) {
 				saveMessage.flags["pf2e-target-damage"].targets.forEach((target) => {
 					if (game.messages.get(target.damage)?.id) ui.chat.updateMessage(game.messages.get(target.damage));
 				})
@@ -110,11 +121,11 @@ Hooks.on("deleteChatMessage", (message) => {
 	}
 });
 
-Hooks.on("ready", () => {
-	game.socket.on("module.pf2e-target-damage", message => linkRolls(message));
+Hooks.on("ready", async () => {
+	game.socket.on("module.pf2e-target-damage", async (message) => await linkRolls(message));
 });
 
-function linkRolls(message) {
+async function linkRolls(message) {
 	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td-")) ?? [];
 
 	if (message?.flags?.["pf2e-target-damage"]?.origin) rollOption.push("pf2e-td-" + message.flags["pf2e-target-damage"].origin);
@@ -456,6 +467,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						onClickSender(target.token, e)
 					});
 					nameHTML.dblclick((e) => onClickSender(target.token, e));
+					nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "UP")
 					// targetTemplate.find(".pf2e-td.image").attr("src", target.img);
 					// targetTemplate.find(".pf2e-td.image").attr("title", target.name);
 
@@ -484,7 +496,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						$(targetTemplate[0]).addClass("name-top").removeClass("name-left");
 					}
 
-					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip", target.name).attr("data-tooltip-direction", "LEFT");
+					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip-direction", "LEFT");
 
 					if (target.wasDealtDamage && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
 						targetTemplate.find(".damage-application").addClass("applied");
