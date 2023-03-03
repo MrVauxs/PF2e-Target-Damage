@@ -62,14 +62,16 @@ Hooks.on("preCreateChatMessage", (message) => {
 	if (message?.flags?.["pf2e-target-damage"]?.targets) return;
 
 	if (message?.item?.traits?.filter((trait) => trait.includes("pf2e-td-")).size > 0) {
-		const messageID = Array.from(message?.item?.traits?.filter((trait) => trait.includes("pf2e-td-")))[0].split("pf2e-td-")[1];
-		const saveMessage = game.messages.get(messageID);
+		setTimeout(() => {
+			const messageID = Array.from(message?.item?.traits?.filter((trait) => trait.includes("pf2e-td-")))[0].split("pf2e-td-")[1];
+			const saveMessage = game.messages.get(messageID);
 
-		if (saveMessage) {
-			return message.updateSource({
-				"flags.pf2e-target-damage.targets": saveMessage?.flags?.["pf2e-target-damage"]?.targets,
-			})
-		}
+			if (saveMessage) {
+				return message.updateSource({
+					"flags.pf2e-target-damage.targets": saveMessage?.flags?.["pf2e-target-damage"]?.targets,
+				})
+			}
+		}, 0)
 	}
 	if (message.rolls[0]?.options.evaluatePersistent) {
 		message.updateSource({

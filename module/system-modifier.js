@@ -6,11 +6,8 @@ Hooks.once("init", async () => {
         get() {
             try {
                 let newItem = this.oldItem
-                console.log(this.id)
                 const trait = "pf2e-td-" + this.id;
-                if (!newItem?.system?.traits?.value.find(x => x.includes("pf2e-td-"))) { // The Item already has a Target Damage Trait
-                    newItem?.system?.traits?.value?.push(trait)
-                }
+                newItem.system.traits.newContent = ["This should only be in item but not oldItem"]
                 return newItem;
             } catch (error) {
                 ui.notifications.error("An error has occured in PF2e Target Damage. <a href='https://github.com/MrVauxs/PF2e-Target-Damage/issues'>Please report the error</a> in the console to the developer.")
