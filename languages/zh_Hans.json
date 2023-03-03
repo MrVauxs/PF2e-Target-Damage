@@ -42,6 +42,8 @@
 		},
 		"error": {
 			"cantFindToken": "无法找到指示物"
-		}
+		},
+		"removeTarget": "移除目标? [Ctrl-Click]",
+		"applied": "该目标已处理完毕。"
 	}
 }
