@@ -1,3 +1,6 @@
+# 2.4.1 "The Hour One Bugfix"
+- Fixed a harmless console error.
+
 # 2.4.1 "The Minute One Bugfix"
 - Fixed a harmless console error.
 

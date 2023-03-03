@@ -100,7 +100,7 @@ Hooks.on("deleteChatMessage", (message) => {
 			// Go through every message that has a link to this message and update it
 			const id = option.split("pf2e-td-")[1];
 			const saveMessage = game.messages.get(id);
-			if (saveMessage.id) ui.chat.updateMessage(saveMessage);
+			if (saveMessage?.id) ui.chat.updateMessage(saveMessage);
 			if (saveMessage.flags["pf2e-target-damage"].targets.length > 0) {
 				saveMessage.flags["pf2e-target-damage"].targets.forEach((target) => {
 					if (game.messages.get(target.damage)?.id) ui.chat.updateMessage(game.messages.get(target.damage));
