@@ -3,7 +3,7 @@
 - Made the modules errors slightly more readable, and made an erroring token not stop the entire rendering process, allowing other targets to be shown.
 - Added a censor to Damage Buttons that have already been pressed (#34)
 - On Basic Saves, the appropriate damage button will now be highlighted depending on the saving throw of the target. (#32)
-- When rolling damage, the module will automatically add the save card targets to the damage roll.
+- When rolling damage, the module will automatically add the save card's targets to the damage roll.
 - Added the ability to remove specific targets with Ctrl-Click on their name. (#31)
 
 # 2.3.3
