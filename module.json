@@ -6,6 +6,11 @@
 	"authors": [
 		{
 			"name": "MrVauxs",
+			"discord": "MrVauxs#8622",
+			"twitter": "@ThatVauxs",
+			"email": "mrvauxs@gmail.com",
+			"ko-fi": "MrVauxs",
+			"patreon": "MrVauxs",
 			"flags": {}
 		}
 	],
@@ -14,6 +19,24 @@
 		"verified": "10"
 	},
 	"relationships": {
+		"flags": {
+			"optional": [
+				{
+					"id": "df-templates",
+					"type": "module",
+					"manifest": "https://dragonflagon.cafe/mods/man/df-templates",
+					"reason": "Allows you to automatically select targets on template placemenet, speeding up the targeting process for AoEs."
+				}
+			]
+		},
+		"optional": [
+			{
+				"id": "df-templates",
+				"type": "module",
+				"manifest": "https://dragonflagon.cafe/mods/man/df-templates",
+				"reason": "Allows you to automatically select targets on template placemenet, speeding up the targeting process for AoEs."
+			}
+		],
 		"conflicts": [
 			{
 				"id": "target-lock",
