@@ -1,3 +1,6 @@
+# 2.4.3
+- Removed auto-scrolling to the last message due to bugs.
+
 # 2.4.2
 - Fixed a harmless console error.
 - Fixed a bug where rolling too many targets at once caused not all of them to be linked to the save card.
