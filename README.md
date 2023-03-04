@@ -10,7 +10,12 @@
 A quality of life module that makes applying damage to targets and tracking saving throws easier in the Pathfinder 2e system.
 A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), at first a copy and then having been rewritten from the ground up.
 
-**As of version 2.4, the module is in a FINISHED state, meaning that the only likely updates to this module will be bug-fixes**. So while I appreciate new suggestions, please note they are not going to be worked in anytime soon! 
+**As of version 2.4, the module is in a FINISHED state, meaning that the only likely updates to this module will be bug-fixes**. So while I appreciate new suggestions, please note they are not going to be worked in anytime soon!
+
+## Recommended Modules
+- [DF Template Enhancements](https://foundryvtt.com/packages/df-templates) - Enables you to automatically target tokens within a templates radius, speeding up AoE targeting.
+
+## Previews
 
 ![image](https://user-images.githubusercontent.com/32039708/219319279-46c84d68-8518-45f5-a90e-d581b72e4cba.png)
 
