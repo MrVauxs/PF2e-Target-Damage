@@ -1,5 +1,6 @@
 # 2.4.4
 - Improved used damage buttons styling.
+- Fixed Chinese translation.
 
 # 2.4.3
 - Removed auto-scrolling to the last message due to bugs.
