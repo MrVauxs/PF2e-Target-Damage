@@ -4,7 +4,7 @@ class TargetDamageTarget {
 		this.roll = target?.roll;
 		this.tokenUuid = target?.tokenUuid;
 		this.actorUuid = target?.actorUuid;
-		this.applied = target?.applied;
+		this.applied = Array.isArray(target?.applied) ? target?.applied : [target?.applied].filter(x => !!x);
 		this.messageUuid = message?.uuid;
 		this.debugOwner = target?.debugOwner; // For testing purposes
 	}
@@ -50,10 +50,6 @@ class TargetDamageTarget {
 
 	get img() {
 		return this.token?.texture.src ?? this.actor?.prototypeToken.texture.src;
-	}
-
-	get wasDealtDamage() {
-		return !!this.applied;
 	}
 }
 
@@ -498,8 +494,31 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip-direction", "LEFT");
 
-					if (target.wasDealtDamage && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
-						targetTemplate.find(".damage-application").addClass("applied");
+					if (target.applied && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
+						target.applied.forEach((damage) => {
+							switch (damage) {
+								case "full": {
+									targetTemplate.find(".full-damage").addClass("applied");
+									break;
+								}
+								case "half": {
+									targetTemplate.find(".half-damage").addClass("applied");
+									break;
+								}
+								case "double": {
+									targetTemplate.find(".double-damage").addClass("applied");
+									break;
+								}
+								case "triple": {
+									targetTemplate.find(".triple-damage").addClass("applied");
+									break;
+								}
+								case "heal": {
+									targetTemplate.find(".heal-damage").addClass("applied");
+									break;
+								}
+							}
+						});
 						if (targetTemplate.hasClass("name-top")) {
 							$(`<i class="fa-solid fa-check pf2e-td name-icon" data-tooltip="${game.i18n.localize("pf2e-target-damage.applied")}"></i>`)
 								.appendTo(targetTemplate.find(".pf2e-td.name"));
@@ -527,10 +546,10 @@ Hooks.on("renderChatMessage", (message, html) => {
 						});
 					$shield.tooltipster("disable");
 
-					function updateDealtDamage() {
+					function updateDealtDamage(degree) {
 						const newTargets = targets.map((target) => {
 							if (target.token?.id === tokenID) {
-								target.applied = true;
+								Array.isArray(target.applied) ? target.applied.push(degree) : target.applied = [target.applied, degree];
 							}
 							return target;
 						});
@@ -540,29 +559,29 @@ Hooks.on("renderChatMessage", (message, html) => {
 					// Add click events to apply damage
 					full.on("click", (event) => {
 						applyDamage(message, tokenID, 1, 0, event.shiftKey, index);
-						updateDealtDamage()
+						updateDealtDamage("full")
 					});
 
 					half.on("click", (event) => {
 						applyDamage(message, tokenID, 0.5, 0, event.shiftKey, index);
-						updateDealtDamage()
+						updateDealtDamage("half")
 					});
 
 					double.on("click", (event) => {
 						applyDamage(message, tokenID, 2, 0, event.shiftKey, index);
-						updateDealtDamage()
+						updateDealtDamage("double")
 					});
 
 					triple === null || triple === void 0
 						? void 0
 						: triple.on("click", (event) => {
 							applyDamage(message, tokenID, 3, 0, event.shiftKey, index);
-							updateDealtDamage()
+							updateDealtDamage("triple")
 						});
 
 					heal.on("click", (event) => {
 						applyDamage(message, tokenID, -1, 0, event.shiftKey, index);
-						updateDealtDamage()
+						updateDealtDamage("heal")
 					});
 
 					$shield.on("click", async (event) => {

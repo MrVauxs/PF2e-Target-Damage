@@ -8,18 +8,10 @@
 	position: absolute;
 }
 
-.pf2e-td.damage-application.applied {
-	transition: 200ms filter linear;
-	-webkit-transition: 200ms -webkit-filter linear;
-	-moz-transition: 200ms -moz-filter linear;
-	-ms-transition: 200ms -ms-filter linear;
-	-o-transition: 200ms -o-filter linear;
-	filter: blur(2px) invert(1);
+.applied {
+	filter: brightness(0.7);
 }
 
-.pf2e-td.damage-application.applied:hover {
-	filter: none;
-}
 
 .pf2e-td.name-icon {
 	display: flex;
@@ -92,9 +84,13 @@
 	gap: 1px;
 }
 
-.pf2e-td.name[data-visibility]:not([data-visibility=all])[data-visibility=gm] {
+.pf2e-td.name[data-visibility=gm] {
 	display: flex;
 	padding: 0px 2px 0px 0px;
+}
+
+.pf2e-td.damage-application[data-visibility=gm] {
+	padding: 1px;
 }
 
 .pf2e-td.heal-damage .fa-stack {
