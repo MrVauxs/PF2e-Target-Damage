@@ -1,3 +1,6 @@
+# 2.4.5
+- Fixed an issue regarding damage hints spilling over to the wrong damage rolls.
+
 # 2.4.4
 - Improved used damage buttons styling.
 - Fixed Chinese translation.

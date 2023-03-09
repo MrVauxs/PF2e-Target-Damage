@@ -636,7 +636,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					// Check the origin message if the token has done saving throws.
 					// If so, highlight the appropriate button to damage / heal with.
-					if (originTargets.length > 0) {
+					if (originID && originTargets.length > 0) {
 						originTargets.map(t => new TargetDamageTarget(t)).filter((target) => target.token?.id === tokenID).forEach((target) => {
 							const outcome = game.messages.get(target.roll)?.flags?.pf2e?.context?.outcome;
 							switch (outcome) {
