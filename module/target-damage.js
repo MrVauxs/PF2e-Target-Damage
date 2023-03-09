@@ -546,6 +546,8 @@ Hooks.on("renderChatMessage", (message, html) => {
 						});
 					$shield.tooltipster("disable");
 
+					// Fix #44 as players cannot update a message that does not belong to them
+					// Need to tunnel that to the owner of the message, or the GM
 					function updateDealtDamage(degree) {
 						const newTargets = targets.map((target) => {
 							if (target.token?.id === tokenID) {
