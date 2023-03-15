@@ -87,7 +87,7 @@ Hooks.on("ready", () => {
 			if (game.user.isGM) {
 				await linkRolls(message);
 			} else {
-				game.socket.emit("module.pf2e-target-damage", message);
+				game.socket.emit("module.pf2e-target-damage", { type: "linkRolls", message });
 			}
 		});
 	} else {
@@ -95,7 +95,7 @@ Hooks.on("ready", () => {
 			if (game.user.isGM) {
 				await linkRolls(message);
 			} else {
-				game.socket.emit("module.pf2e-target-damage", message);
+				game.socket.emit("module.pf2e-target-damage", { type: "linkRolls", message });
 			}
 		});
 	}
@@ -118,8 +118,25 @@ Hooks.on("deleteChatMessage", (message) => {
 });
 
 Hooks.on("ready", async () => {
-	game.socket.on("module.pf2e-target-damage", async (message) => await linkRolls(message));
+	game.socket.on("module.pf2e-target-damage", async (args) => {
+		switch (args.type) {
+			case "linkRolls": await linkRolls(args.message); break;
+			case "updateDealtDamage": await updateDealtDamage(args.args); break;
+		}
+	});
 });
+
+async function updateDealtDamage(args) {
+	let { degree, targets, message, tokenID } = args;
+	message = game.messages.get(message.id ?? message._id);
+	const newTargets = targets.map((target) => {
+		if (target.id === tokenID) {
+			Array.isArray(target.applied) ? target.applied.push(degree) : target.applied = [target.applied, degree];
+		}
+		return target;
+	});
+	message.update({ flags: { "pf2e-target-damage": { targets: newTargets } } })
+}
 
 async function linkRolls(message) {
 	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td-")) ?? [];
@@ -546,44 +563,52 @@ Hooks.on("renderChatMessage", (message, html) => {
 						});
 					$shield.tooltipster("disable");
 
-					// FIXME: #44 as players cannot update a message that does not belong to them
-					// Need to tunnel that to the owner of the message, or the GM
-					function updateDealtDamage(degree) {
-						const newTargets = targets.map((target) => {
-							if (target.token?.id === tokenID) {
-								Array.isArray(target.applied) ? target.applied.push(degree) : target.applied = [target.applied, degree];
-							}
-							return target;
-						});
-						message.update({ flags: { "pf2e-target-damage": { targets: newTargets } } })
-					}
-
 					// Add click events to apply damage
 					full.on("click", (event) => {
 						applyDamage(message, tokenID, 1, 0, event.shiftKey, index);
-						updateDealtDamage("full")
+						if (message.isAuthor || game.user.isGM) {
+							updateDealtDamage({ degree: "full", targets, message, tokenID })
+						} else {
+							game.socket.emit("module.pf2e-target-damage", { type: "updateDealtDamage", args: { degree: "full", targets, message, tokenID } });
+						}
 					});
 
 					half.on("click", (event) => {
 						applyDamage(message, tokenID, 0.5, 0, event.shiftKey, index);
-						updateDealtDamage("half")
+						if (message.isAuthor || game.user.isGM) {
+							updateDealtDamage({ degree: "half", targets, message, tokenID })
+						} else {
+							game.socket.emit("module.pf2e-target-damage", { type: "updateDealtDamage", args: { degree: "half", targets, message, tokenID } });
+						}
 					});
 
 					double.on("click", (event) => {
 						applyDamage(message, tokenID, 2, 0, event.shiftKey, index);
-						updateDealtDamage("double")
+						if (message.isAuthor || game.user.isGM) {
+							updateDealtDamage({ degree: "double", targets, message, tokenID })
+						} else {
+							game.socket.emit("module.pf2e-target-damage", { type: "updateDealtDamage", args: { degree: "double", targets, message, tokenID } });
+						}
 					});
 
 					triple === null || triple === void 0
 						? void 0
 						: triple.on("click", (event) => {
 							applyDamage(message, tokenID, 3, 0, event.shiftKey, index);
-							updateDealtDamage("triple")
+							if (message.isAuthor || game.user.isGM) {
+								updateDealtDamage({ degree: "triple", targets, message, tokenID })
+							} else {
+								game.socket.emit("module.pf2e-target-damage", { type: "updateDealtDamage", args: { degree: "triple", targets, message, tokenID } });
+							}
 						});
 
 					heal.on("click", (event) => {
 						applyDamage(message, tokenID, -1, 0, event.shiftKey, index);
-						updateDealtDamage("heal")
+						if (message.isAuthor || game.user.isGM) {
+							updateDealtDamage({ degree: "heal", targets, message, tokenID })
+						} else {
+							game.socket.emit("module.pf2e-target-damage", { type: "updateDealtDamage", args: { degree: "heal", targets, message, tokenID } });
+						}
 					});
 
 					$shield.on("click", async (event) => {
