@@ -12,13 +12,13 @@
 	filter: brightness(0.7);
 }
 
-
 .pf2e-td.name-icon {
-	display: flex;
 	right: 0;
-	width: 28px;
+	width: 16px;
 	margin: 2px;
 	position: absolute;
+    color: green;
+    text-shadow: 0 0 8px greenyellow;
 }
 
 .pf2e-td.small-button.splash-button {
@@ -61,6 +61,7 @@
 }
 
 .pf2e-td.name {
+	position: relative;
 	line-height: revert !important;
 	border: none !important;
 	user-select: none !important;
