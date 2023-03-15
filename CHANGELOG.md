@@ -1,7 +1,7 @@
 # 2.4.6
 
-- Fixed an CSS issue with Classic layout mode and whether a token has been damaged or not.
-- Fixed an CSS issue with the suggested damage buttons not becoming greyed out upon usage.
+- Fixed a CSS issue with Classic layout mode and whether a token has been damaged or not.
+- Fixed a CSS issue with the suggested damage buttons not becoming greyed out upon usage.
 - Fixed an issue with players being unable to grey out buttons upon dealing damage to themselves.
 
 # 2.4.5
