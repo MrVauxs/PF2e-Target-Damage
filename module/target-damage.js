@@ -494,7 +494,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					if (targetTemplate.hasClass("name-left")) nameHTML.attr("data-tooltip-direction", "LEFT");
 
-					if (target.applied && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
+					if (target.applied.length && (target.isOwner || !game.settings.get("pf2e", "metagame_secretDamage"))) {
 						target.applied.forEach((damage) => {
 							switch (damage) {
 								case "full": {

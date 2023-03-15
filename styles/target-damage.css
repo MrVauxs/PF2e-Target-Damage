@@ -9,7 +9,7 @@
 }
 
 .applied {
-	filter: brightness(0.7);
+	filter: brightness(0.7) !important;
 }
 
 .pf2e-td.name-icon {
@@ -98,11 +98,8 @@
 	font-size: .5em;
 }
 
-.pf2e-td.select {
-	filter: drop-shadow(1px 4px 5px black);
-}
-
 .pf2e-td.select span {
+	color: aliceblue;
 	background: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
 	border-radius: 3px;
 	padding: 1px 4px;

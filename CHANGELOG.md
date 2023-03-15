@@ -1,6 +1,7 @@
 # 2.4.6
 
 - Fixed an CSS issue with Classic layout mode and whether a token has been damaged or not.
+- Fixed an CSS issue with the suggested damage buttons not becoming greyed out upon usage.
 
 # 2.4.5
 
