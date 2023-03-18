@@ -158,6 +158,7 @@ wrapper.pf2e-td.name-top {
 
 wrapper.pf2e-td.name-top .pf2e-td.name {
 	word-break: break-word;
+	width: 100%;
 	user-select: none !important;
 	font-size: var(--font-size-14);
 }

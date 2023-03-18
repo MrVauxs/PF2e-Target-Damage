@@ -722,6 +722,13 @@ Hooks.on("renderChatMessage", (message, html) => {
 				if (!html.find('[data-action="save"]').attr("data-dc")) return; // Message has no saving throw button
 				if (!save) return; // Not a saving throw spell
 
+				// Add hook to Damage
+				html.find("[data-action='spellDamage']").click((e) => {
+					Hooks.once("preCreateChatMessage", (damageMessage) => {
+						damageMessage.updateSource({ "flags.pf2e-target-damage": { origin: message.id, targets: targets } });
+					});
+				})
+
 				const buttonTemplate = $(`<wrapper class="pf2e-td"><span class="pf2e-td name"></span><button class="pf2e-td save"></button></wrapper>`);
 
 				const buttonTemplates = []
@@ -858,13 +865,6 @@ Hooks.on("renderChatMessage", (message, html) => {
 				})
 
 				if (game.user.isGM) html.find(".card-buttons").append(quickButtons);
-
-				// Add hook to Damage
-				html.find("[data-action='spellDamage']").click((e) => {
-					Hooks.once("preCreateChatMessage", (damageMessage) => {
-						damageMessage.updateSource({ "flags.pf2e-target-damage": { origin: message.id, targets: targets } });
-					});
-				})
 			}
 		}
 

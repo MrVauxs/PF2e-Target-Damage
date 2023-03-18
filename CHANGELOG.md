@@ -1,3 +1,8 @@
+# 2.4.7
+
+- Fixed a CSS issue with Classic layout mode and whether a token has been damaged or not. Again.
+- Fixed an issue when using the "Hide non-Player Token Targets" setting causing the damage button to not pass the GM-only targets to the damage roll.
+
 # 2.4.6
 
 - Fixed a CSS issue with Classic layout mode and whether a token has been damaged or not.
