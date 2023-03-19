@@ -129,6 +129,8 @@ Hooks.on("ready", async () => {
 async function updateDealtDamage(args) {
 	let { degree, targets, message, tokenID } = args;
 	message = game.messages.get(message.id ?? message._id);
+	if (!(message.isAuthor || game.user.isGM)) return;
+
 	const newTargets = targets.map((target) => {
 		if (target.id === tokenID) {
 			Array.isArray(target.applied) ? target.applied.push(degree) : target.applied = [target.applied, degree];
@@ -139,6 +141,7 @@ async function updateDealtDamage(args) {
 }
 
 async function linkRolls(message) {
+	if (!(message.isAuthor || game.user.isGM)) return;
 	const rollOption = message?.flags?.pf2e?.context?.options?.filter(x => x.includes("pf2e-td-")) ?? [];
 
 	if (message?.flags?.["pf2e-target-damage"]?.origin) rollOption.push("pf2e-td-" + message.flags["pf2e-target-damage"].origin);
