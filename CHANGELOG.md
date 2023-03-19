@@ -1,3 +1,7 @@
+# 2.4.8
+
+- Fixed an issue with multiple users trying to edit a message they have no permissions to.
+
 # 2.4.7
 
 - Fixed a CSS issue with Classic layout mode and whether a token has been damaged or not. Again.
