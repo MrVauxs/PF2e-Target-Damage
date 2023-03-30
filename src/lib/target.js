@@ -92,13 +92,13 @@ export class TargetDamageTarget {
     }
     // #endregion
 
-    tokensInRange(target = this.token, range = 5) {
+    tokensInRange(token = this.token, range = 5) {
         if (!canvas) {
             return;
         }
         const allTokens = canvas.tokens.placeables;
-        // Get all tokens that are within range of the target
-        const splashedTokens = allTokens.filter((x) => target.distanceTo(x) <= range);
+        // Get all tokens that are within range of the token
+        const splashedTokens = allTokens.filter((x) => token.distanceTo(x) <= range);
         return splashedTokens;
     }
 }
