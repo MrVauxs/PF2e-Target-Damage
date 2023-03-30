@@ -1,5 +1,6 @@
 # 2.4.9
 
+- Updated the module to be compatible with PF2e 4.10.0.
 - Fixed popped out Target Damage messages not being full height.
 
 # 2.4.8

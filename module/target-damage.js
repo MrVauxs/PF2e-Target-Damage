@@ -580,6 +580,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 					// Add click events to apply damage
 					full.on("click", (event) => {
+						event.stopPropagation();
 						applyDamage(message, tokenID, 1, 0, event.shiftKey, index);
 						if (message.isAuthor || game.user.isGM) {
 							updateDealtDamage({ degree: "full", targets, message, tokenID })
@@ -589,6 +590,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					});
 
 					half.on("click", (event) => {
+						event.stopPropagation();
 						applyDamage(message, tokenID, 0.5, 0, event.shiftKey, index);
 						if (message.isAuthor || game.user.isGM) {
 							updateDealtDamage({ degree: "half", targets, message, tokenID })
@@ -598,6 +600,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					});
 
 					double.on("click", (event) => {
+						event.stopPropagation();
 						applyDamage(message, tokenID, 2, 0, event.shiftKey, index);
 						if (message.isAuthor || game.user.isGM) {
 							updateDealtDamage({ degree: "double", targets, message, tokenID })
@@ -609,6 +612,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					triple === null || triple === void 0
 						? void 0
 						: triple.on("click", (event) => {
+							event.stopPropagation();
 							applyDamage(message, tokenID, 3, 0, event.shiftKey, index);
 							if (message.isAuthor || game.user.isGM) {
 								updateDealtDamage({ degree: "triple", targets, message, tokenID })
@@ -618,6 +622,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 						});
 
 					heal.on("click", (event) => {
+						event.stopPropagation();
 						applyDamage(message, tokenID, -1, 0, event.shiftKey, index);
 						if (message.isAuthor || game.user.isGM) {
 							updateDealtDamage({ degree: "heal", targets, message, tokenID })
@@ -627,6 +632,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 					});
 
 					$shield.on("click", async (event) => {
+						event.stopPropagation();
 						const tokens = canvas.tokens.ownedTokens.filter((token) => token.id === tokenID && token.actor);
 						if (tokens.length === 0) {
 							const errorMsg = game.i18n.localize("PF2E.UI.errorTargetToken");
