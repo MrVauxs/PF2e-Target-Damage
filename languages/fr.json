@@ -5,7 +5,7 @@
 				"content": "Rayon d'éclaboussure :",
 				"title": "Modifier le rayon"
 			},
-			"hint": "[Clic] Choisir les jetons pour les dégâts d'éclaboussure.\n[Shift-Clic] Ajuster le rayon avant de choisir."
+			"hint": "[Clic] Choisir les jetons pour les dégâts d'éclaboussure.\n[Droit-Clic] Ajuster le rayon avant de choisir."
 		},
 		"hideButton": "Cacher les boutons de dégâts du système.",
 		"settings": {
@@ -43,8 +43,8 @@
 		},
 		"hidden": "Jeton inconnu",
 		"targetButton": {
-			"hint-false": "[Clic] Ajouter les cibles actuelles au message.\n[Shift-Clic] Remplacer les cibles du message par les cibles actuelles.",
-			"hint-true": "[Clic] Remplacez les cibles du message par les cibles actuelles.\n[Shift-Clic] Ajouter les cibles actuelles au message."
+			"hint-false": "[Clic] Ajouter les cibles actuelles au message.\n[Droit-Clic] Remplacer les cibles du message par les cibles actuelles.",
+			"hint-true": "[Clic] Remplacez les cibles du message par les cibles actuelles.\n[Droit-Clic] Ajouter les cibles actuelles au message."
 		},
 		"noTargets": "Aucun jeton n'a été ciblé.",
 		"removeTarget": "Supprimer la cible ? [Ctrl-Clic]",

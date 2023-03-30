@@ -3,15 +3,12 @@
 		"noTargets": "没有指示物被选为目标",
 		"hidden": "未知指示物",
 		"targetButton": {
-			"hint-true": "[单击] 用当前目标替换聊天中的目标；\n[Shift+单击] 将当前目标发送至聊天",
-			"hint-false": "[单击] 将当前目标发送至聊天；\n[Shift+单击] 用当前目标替换聊天中的目标"
 		},
 		"splashButton": {
 			"radiusDialog": {
 				"title": "修改半径",
 				"content": "溅射半径："
-			},
-			"hint": "[单击] 选择受到溅射伤害的指示物\n[Shift+单击] 选择指示物前调整半径"
+			}
 		},
 		"hideButton": "隐藏系统伤害按键",
 		"settings": {

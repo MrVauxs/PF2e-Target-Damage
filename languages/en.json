@@ -8,15 +8,16 @@
         "noTargets": "No tokens have been targeted.",
         "hidden": "Unknown Token",
         "targetButton": {
-            "hint-false": "[Click] Add current targets to the message.\n[Shift-Click] Replace the targets in the message with current targets.",
-            "hint-true": "[Click] Replace the targets in the message with current targets.\n[Shift-Click] Add current targets to the message."
+            "hint-false": "[Click] Add current targets to the message.\n[Right-Click] Replace the targets in the message with current targets.",
+            "hint-true": "[Click] Replace the targets in the message with current targets.\n[Right-Click] Add current targets to the message."
         },
         "splashButton": {
             "radiusDialog": {
                 "title": "Modify Radius",
-                "content": "Splash Radius:"
+                "content": "Splash Radius:",
+                "away": "{distance} feet away from {name}"
             },
-            "hint": "[Click] Select tokens for splash damage.\n[Shift-Click] Adjust radius before selecting."
+            "hint": "[Click] Select tokens for splash damage.\n[Right-Click] Adjust radius before selecting."
         },
         "hideButton": "Hide the system damage buttons.",
         "settings": {
