@@ -27,8 +27,14 @@ jobs:
         manifest: https://github.com/${{github.repository}}/releases/latest/download/module.json
         download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
+    # Install packages.
+    - run: npm install
+
+    # Build distribution.
+    - run: npm run build
+
     # Create a zip file with all files required by the module to add to the release
-    - run: zip -r ./module.zip module.json README.md LICENSE styles/ scripts/ module/ languages/ templates/
+    - run: zip -r ./module.zip module.json index.js index.js.map style.css README.md LICENSE styles/ module/ languages/
 
     # Create a release for this specific version
     - name: Update Release with Files
@@ -47,7 +53,7 @@ jobs:
     # Publish to FoundryVTT
     - name: Publish to Foundry VTT Repo
       id: publish_foundry_repo
-      if: "!github.event.release.prerelease"
+      if: !github.event.release.prerelease
       run: npx @ghost-fvtt/foundry-publish
       env:
         FVTT_MANIFEST_PATH: 'module.json'
@@ -55,12 +61,3 @@ jobs:
         FVTT_USERNAME: ${{ secrets.FOUNDRY_ADMIN_USERNAME }}
         FVTT_PASSWORD: ${{ secrets.FOUNDRY_ADMIN_PASSWORD }}
         FVTT_MANIFEST_URL: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.json
-
-   # - name: FoundryVTT AutoPublish
-   #   uses: Varriount/fvtt-autopublish@v1.0.9
-   #   with:
-   #     username: ${{ secrets.FOUNDRY_ADMIN_USERNAME }}
-   #     password: ${{ secrets.FOUNDRY_ADMIN_PASSWORD }}
-   #     module-id: 2350
-   #     manifest-url: https://github.com/${{ github.repository }}/releases/download/${{steps.get_version.outputs.version-without-v}}/module.json
-   #     manifest-file: module.json

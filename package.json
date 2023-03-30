@@ -1,0 +1,31 @@
+{
+  "description": "A quality of life module that makes applying damage to targets and tracking saving throws easier in the Pathfinder 2e system.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
+  "contributors": [
+    "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
+  ],
+  "dependencies": {
+    "@typhonjs-fvtt/runtime": "^0.0.22",
+    "@typhonjs-fvtt/svelte-standard": "^0.0.23",
+    "svelte": "^3.57.0"
+  },
+  "devDependencies": {
+    "@typhonjs-config/eslint-config": "^0.3.0",
+    "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",
+    "eslint": "^8",
+    "svelte-preprocess": "^5",
+    "vite": "^4"
+  },
+  "browserslist": [
+    ">5%",
+    "not IE 11"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "eslint": "eslint ."
+  }
+}

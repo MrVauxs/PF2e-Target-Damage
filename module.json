@@ -18,6 +18,12 @@
 		"minimum": "10",
 		"verified": "10"
 	},
+	"esmodules": [
+		"index.js"
+	],
+	"styles": [
+		"style.css"
+	],
 	"relationships": {
 		"flags": {
 			"optional": [
@@ -82,12 +88,5 @@
 	"download": "This is replaced",
 	"readme": "https://github.com/MrVauxs/PF2e-Target-Damage",
 	"bugs": "https://github.com/MrVauxs/PF2e-Target-Damage/issues",
-	"changelog": "https://github.com/MrVauxs/PF2e-Target-Damage/blob/master/CHANGELOG.md",
-	"esmodules": [
-		"module/settings.js",
-		"module/target-damage.js"
-	],
-	"styles": [
-		"styles/target-damage.css"
-	]
+	"changelog": "https://github.com/MrVauxs/PF2e-Target-Damage/blob/master/CHANGELOG.md"
 }
