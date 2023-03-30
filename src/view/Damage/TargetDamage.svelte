@@ -18,9 +18,10 @@
 				class="pf2e-td name"
 				data-tooltip-direction="LEFT"
 				data-tooltip={target.name}
-				on:click={target.onClickSender}
-				on:mouseover={target.onHoverIn}
-				on:mouseout={target.onHoverOut}
+				on:click={target.onClickSender()}
+				on:dblclick={(e) => target.onClickSender(target.token, e)}
+				on:mouseover={target.onHoverIn()}
+				on:mouseout={target.onHoverOut()}
 			>
 				{target.token.name}
 			</span>
@@ -29,6 +30,7 @@
 					type="button"
 					class="pf2e-td full-damage"
 					title="{localize('PF2E.DamageButton.Full')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+					on:click|stopPropagation={() => console.log("Heck")}
 				>
 					<i class="fa-solid fa-heart-broken fa-fw" />
 					<span class="label">{localize("PF2E.DamageButton.FullShort")}</span>
