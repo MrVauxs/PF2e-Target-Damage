@@ -12,10 +12,6 @@ export function localize(string, object = {}) {
         throw new Error("PF2e Target Damage | localize() was called without a string.");
     }
 
-    if (!string.includes("pf2e-target-damage") && !string.includes("PF2E.")) {
-        string = `pf2e-target-damage.${string}`;
-    }
-
     if (Object.keys(object).length > 0) {
         return game.i18n.format(string, object);
     } else {

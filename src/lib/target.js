@@ -68,7 +68,7 @@ export class TargetDamageTarget {
     onHoverOut(token = this.token) {
         token = token?.object ?? token;
         if (canvas.ready) {
-            token?.emitHoverOut();
+            token.emitHoverOut();
         }
     }
 
@@ -92,10 +92,20 @@ export class TargetDamageTarget {
     }
     // #endregion
 
-    tokensInRange(token = this.token, range = 5) {
+    /**
+     * Returns an array of tokens that are within range of the token
+     *
+     * @param {string} range The range to check
+     *
+     * @param {TokenPF2e} token The token object
+     *
+     * @returns {TokenPF2e[]} An array of tokens that are within range of the token
+     */
+    tokensInRange(range = 5, token = this.token.object) {
         if (!canvas) {
-            return;
+            return [];
         }
+
         const allTokens = canvas.tokens.placeables;
         // Get all tokens that are within range of the token
         const splashedTokens = allTokens.filter((x) => token.distanceTo(x) <= range);

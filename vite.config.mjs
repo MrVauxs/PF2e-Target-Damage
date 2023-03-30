@@ -41,7 +41,9 @@ export default () => {
       publicDir: false,             // No public resources to copy.
       cacheDir: '../.vite-cache',   // Relative from root directory.
 
-      resolve: { conditions: ['import', 'browser'] },
+      resolve: {
+         conditions: ['import', 'browser']
+      },
 
       esbuild: {
          target: ['es2022']

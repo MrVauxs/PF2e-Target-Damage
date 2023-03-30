@@ -24,6 +24,8 @@
   //
   // Note: if you are using Typescript you must use `@typescript-eslint/no-shadow`
   "rules": {
+    "lit-a11y/click-events-have-key-events": "ignore",
+    "lit-a11y/mouse-events-have-key-events": "ignore",
     "brace-style": ["error", "1tbs"],
     "no-shadow": ["error", {
       "builtinGlobals": true,

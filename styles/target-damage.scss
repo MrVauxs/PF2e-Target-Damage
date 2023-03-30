@@ -1,0 +1,176 @@
+.applied {
+	filter: brightness(0.7) !important;
+}
+
+.pf2e-td {
+	&.name-icon {
+		right: 0;
+		width: 16px;
+		margin: 2px;
+		position: absolute;
+		color: green;
+		text-shadow: 0 0 8px greenyellow;
+	}
+
+	&.small-button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 1px;
+		width: 22px;
+		height: calc(100% - 2px);
+		position: absolute;
+
+		&.splash-button,
+		&.target-button {
+			top: 0;
+			left: 0;
+		}
+
+		&.hide-button {
+			top: 0;
+			right: 0;
+		}
+
+	}
+
+	.spell-button &.target-button {
+		height: calc(100% - 12px);
+		top: 4px;
+		left: 4px;
+		width: 24px;
+	}
+
+	&.quick-buttons {
+		margin-top: 0px;
+	}
+
+	&.target-section {
+		position: relative;
+	}
+
+	&.damage-application {
+		gap: 1px;
+		margin-top: 0px;
+
+		.label {
+			font-size: var(--font-size-8);
+		}
+	}
+
+	&.name {
+		position: relative;
+		line-height: revert !important;
+		border: none !important;
+		user-select: none !important;
+		word-break: break-all;
+		text-align: center;
+		display: flex;
+		font-weight: 800;
+		justify-content: center;
+		max-height: var(--font-size-34);
+		font-size: var(--font-size-10);
+		cursor: pointer;
+	}
+
+	&.save button,
+	&.damage-application button {
+		margin: 0px;
+	}
+
+	&.save,
+	&.damage-application {
+		gap: 1px;
+	}
+
+	&.name[data-visibility=gm] {
+		display: flex;
+		padding: 0px 2px 0px 0px;
+	}
+
+	&.damage-application[data-visibility=gm] {
+		padding: 1px;
+	}
+
+	&.heal-damage .fa-stack {
+		font-size: .5em;
+	}
+
+	&.select span {
+		color: aliceblue;
+		background: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
+		border-radius: 3px;
+		padding: 1px 4px;
+	}
+}
+
+.chat-message .message-content .pf2e-td {
+
+	&.save,
+	&.damage-application {
+		margin-top: 0px;
+	}
+}
+
+.pf2e-td {
+	&.criticalSuccess {
+		transition: background-color 0.5s ease;
+		background-color: rgb(0, 128, 0, 0.3);
+	}
+
+	&.success {
+		transition: background-color 0.5s ease;
+		background-color: rgb(0, 0, 255, 0.3);
+	}
+
+	&.failure {
+		transition: background-color 0.5s ease;
+		background-color: rgb(255, 69, 0, 0.3);
+	}
+
+	&.criticalFailure {
+		transition: background-color 0.5s ease;
+		background-color: rgb(255, 0, 0, 0.3);
+	}
+}
+
+wrapper.pf2e-td {
+	display: flex;
+	margin-top: 3px;
+	align-items: center;
+	gap: 2px;
+
+	&.name-left {
+		flex-direction: row;
+
+		.pf2e-td {
+			&.name {
+				overflow: auto;
+				user-select: none !important;
+				display: flex;
+				flex: 50px 1 1;
+			}
+
+			&.damage-application {
+				flex: 235px 1 0;
+			}
+		}
+	}
+
+	&.name-top {
+		flex-direction: column;
+
+		.pf2e-td {
+			&.name {
+				word-break: break-word;
+				width: 100%;
+				user-select: none !important;
+				font-size: var(--font-size-14);
+			}
+
+			&.damage-application {
+				width: 100%;
+			}
+		}
+	}
+}
