@@ -55,7 +55,7 @@ export class TargetDamageTarget {
     }
 
     // #region borrowed from PF2e system, document.ts#210
-    onHoverIn(token) {
+    onHoverIn(token = this.token) {
         if (!canvas.ready) {
             return;
         }
@@ -65,14 +65,14 @@ export class TargetDamageTarget {
         }
     }
 
-    onHoverOut(token) {
+    onHoverOut(token = this.token) {
         token = token?.object ?? token;
         if (canvas.ready) {
             token?.emitHoverOut();
         }
     }
 
-    onClickSender(token, event) {
+    onClickSender(token = this.token, event = Event) {
         if (!canvas) {
             return;
         }
@@ -91,4 +91,14 @@ export class TargetDamageTarget {
         }
     }
     // #endregion
+
+    tokensInRange(target = this.token, range = 5) {
+        if (!canvas) {
+            return;
+        }
+        const allTokens = canvas.tokens.placeables;
+        // Get all tokens that are within range of the target
+        const splashedTokens = allTokens.filter((x) => target.distanceTo(x) <= range);
+        return splashedTokens;
+    }
 }
