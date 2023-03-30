@@ -1,3 +1,7 @@
+# 2.4.9
+
+- Fixed popped out Target Damage messages not being full height.
+
 # 2.4.8
 
 - Fixed an issue with multiple users trying to edit a message they have no permissions to.

@@ -79,6 +79,18 @@ Hooks.on("preCreateChatMessage", (message) => {
 	}
 });
 
+// Fix Popout
+Hooks.on("renderChatPopout", (app, html, data) => {
+	self.popoutApp = app;
+
+	console.log(app)
+
+	setTimeout(() => {
+		//app.message.render() // because apparently it only renders Target Damage stuff the second time around without this
+		app.setPosition() // Fix the popout not being fully extended to full height
+	}, 100);
+})
+
 // Link the saving throw to the message that caused it
 Hooks.on("ready", () => {
 	if (game.modules.get("dice-so-nice")?.active) {
@@ -874,15 +886,14 @@ Hooks.on("renderChatMessage", (message, html) => {
 		// html.find(".tag:contains('pf2e-td'), .tag[data-trait*='pf2e-td']").remove();
 
 		// Scroll down to the last roll
-		// Maybe not
-		/* setTimeout(() => {
+		setTimeout(() => {
 			if (game.messages.contents.at(-1).id === message.id) { // Only on last message
 				const lastRoll = html.find("wrapper.pf2e-td").last();
 				if (lastRoll.length) {
-					lastRoll[0].scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+					ui.chat.scrollBottom();
 				}
 			}
-		}, 0); */
+		}, 0);
 	}, 0);
 });
 
