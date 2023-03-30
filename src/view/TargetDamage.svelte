@@ -1,16 +1,263 @@
 <script>
    import { gameSettings } from "../settings.js";
-   import { TargetDamageTarget } from "../lib/target.js";
+   import { localize } from "../lib/utils.js";
    export let targets = void 0;
+   export let message = void 0;
 
-   const Targets = targets.map((target) => {
-      return new TargetDamageTarget(target);
-   });
-
+   // Settings
    const classic = gameSettings.getWritableStore("classic");
+   const showTripleDamage = game.settings.get("pf2e", "critFumbleButtons");
 
-   console.log("Hello, world!", $classic, Targets);
+   console.log("Hello, world!", targets, message);
 </script>
 
-<hr />
-Svelte Messages, this will be interesting
+<div class="message-content">
+   {#each targets as target}
+      <wrapper class="pf2e-td" class:name-top={$classic} class:name-left={!$classic}>
+         <span class="pf2e-td name" data-tooltip-direction="LEFT" data-tooltip={target.name}>
+            {target.token.name}
+         </span>
+         <section class="pf2e-td damage-application">
+            <button
+               type="button"
+               class="pf2e-td full-damage"
+               title="{localize('PF2E.DamageButton.Full')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+            >
+               <i class="fa-solid fa-heart-broken fa-fw" />
+               <span class="label">{localize("PF2E.DamageButton.FullShort")}</span>
+            </button>
+            <button
+               type="button"
+               class="pf2e-td half-damage"
+               title="{localize('PF2E.DamageButton.Half')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+            >
+               <i class="fa-solid fa-heart-broken fa-fw" />
+               <span class="transparent-half" />
+               <span class="label">{localize("PF2E.DamageButton.HalfShort")}</span>
+            </button>
+            <button
+               type="button"
+               class="pf2e-td double-damage"
+               title="{localize('PF2E.DamageButton.Double')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+            >
+               <img src="systems/pf2e/icons/damage/double.svg" alt={localize("PF2E.DamageButton.Double")} />
+               <span class="label">{localize("PF2E.DamageButton.DoubleShort")}</span>
+            </button>
+            {#if showTripleDamage}
+               <button
+                  type="button"
+                  class="pf2e-td triple-damage"
+                  title="{localize('PF2E.DamageButton.Triple')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+               >
+                  <img src="systems/pf2e/icons/damage/triple.svg" alt={localize("PF2E.DamageButton.Triple")} />
+                  <span class="label">{localize("PF2E.DamageButton.TripleShort")}</span>
+               </button>
+            {/if}
+            <button
+               type="button"
+               class="pf2e-td shield-block dice-total-shield-btn"
+               title={localize("PF2E.DamageButton.ShieldBlock")}
+            >
+               <i class="fa-solid fa-shield-alt fa-fw" />
+               <span class="label">{localize("PF2E.DamageButton.ShieldBlockShort")}</span>
+            </button>
+            <button
+               type="button"
+               class="pf2e-td heal-damage"
+               title="{localize('PF2E.DamageButton.Healing')}&#013;{localize('PF2E.DamageButton.Adjust')}"
+            >
+               <span class="fa-stack fa-fw">
+                  <i class="fa-solid fa-heart fa-stack-2x" />
+                  <i class="fa-solid fa-plus fa-inverse fa-stack-1x" />
+               </span>
+               <span class="label">{localize("PF2E.DamageButton.HealingShort")}</span>
+            </button>
+         </section>
+      </wrapper>
+      <div class="hover-content select-shield">
+         <div class="sidebar_title">
+            <h2>{localize("PF2E.Actions.ShieldBlock.selectAShield")}</h2>
+         </div>
+         <ul class="pf2e-td shield-options">
+            <template>
+               <li class="item">
+                  <input class="data" name="shield-id" type="radio" value="" />
+                  <span class="label" />
+                  <span class="tag" />
+               </li>
+            </template>
+         </ul>
+      </div>
+   {/each}
+</div>
+
+<style>
+   .pf2e-td.small-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1px;
+      width: 22px;
+      height: calc(100% - 2px);
+      position: absolute;
+   }
+
+   .applied {
+      filter: brightness(0.7) !important;
+   }
+
+   .pf2e-td.name-icon {
+      right: 0;
+      width: 16px;
+      margin: 2px;
+      position: absolute;
+      color: green;
+      text-shadow: 0 0 8px greenyellow;
+   }
+
+   .pf2e-td.small-button.splash-button {
+      top: 0;
+      left: 0;
+   }
+
+   .pf2e-td.small-button.target-button {
+      top: 0;
+      left: 0;
+   }
+
+   .pf2e-td.quick-buttons {
+      margin-top: 0px;
+   }
+
+   .spell-button .pf2e-td.target-button {
+      height: calc(100% - 12px);
+      top: 4px;
+      left: 4px;
+      width: 24px;
+   }
+
+   .pf2e-td.target-section {
+      position: relative;
+   }
+
+   .pf2e-td.small-button.hide-button {
+      top: 0;
+      right: 0;
+   }
+
+   .pf2e-td.damage-application {
+      gap: 1px;
+      margin-top: 0px;
+   }
+
+   .pf2e-td.damage-application .label {
+      font-size: var(--font-size-8);
+   }
+
+   .pf2e-td.name {
+      position: relative;
+      line-height: revert !important;
+      border: none !important;
+      user-select: none !important;
+      word-break: break-all;
+      text-align: center;
+      display: flex;
+      font-weight: 800;
+      justify-content: center;
+      max-height: var(--font-size-34);
+      font-size: var(--font-size-10);
+      cursor: pointer;
+   }
+
+   .pf2e-td.save button,
+   .pf2e-td.damage-application button {
+      margin: 0px;
+   }
+
+   .pf2e-td.save,
+   .pf2e-td.damage-application {
+      gap: 1px;
+   }
+
+   .pf2e-td.name[data-visibility="gm"] {
+      display: flex;
+      padding: 0px 2px 0px 0px;
+   }
+
+   .pf2e-td.damage-application[data-visibility="gm"] {
+      padding: 1px;
+   }
+
+   .pf2e-td.heal-damage .fa-stack {
+      font-size: 0.5em;
+   }
+
+   .pf2e-td.select span {
+      color: aliceblue;
+      background: linear-gradient(to right, #f27121cc, #e94057cc, #8a2387cc);
+      border-radius: 3px;
+      padding: 1px 4px;
+   }
+
+   .chat-message .message-content .pf2e-td.save,
+   .chat-message .message-content .pf2e-td.damage-application {
+      margin-top: 0px;
+   }
+
+   .pf2e-td.criticalSuccess {
+      transition: background-color 0.5s ease;
+      background-color: rgb(0, 128, 0, 0.3);
+   }
+
+   .pf2e-td.success {
+      transition: background-color 0.5s ease;
+      background-color: rgb(0, 0, 255, 0.3);
+   }
+
+   .pf2e-td.failure {
+      transition: background-color 0.5s ease;
+      background-color: rgb(255, 69, 0, 0.3);
+   }
+
+   .pf2e-td.criticalFailure {
+      transition: background-color 0.5s ease;
+      background-color: rgb(255, 0, 0, 0.3);
+   }
+
+   wrapper.pf2e-td {
+      display: flex;
+      margin-top: 3px;
+      align-items: center;
+      gap: 2px;
+   }
+
+   wrapper.pf2e-td.name-left {
+      flex-direction: row;
+   }
+
+   wrapper.pf2e-td.name-left .pf2e-td.name {
+      overflow: auto;
+      user-select: none !important;
+      display: flex;
+      flex: 50px 1 1;
+   }
+
+   wrapper.pf2e-td.name-left .pf2e-td.damage-application {
+      flex: 235px 1 0;
+   }
+
+   wrapper.pf2e-td.name-top {
+      flex-direction: column;
+   }
+
+   wrapper.pf2e-td.name-top .pf2e-td.name {
+      word-break: break-word;
+      width: 100%;
+      user-select: none !important;
+      font-size: var(--font-size-14);
+   }
+
+   wrapper.pf2e-td.name-top .pf2e-td.damage-application {
+      width: 100%;
+   }
+</style>

@@ -1,2 +1,2 @@
-import "./hooks.js";
+import "./renderHooks.js";
 import "./settings.js";

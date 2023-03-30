@@ -1,3 +1,4 @@
+import { TargetDamageTarget } from "./lib/target.js";
 import TargetDamage from './view/TargetDamage.svelte';
 
 /**
@@ -11,7 +12,11 @@ function getFlagData(message) {
     const flagData = message.getFlag('pf2e-target-damage', 'targets');
 
     if (Array.isArray(flagData)) {
-        return { targets: flagData };
+        const targets = flagData.map((target) => {
+            return new TargetDamageTarget(target);
+        });
+
+        return { targets, message };
     }
 
     return false;
