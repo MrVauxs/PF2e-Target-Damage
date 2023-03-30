@@ -1,3 +1,9 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve'; // This resolves NPM modules from node_modules.
 import preprocess from 'svelte-preprocess';
