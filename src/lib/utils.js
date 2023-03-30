@@ -7,10 +7,18 @@
  *
  * @returns {string} - The localized or formatted string.
  */
-export function localize(string, object) {
-    if (object.length > 0) {
+export function localize(string, object = {}) {
+    if (string === undefined || string.length === 0) {
+        throw new Error("PF2e Target Damage | localize() was called without a string.");
+    }
+
+    if (!string.includes("pf2e-target-damage")) {
+        string = `pf2e-target-damage.${string}`;
+    }
+
+    if (Object.keys(object).length > 0) {
         return game.i18n.format(string, object);
     } else {
-        return game.i18n.localize(string, object);
+        return game.i18n.localize(string);
     }
 }

@@ -53,4 +53,42 @@ export class TargetDamageTarget {
     get img() {
         return this.token?.texture.src ?? this.actor?.prototypeToken.texture.src;
     }
+
+    // #region borrowed from PF2e system, document.ts#210
+    onHoverIn(token) {
+        if (!canvas.ready) {
+            return;
+        }
+        token = token?.object ?? token;
+        if (token?.isVisible && !token.controlled) {
+            token.emitHoverIn();
+        }
+    }
+
+    onHoverOut(token) {
+        token = token?.object ?? token;
+        if (canvas.ready) {
+            token?.emitHoverOut();
+        }
+    }
+
+    onClickSender(token, event) {
+        if (!canvas) {
+            return;
+        }
+        token = token?.object;
+        if (token?.isVisible) {
+            if (token.isOwner) {
+                token.controlled ? token.release() : token.control({ releaseOthers: !event.shiftKey });
+            } else {
+                token.setTarget(!token.isTargeted, { releaseOthers: !event.shiftKey });
+            }
+            // If a double click, also pan to the token
+            if (event.type === "dblclick") {
+                const scale = Math.max(1, canvas.stage.scale.x);
+                canvas.animatePan({ ...token.center, scale, duration: 1000 });
+            }
+        }
+    }
+    // #endregion
 }

@@ -1,7 +1,15 @@
 <script>
+   import { gameSettings } from "../settings.js";
+   import { TargetDamageTarget } from "../lib/target.js";
    export let targets = void 0;
 
-   console.log("Hello, world!", targets);
+   const Targets = targets.map((target) => {
+      return new TargetDamageTarget(target);
+   });
+
+   const classic = gameSettings.getWritableStore("classic");
+
+   console.log("Hello, world!", $classic, Targets);
 </script>
 
 <hr />
