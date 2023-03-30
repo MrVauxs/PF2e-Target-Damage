@@ -1,5 +1,15 @@
-*.lock
-.vscode/*
+vscode/*
 *.code-workspace
 .history/
 packs/*.db~
+.idea
+.DS_Store
+.vite-cache/
+.vscode/**/*
+!.vscode/extensions.json
+dist/
+node_modules/
+/index.js
+/index.js.map
+/style.css
+/*.lock
