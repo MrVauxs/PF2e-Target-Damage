@@ -12,12 +12,12 @@
             "hint-true": "[Click] Replace the targets in the message with current targets.\n[Right-Click] Add current targets to the message."
         },
         "splashButton": {
+            "selectTarget": "Target: {name}",
             "radiusDialog": {
                 "title": "Modify Radius",
-                "content": "Splash Radius:",
                 "away": "{distance} feet away from {name}"
             },
-            "hint": "[Click] Select tokens for splash damage.\n[Right-Click] Adjust radius before selecting."
+            "hint": "[Click] Select tokens for splash damage.\n[Right-Click] Adjust radius and target before selecting."
         },
         "hideButton": "Hide the system damage buttons.",
         "settings": {

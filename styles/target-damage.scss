@@ -11,6 +11,11 @@
 }
 
 .pf2e-td {
+
+	&#tooltip {
+		pointer-events: auto;
+	}
+
 	&.name-icon {
 		right: 0;
 		width: 16px;

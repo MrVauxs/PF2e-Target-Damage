@@ -19,13 +19,13 @@
 		}
 
 		if (e.type === "contextmenu" || e.shiftKey) {
-			new SplashMenuApplication(target, multiplier).render(true)
+			new SplashMenuApplication(targets, multiplier).render(true);
 		} else {
 			target
 				.tokensInRange(multiplier)
 				.filter((x) => x !== target.token.object)
-				.forEach((x) => {
-					x.control({ releaseOthers: false });
+				.forEach((x, index) => {
+					x.control({ releaseOthers: index === 0 ? true : false });
 					game.canvas.ping(x.document.center);
 				});
 		}
@@ -35,6 +35,8 @@
 <button
 	class="pf2e-td splash-button small-button"
 	title={localize("pf2e-target-damage.splashButton.hint")}
+	data-tooltip={localize("pf2e-target-damage.splashButton.selectTarget", { name: targets[0]?.name })}
+	data-tooltip-direction="LEFT"
 	on:click={onClick}
 	on:contextmenu|stopPropagation|preventDefault={onClick}
 >

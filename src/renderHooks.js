@@ -34,11 +34,14 @@ Hooks.on('renderChatMessage', (message, html) => {
         rolls.forEach((roll, index) => {
             if (roll.options.splashOnly) {
                 const target = html[0].getElementsByClassName("dice-roll damage-roll")[index].getElementsByClassName("dice-total")[0];
-                const anchor = html[0].getElementsByClassName("dice-roll damage-roll")[index].getElementsByClassName("dice-total")[0].getElementsByClassName("total")[0];
+                const anchor = target.getElementsByClassName("total")[0];
+
                 message._svelteTargetDamage.splashButton = new SplashButton({ target, props: flagData, anchor });
             } else {
-                const target = html[0];
-                message._svelteTargetDamage.damageButtons = new TargetDamage({ target, props: flagData });
+                const target = html[0].getElementsByClassName("message-content")[0];
+                const anchor = target.getElementsByClassName("damage-application")[0].nextSibling
+
+                message._svelteTargetDamage.damageButtons = new TargetDamage({ target, props: flagData, anchor });
             }
         });
     }

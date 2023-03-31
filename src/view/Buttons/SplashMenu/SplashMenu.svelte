@@ -7,15 +7,16 @@
 	import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
 	export let elementRoot = void 0;
 	const application = getContext("#external").application;
-	const target = application.splashTarget;
+	const targets = application.splashTargets;
 	let multiplier = application.multiplier;
 
 	let splashTargets = [];
+	let target = targets[0];
 
 	$: updateSplashTargets(multiplier);
 
 	function updateSplashTargets(multiplier) {
-		let targets = target.tokensInRange(multiplier).filter((x) => x !== target.token.object);
+		const targets = target.tokensInRange(multiplier).filter((x) => x !== target.token.object);
 		splashTargets = targets;
 	}
 </script>
@@ -23,6 +24,11 @@
 <ApplicationShell bind:elementRoot>
 	<main>
 		<div class="container">
+			<select bind:value={target} on:change={updateSplashTargets(multiplier)}>
+				{#each targets as target}
+					<option value={target}>{target.name}</option>
+				{/each}
+			</select>
 			<input type="number" on:input={updateSplashTargets(multiplier)} bind:value={multiplier} />
 			<input type="range" min="0" max="30" bind:value={multiplier} step="5" />
 		</div>
@@ -36,29 +42,43 @@
 						style="transform: scale({splashed.document.texture.scaleX})"
 					/>
 					<td class="token-name">{splashed.name}</td>
-					<td class="token-distance"
-						>{localize("pf2e-target-damage.splashButton.radiusDialog.away", {
+					<td class="token-distance">
+						{localize("pf2e-target-damage.splashButton.radiusDialog.away", {
 							name: target.name,
 							distance: target.token.object.distanceTo(splashed),
-						})}</td
-					>
+						})}
+					</td>
 				</tr>
 			{/each}
 		</table>
 	</main>
 
+	<!-- svelte-ignore missing-declaration -->
 	<footer class="container buttons">
-		<!-- svelte-ignore missing-declaration -->
 		<button
 			type="submit"
 			on:click={() => {
-				splashTargets.forEach((x) => {
-					x.control({ releaseOthers: false });
+				splashTargets.forEach((x, index) => {
+					x.control({ releaseOthers: index === 0 ? true : false });
 					game.canvas.ping(x.document.center);
 				});
 				application.close();
-			}}>{localize("CONTROLS.CanvasSelectAll")}</button
+			}}
 		>
+			{localize("CONTROLS.BasicSelect")}
+		</button>
+		<button
+			type="submit"
+			on:click={() => {
+				splashTargets.forEach((x, index) => {
+					x.setTarget(true, { releaseOthers: index === 0 ? true : false });
+					game.canvas.ping(x.document.center);
+				});
+				application.close();
+			}}
+		>
+			{localize("CONTROLS.TargetSelect")}
+		</button>
 	</footer>
 </ApplicationShell>
 
@@ -80,13 +100,22 @@
 	.container {
 		display: flex;
 	}
-	input[type="range"] {
-		margin-left: 0.25em;
+	select {
 		flex: 1;
+		z-index: 1;
 		height: 2em;
+		border-radius: 3px 0 0 3px;
+	}
+	input[type="range"] {
+		flex: 1;
+		z-index: 1;
+		height: 2em;
+		margin-left: 0.25em;
 	}
 	input[type="number"] {
+		z-index: 1;
 		width: 2em;
 		height: 2em;
+		border-radius: 0 3px 3px 0;
 	}
 </style>

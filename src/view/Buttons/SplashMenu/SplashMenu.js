@@ -1,22 +1,20 @@
-import { SvelteApplication }  from '@typhonjs-fvtt/runtime/svelte/application';
+import { SvelteApplication } from '@typhonjs-fvtt/runtime/svelte/application';
 import SplashMenu from './SplashMenu.svelte';
 import { localize } from '../../../lib/utils';
 
-export default class SplashMenuApplication extends SvelteApplication
-{
-    constructor(target, multiplier) {
-        super();
-        this.splashTarget = target
-        this.multiplier = multiplier
-    }
+export default class SplashMenuApplication extends SvelteApplication {
+   constructor(targets, multiplier) {
+      super();
+      this.splashTargets = targets
+      this.multiplier = multiplier
+   }
    /**
     * Default Application options
     *
     * @returns {object} options - Application options.
     * @see https://foundryvtt.com/api/interfaces/client.ApplicationOptions.html
     */
-   static get defaultOptions()
-   {
+   static get defaultOptions() {
       return foundry.utils.mergeObject(super.defaultOptions, {
          id: 'pf2e-target-damage',
          minimizable: true,
