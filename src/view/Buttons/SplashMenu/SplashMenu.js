@@ -19,12 +19,11 @@ export default class SplashMenuApplication extends SvelteApplication
    {
       return foundry.utils.mergeObject(super.defaultOptions, {
          id: 'pf2e-target-damage',
-         resizable: true,
          minimizable: true,
          title: localize("pf2e-target-damage.splashButton.radiusDialog.title"),
-         width: 385,
+         width: "auto",
          height: "auto",
-         maxWidth: 385,
+         minWidth: 385,
          svelte: {
             class: SplashMenu,
             target: document.body

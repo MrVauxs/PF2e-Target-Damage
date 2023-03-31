@@ -3,7 +3,7 @@
 <script>
 	import { getContext } from "svelte";
 	import { fade } from "svelte/transition";
-    import { localize } from "../../../lib/utils";
+	import { localize } from "../../../lib/utils";
 	import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
 	export let elementRoot = void 0;
 	const application = getContext("#external").application;
@@ -16,8 +16,7 @@
 
 	function updateSplashTargets(multiplier) {
 		let targets = target.tokensInRange(multiplier).filter((x) => x !== target.token.object);
-
-		splashTargets = targets
+		splashTargets = targets;
 	}
 </script>
 
@@ -27,21 +26,25 @@
 			<input type="number" on:input={updateSplashTargets(multiplier)} bind:value={multiplier} />
 			<input type="range" min="0" max="30" bind:value={multiplier} step="5" />
 		</div>
-		<ul class="targets">
+		<table class="targets">
 			{#each splashTargets as splashed}
-				<li class="target" transition:fade>
+				<tr class="target" transition:fade>
 					<img
 						src={splashed.document.texture.src}
 						class="token-image"
 						alt={splashed.name}
-						style="
-                transform: scale({splashed.document.texture.scaleX})"
+						style="transform: scale({splashed.document.texture.scaleX})"
 					/>
-					<div class="token-name">{splashed.name}</div>
-					<div class="token-distance">{localize("pf2e-target-damage.splashButton.radiusDialog.away", {name: target.name, distance: target.token.object.distanceTo(splashed)})}</div>
-				</li>
+					<td class="token-name">{splashed.name}</td>
+					<td class="token-distance"
+						>{localize("pf2e-target-damage.splashButton.radiusDialog.away", {
+							name: target.name,
+							distance: target.token.object.distanceTo(splashed),
+						})}</td
+					>
+				</tr>
 			{/each}
-		</ul>
+		</table>
 	</main>
 
 	<footer class="container buttons">
@@ -54,41 +57,32 @@
 					game.canvas.ping(x.document.center);
 				});
 				application.close();
-			}}>Target</button
+			}}>{localize("CONTROLS.CanvasSelectAll")}</button
 		>
-		<button type="submit" on:click={() => application.close()}>Close</button>
 	</footer>
 </ApplicationShell>
 
 <style lang="scss">
-    ul.targets {
-        list-style: none;
-        padding: 1em;
-    }
-    .token-distance {
-        margin-left: 2em;
-    }
-	.target {
-        margin: 0 0 1em 0;
-		display: flex;
-		align-items: center;
-	}
-    .token-name {
-        margin-left: 1.5em;
-    }
 	.token-image {
-		width: 5em;
+		width: 7.5em;
 		border: 0;
 	}
-	.buttons {
-		flex: 0;
+	.token-distance {
+		text-align: left;
+		padding: 0 1em;
+	}
+	.token-name {
+		font-weight: bold;
+		font-size: 1.25em;
+		text-align: center;
+		padding: 0 1em 0 2em;
 	}
 	.container {
 		display: flex;
 	}
 	input[type="range"] {
-        margin-left: 0.25em;
-        flex: 1;
+		margin-left: 0.25em;
+		flex: 1;
 		height: 2em;
 	}
 	input[type="number"] {
