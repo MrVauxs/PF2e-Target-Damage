@@ -108,7 +108,7 @@ export class TargetDamageTarget {
 
         const allTokens = canvas.tokens.placeables;
         // Get all tokens that are within range of the token
-        const splashedTokens = allTokens.filter((x) => token.distanceTo(x) <= range);
+        const splashedTokens = allTokens.filter((x) => token.distanceTo(x) <= range).sort((a, b) => token.distanceTo(a) - token.distanceTo(b));
         return splashedTokens;
     }
 }
