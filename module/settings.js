@@ -13,10 +13,10 @@ Hooks.once("init", () => {
 		name: game.i18n.localize("pf2e-target-damage.settings.targetButton.name"),
 		hint: game.i18n.localize("pf2e-target-damage.settings.targetButton.hint"),
 		type: Boolean,
+		default: false,
 		onChange: () => {
 			reRenderDamageButtons();
-		},
-		default: false
+		}
 	});
 	game.settings.register("pf2e-target-damage", "hideNPCs", {
 		scope: "world",

@@ -17,4 +17,17 @@ Hooks.on("init", () => {
             default: false
         }
     });
+
+    gameSettings.register({
+        namespace: moduleID,
+        key: "targetButton",
+        options: {
+            scope: "client",
+            config: true,
+            name: localize("pf2e-target-damage.settings.targetButton.name"),
+            hint: localize("pf2e-target-damage.settings.targetButton.hint"),
+            type: Boolean,
+            default: false
+        }
+    });
 });

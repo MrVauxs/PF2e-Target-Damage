@@ -1,19 +1,53 @@
 <script>
 	import { gameSettings } from "../../settings.js";
-	import { localize } from "../../lib/utils.js";
+	import { DamageRoll, localize } from "../../lib/utils.js";
 	export let targets = void 0;
 	export let message = void 0;
+	export let index = void 0;
 
 	// Settings
 	const classic = gameSettings.getWritableStore("classic");
 	const showTripleDamage = game.settings.get("pf2e", "critFumbleButtons");
 
-	console.log("Hello, world!", targets, message);
+	console.log("Hello, world!", targets, message, index);
+
+	async function applyDamage(message, tokenID, multiplier, addend = 0, promptModifier = false, rollIndex = 0) {
+		if (promptModifier) return shiftModifyDamage(message, tokenID, multiplier, rollIndex);
+		// Modified here to include TokenID
+		const tokens = canvas.tokens.ownedTokens.filter((token) => token.document._id === tokenID && token.actor);
+		// End modif
+		if (tokens.length === 0) {
+			const errorMsg = game.i18n.localize("pf2e-target-damage.error.cantFindToken");
+			ui.notifications.error(errorMsg);
+			return;
+		}
+
+		const shieldBlockRequest = CONFIG.PF2E.chatDamageButtonShieldToggle;
+		const roll = message.rolls.at(rollIndex);
+
+		if (!(roll instanceof DamageRoll)) throw Error("Unexpected error retrieving damage roll");
+
+		const damage = multiplier < 0 ? multiplier * roll.total + addend : roll.alter(multiplier, addend);
+
+		for (const token of tokens) {
+			await token.actor?.applyDamage({
+				damage,
+				token: token.document,
+				skipIWR: multiplier <= 0,
+				rollOptions: new Set(message.flags.pf2e.context?.options ?? []),
+				shieldBlockRequest,
+			});
+		}
+		// TODO: Shield Blocking, Other Buttons
+		toggleOffShieldBlock(message.id);
+	}
 </script>
 
 <div class="message-content">
 	{#each targets as target}
 		<wrapper class="pf2e-td" class:name-top={$classic} class:name-left={!$classic}>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 			<span
 				class="pf2e-td name"
 				data-tooltip-direction="LEFT"
@@ -30,7 +64,7 @@
 					type="button"
 					class="pf2e-td full-damage"
 					title="{localize('PF2E.DamageButton.Full')}&#013;{localize('PF2E.DamageButton.Adjust')}"
-					on:click|stopPropagation={() => console.log("Heck")}
+					on:click|stopPropagation={(e) => applyDamage(message, target.token?.id, 1, 0, e.shiftKey, index)}
 				>
 					<i class="fa-solid fa-heart-broken fa-fw" />
 					<span class="label">{localize("PF2E.DamageButton.FullShort")}</span>

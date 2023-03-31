@@ -18,3 +18,5 @@ export function localize(string, object = {}) {
         return game.i18n.localize(string);
     }
 }
+
+export const DamageRoll = CONFIG.Dice.rolls.find((R) => R.name === "DamageRoll");
