@@ -20,6 +20,7 @@
             "hint": "[Click] Select tokens for splash damage.\n[Right-Click] Adjust radius and target before selecting."
         },
         "hideButton": "Hide the system damage buttons.",
+        "showButton": "Show the system damage buttons.",
         "settings": {
             "hideNPCs": {
                 "name": "Hide non-Player Token Targets",

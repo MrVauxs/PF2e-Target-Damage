@@ -29,23 +29,21 @@
 	}
 </script>
 
-{#if $writableTargets.length}
-	<button
-		class="pf2e-td hide-button small-button"
-		title={localize("pf2e-target-damage.hideButton")}
-		on:click|stopPropagation|preventDefault={() => hide()}
-		style={$hideButton ? "display: none" : ""}
-	>
-		{#if icon}
-			<i class="fa fa-fw fa-eye" transition:fade={{ duration: 350 }} />
-		{:else}
-			<i class="fa fa-fw fa-eye-slash" transition:fade={{ duration: 350 }} />
-		{/if}
-	</button>
-{/if}
+<button
+	class="pf2e-td hide-button small-button"
+	title={!icon ? localize("pf2e-target-damage.hideButton") : localize("pf2e-target-damage.showButton")}
+	on:click|stopPropagation|preventDefault={() => hide()}
+	style={$hideButton || !$writableTargets.length ? "display: none" : ""}
+>
+	{#if icon}
+		<i class="fa fa-fw fa-eye" transition:fade={{ duration: 350 }} />
+	{:else}
+		<i class="fa fa-fw fa-eye-slash" transition:fade={{ duration: 350 }} />
+	{/if}
+</button>
 
 <style>
-	.fa {
+	i {
 		position: absolute;
 	}
 </style>
