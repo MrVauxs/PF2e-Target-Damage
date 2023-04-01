@@ -34,7 +34,7 @@
 		</div>
 		<table class="targets">
 			{#each splashTargets as splashed}
-				<tr class="target" transition:fade>
+				<tr class="target" transition:fade|local>
 					<img
 						src={splashed.document.texture.src}
 						class="token-image"

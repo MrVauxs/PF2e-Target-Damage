@@ -30,4 +30,29 @@ Hooks.on("init", () => {
             default: false
         }
     });
+
+    gameSettings.register({
+        namespace: moduleID,
+        key: "hideTheHidingButtons",
+        options: {
+            scope: "user",
+            config: true,
+            name: localize("pf2e-target-damage.settings.hideTheHidingButtons.name"),
+            hint: localize("pf2e-target-damage.settings.hideTheHidingButtons.hint"),
+            type: Boolean,
+            default: false
+        }
+    });
+    gameSettings.register({
+        namespace: moduleID,
+        key: "hideOGButtons",
+        options: {
+            scope: "user",
+            config: true,
+            name: localize("pf2e-target-damage.settings.hideOGButtons.name"),
+            hint: localize("pf2e-target-damage.settings.hideOGButtons.hint"),
+            type: Boolean,
+            default: false
+        }
+    });
 });

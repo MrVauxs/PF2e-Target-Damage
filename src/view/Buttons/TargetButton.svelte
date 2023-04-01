@@ -1,13 +1,13 @@
 <script>
+	import { TargetDamageTarget } from "../../lib/target";
 	/* global game */
 	import { localize } from "../../lib/utils";
 	import { gameSettings } from "../../settings.js";
-	// svelte-ignore unused-export-let
-	export let targets = void 0; // For future use when we have multiple rolls support?
 	export let message = void 0;
+	export let writableTargets = void 0;
 
 	// Settings
-	const targetButton = gameSettings.getWritableStore("targetButton");
+	const targetButton = gameSettings.getReadableStore("targetButton");
 
 	function updateMessageWithFlags(message, event) {
 		const targetsFlags = message.flags["pf2e-target-damage"].targets;
@@ -61,6 +61,8 @@
 				},
 			},
 		});
+
+		writableTargets = targetsFinal.map((x) => new TargetDamageTarget(x));
 	}
 </script>
 

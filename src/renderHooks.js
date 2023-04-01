@@ -2,6 +2,9 @@ import { TargetDamageTarget } from "./lib/target.js";
 import TargetDamage from './view/Damage/TargetDamage.svelte';
 import SplashButton from './view/Buttons/SplashButton.svelte';
 import TargetButton from './view/Buttons/TargetButton.svelte';
+import HideButton from './view/Buttons/HideButton.svelte';
+import { writable } from "svelte/store";
+
 
 /**
  * Returns the flag data for the given message.
@@ -18,7 +21,9 @@ function getFlagData(message) {
             return new TargetDamageTarget(target);
         });
 
-        return { targets, message };
+        const writableTargets = writable(targets);
+
+        return { targets, message, writableTargets };
     }
 
     return false;
@@ -34,6 +39,7 @@ Hooks.on('renderChatMessage', (message, html) => {
 
         rolls.forEach((roll, index) => {
             flagData.index = index;
+            flagData.html = html;
             if (roll.options.splashOnly) {
                 const target = html[0].getElementsByClassName("dice-roll damage-roll")[index].getElementsByClassName("dice-total")[0];
                 const anchor = target.getElementsByClassName("total")[0];
@@ -51,6 +57,8 @@ Hooks.on('renderChatMessage', (message, html) => {
 
                     message._svelteTargetDamage.targetButtons = new TargetButton({ target, props: flagData, anchor });
                 };
+
+                message._svelteTargetDamage.targetButtons = new HideButton({ target: html[0].getElementsByClassName("message-content")[0].getElementsByClassName("dice-total")[0], props: flagData });
             }
         });
     }
