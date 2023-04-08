@@ -4,7 +4,7 @@ import SplashButton from './view/Buttons/SplashButton.svelte';
 import TargetButton from './view/Buttons/TargetButton.svelte';
 import HideButton from './view/Buttons/HideButton.svelte';
 import TargetSaves from './view/Saves/TargetSaves.svelte';
-import GrabDamageButton from './view/Buttons/GrabDamageButton.svelte';
+//import GrabDamageButton from './view/Buttons/GrabDamageButton.svelte';
 import { writable } from "svelte/store";
 
 
@@ -79,7 +79,7 @@ Hooks.on('renderChatMessage', (message, html) => {
 
                 if (message.isAuthor || message.isOwner) {
                     message._svelteTargetDamage.targetButtons = new TargetButton({ target: saveButton, props });
-                    // message._svelteTargetDamage.grabDamageButtons = new GrabDamageButton({ target: damageButton, props });
+                    //message._svelteTargetDamage.grabDamageButtons = new GrabDamageButton({ target: damageButton, props });
                 };
 
                 message._svelteTargetDamage.saveButtons = new TargetSaves({ target, props, anchor: target.getElementsByClassName("owner-buttons")[0] });

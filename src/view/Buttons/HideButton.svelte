@@ -12,17 +12,19 @@
 	let auto = gameSettings.getReadableStore("hideOGButtons");
 
 	function hide(hide = false) {
-		const buttons = jQuery(html).find('section[data-roll-index="' + index + '"]');
-		if (!buttons.length) return ui.notifications.error("aaaaaaaaaaaaaaaaaaaaaaa");
-		if (hide) {
-			buttons.slideUp(350, () => {
-				icon = Boolean(buttons[0].style.display);
-			});
-		} else {
-			buttons.slideToggle(350, () => {
-				icon = Boolean(buttons[0].style.display);
-			});
-		}
+		setTimeout(() => {
+			const buttons = jQuery(html).find('section[data-roll-index="' + index + '"]');
+			if (!buttons.length) return new Error("Couldn't find the damage buttons to hide.");
+			if (hide) {
+				buttons.slideUp(350, () => {
+					icon = Boolean(buttons[0].style.display);
+				});
+			} else {
+				buttons.slideToggle(350, () => {
+					icon = Boolean(buttons[0].style.display);
+				});
+			}
+		}, 0);
 	}
 
 	$: hide($auto);

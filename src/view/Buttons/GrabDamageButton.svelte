@@ -14,10 +14,6 @@
 		const damageButton = target.querySelector('[data-action="spellDamage"]');
 
 		jQuery(damageButton).wrap('<div class="spell-button pf2e-td target-section"></div>');
-		// Doesn't work
-		const props = getFlagData(damageMessage);
-		props.html = html;
-		damageMessage._svelteTargetDamage.linkedDamageButton = new TargetDamage({ target, props });
 	}
 </script>
 
