@@ -3,10 +3,12 @@
         "removeTarget": "Remove Target? [Ctrl-Click]",
         "applied": "The target has been processed.",
         "error": {
-            "cantFindToken": "Can't find token."
+            "cantFindToken": "Can't find token.",
+            "cantFindMessage": "Can't find damage roll."
         },
         "noTargets": "No tokens have been targeted.",
         "hidden": "Unknown Token",
+        "linkDamage": "Display Damage Targets from Damage Roll",
         "targetButton": {
             "hint-false": "[Click] Add current targets to the message.\n[Right-Click] Replace the targets in the message with current targets.",
             "hint-true": "[Click] Replace the targets in the message with current targets.\n[Right-Click] Add current targets to the message."

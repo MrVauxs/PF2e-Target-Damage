@@ -43,6 +43,7 @@ Hooks.on("init", () => {
             default: false
         }
     });
+
     gameSettings.register({
         namespace: moduleID,
         key: "hideOGButtons",
@@ -51,6 +52,19 @@ Hooks.on("init", () => {
             config: true,
             name: localize("pf2e-target-damage.settings.hideOGButtons.name"),
             hint: localize("pf2e-target-damage.settings.hideOGButtons.hint"),
+            type: Boolean,
+            default: false
+        }
+    });
+
+    gameSettings.register({
+        namespace: moduleID,
+        key: "hideNPCs",
+        options: {
+            scope: "world",
+            config: true,
+            name: localize("pf2e-target-damage.settings.hideNPCs.name"),
+            hint: localize("pf2e-target-damage.settings.hideNPCs.hint"),
             type: Boolean,
             default: false
         }

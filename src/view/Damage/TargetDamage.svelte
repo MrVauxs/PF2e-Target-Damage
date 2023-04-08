@@ -1,5 +1,6 @@
 <script>
 	import { gameSettings } from "../../settings.js";
+	import { updateDealtDamage } from "../../rollHooks.js";
 	import { DamageRoll, localize } from "../../lib/utils.js";
 	export let targets = void 0;
 	export let message = void 0;
@@ -39,6 +40,15 @@
 		}
 
 		target.shieldEnabled = false;
+
+		if (message.isAuthor || game.user.isGM) {
+			updateDealtDamage({ degree: multiplier, targets, message, tokenID: target.token?.id });
+		} else {
+			game.socket.emit("module.pf2e-target-damage", {
+				type: "updateDealtDamage",
+				args: { degree: multiplier, targets, message, tokenID: target.token?.id },
+			});
+		}
 	}
 
 	function shiftModifyDamage(message, target, multiplier, rollIndex) {
@@ -88,6 +98,7 @@
 			<button
 				type="button"
 				class="pf2e-td full-damage"
+				class:applied={target.applied.find((a) => a === "full")}
 				title="{localize('PF2E.DamageButton.Full')}&#013;{localize('PF2E.DamageButton.Adjust')}"
 				on:click|stopPropagation={async (e) => {
 					await applyDamage(message, target, 1, 0, e.shiftKey, index);
@@ -100,6 +111,7 @@
 			<button
 				type="button"
 				class="pf2e-td half-damage"
+				class:applied={target.applied.find((a) => a === "half")}
 				title="{localize('PF2E.DamageButton.Half')}&#013;{localize('PF2E.DamageButton.Adjust')}"
 				on:click|stopPropagation={async (e) => {
 					await applyDamage(message, target, 0.5, 0, e.shiftKey, index);
@@ -113,6 +125,7 @@
 			<button
 				type="button"
 				class="pf2e-td double-damage"
+				class:applied={target.applied.find((a) => a === "double")}
 				title="{localize('PF2E.DamageButton.Double')}&#013;{localize('PF2E.DamageButton.Adjust')}"
 				on:click|stopPropagation={async (e) => {
 					await applyDamage(message, target, 2, 0, e.shiftKey, index);
@@ -126,6 +139,7 @@
 				<button
 					type="button"
 					class="pf2e-td triple-damage"
+					class:applied={target.applied.find((a) => a === "triple")}
 					title="{localize('PF2E.DamageButton.Triple')}&#013;{localize('PF2E.DamageButton.Adjust')}"
 					on:click|stopPropagation={async (e) => {
 						await applyDamage(message, target, 3, 0, e.shiftKey, index);
@@ -151,6 +165,7 @@
 			<button
 				type="button"
 				class="pf2e-td heal-damage"
+				class:applied={target.applied.find((a) => a === "heal")}
 				title="{localize('PF2E.DamageButton.Healing')}&#013;{localize('PF2E.DamageButton.Adjust')}"
 				on:click|stopPropagation={async (e) => {
 					await applyDamage(message, target, -1, 0, e.shiftKey, index);

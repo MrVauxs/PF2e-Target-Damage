@@ -4,6 +4,7 @@ export class TargetDamageTarget {
     constructor(target, message) {
         this.id = target?.id;
         this.roll = target?.roll;
+        this.damage = target?.damage;
         this.tokenUuid = target?.tokenUuid;
         this.actorUuid = target?.actorUuid;
         this.applied = Array.isArray(target?.applied) ? target?.applied : [target?.applied].filter((x) => !!x);
@@ -46,6 +47,7 @@ export class TargetDamageTarget {
     }
 
     get name() {
+        if (this.isOwner) return this.token.name ?? this.actor.name;
         // If tokens set name visibility and the players can't see the name and the user isn't a GM, hide the name.
         return !this.mystified && !game.user.isGM ? game.i18n.localize("pf2e-target-damage.hidden") : this.token.name ?? this.actor.name;
     }

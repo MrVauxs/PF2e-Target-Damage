@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from "svelte";
 	import { localize } from "../../lib/utils";
 	export let html = void 0;
 	export let index = void 0;
@@ -11,8 +12,8 @@
 	let auto = gameSettings.getReadableStore("hideOGButtons");
 
 	function hide(hide = false) {
-		// TODO: Replace with actual javascript
 		const buttons = jQuery(html).find('section[data-roll-index="' + index + '"]');
+		if (!buttons.length) return ui.notifications.error("aaaaaaaaaaaaaaaaaaaaaaa");
 		if (hide) {
 			buttons.slideUp(350, () => {
 				icon = Boolean(buttons[0].style.display);
@@ -24,9 +25,7 @@
 		}
 	}
 
-	$: if ($auto) {
-		hide(true);
-	}
+	$: hide($auto);
 </script>
 
 <button

@@ -68,6 +68,16 @@ Hooks.on("deleteChatMessage", (message) => {
     }
 });
 
+Hooks.on("ready", async () => {
+    game.socket.on("module.pf2e-target-damage", async (args) => {
+        switch (args.type) {
+            case "linkRolls": await linkRolls(args.message); break;
+            case "updateDealtDamage": await updateDealtDamage(args.args); break;
+        }
+    });
+});
+
+
 /**
  * Link the rolls between messages
  *
@@ -128,4 +138,34 @@ async function linkRolls(message) {
             }
         });
     }
+}
+
+/**
+ * Link the rolls between messages
+ *
+ * @param {ChatMessage} message The message to link
+ */
+export async function updateDealtDamage(args) {
+    let { degree, targets, message, tokenID } = args;
+
+    if (Number.isNumeric(degree)) {
+        switch (degree) {
+            case -1: degree = "heal"; break;
+            case 0.5: degree = "half"; break;
+            case 1: degree = "full"; break;
+            case 2: degree = "double"; break;
+            case 3: degree = "triple"; break;
+        }
+    }
+
+    message = game.messages.get(message.id ?? message._id);
+    if (!(message.isAuthor || game.user.isGM)) return;
+
+    const newTargets = targets.map((target) => {
+        if (target.id === tokenID) {
+            Array.isArray(target.applied) ? target.applied.push(degree) : target.applied = [target.applied, degree];
+        }
+        return target;
+    });
+    message.update({ flags: { "pf2e-target-damage": { targets: newTargets } } })
 }

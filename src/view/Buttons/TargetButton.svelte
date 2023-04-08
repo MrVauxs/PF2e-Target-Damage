@@ -1,6 +1,6 @@
 <script>
-	import { TargetDamageTarget } from "../../lib/target";
 	/* global game */
+	import { TargetDamageTarget } from "../../lib/target";
 	import { localize } from "../../lib/utils";
 	import { gameSettings } from "../../settings.js";
 	export let message = void 0;
