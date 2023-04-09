@@ -1,9 +1,11 @@
 // Flag what targets were at the time of the roll
 Hooks.on("preCreateChatMessage", (message) => {
     if (message?.flags?.["pf2e-target-damage"]?.targets) {
+        // If flag already exists, whether because of a macro or existing code, don't do anything.
         return;
     }
     if (message.rolls[0]?.options.evaluatePersistent) {
+        // If it's persistent damage (which hopefully should just be the first and only roll... ever), only use the token that takes the persistent damage, presumably the author.
         message.updateSource({
             "flags.pf2e-target-damage.targets": [message.token.object].map((target) => {
                 return {
@@ -14,6 +16,7 @@ Hooks.on("preCreateChatMessage", (message) => {
             }),
         });
     } else {
+        // Otherwise, create the flag using the current targets.
         message.updateSource({
             "flags.pf2e-target-damage.targets": Array.from(game.user.targets).map((target) => {
                 return {

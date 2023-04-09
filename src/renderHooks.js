@@ -1,45 +1,21 @@
-import { TargetDamageTarget } from "./lib/target.js";
-import TargetDamage from './view/Damage/TargetDamage.svelte';
+import TargetDamageStore from "./lib/flagStores.js";
+import TargetDamage from './view/TargetDamage.svelte';
 import SplashButton from './view/Buttons/SplashButton.svelte';
 import TargetButton from './view/Buttons/TargetButton.svelte';
 import HideButton from './view/Buttons/HideButton.svelte';
-import TargetSaves from './view/Saves/TargetSaves.svelte';
+import TargetSaves from './view/TargetSaves.svelte';
 //import GrabDamageButton from './view/Buttons/GrabDamageButton.svelte';
-import { writable } from "svelte/store";
-
-
-/**
- * Returns the flag data for the given message.
- *
- * @param {ChatMessage} message Message
- *
- * @returns {object} Flag data
- */
-export function getFlagData(message) {
-    const flagData = message.getFlag('pf2e-target-damage', 'targets');
-
-    if (Array.isArray(flagData)) {
-        const targets = flagData.map((target) => {
-            return new TargetDamageTarget(target);
-        });
-
-        const writableTargets = writable(targets);
-
-        return { targets, message, writableTargets };
-    }
-
-    return false;
-}
 
 Hooks.on('renderChatMessage', (message, html) => {
     const DamageRoll = CONFIG.Dice.rolls.find((r) => r.name === "DamageRoll");
     const rolls = message.rolls.filter((roll) => roll instanceof DamageRoll);
-    const props = getFlagData(message);
+    const props = { props: new TargetDamageStore(message) };
+    props.props.html = html;
 
     if (props) {
         message._svelteTargetDamage = {};
-        props.html = html;
 
+        // Is a Roll.
         rolls.forEach((roll, index) => {
             props.index = index;
             if (roll.options.splashOnly) {

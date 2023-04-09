@@ -1,10 +1,14 @@
 <script>
-	import { gameSettings } from "../../settings.js";
-	import { updateDealtDamage } from "../../rollHooks.js";
-	import { DamageRoll, localize } from "../../lib/utils.js";
-	export let targets = void 0;
-	export let message = void 0;
-	export let index = void 0;
+	import { gameSettings } from "../settings.js";
+	import { updateDealtDamage } from "../rollHooks.js";
+	import { DamageRoll, localize } from "../lib/utils.js";
+	export let props = void 0;
+
+	let targets = $props;
+	let message = props._message;
+	let index = props.index;
+
+	console.log(targets);
 
 	// Settings
 	const classic = gameSettings.getWritableStore("classic");
@@ -79,10 +83,11 @@
 	}
 </script>
 
+<!--
 {#each targets as target}
 	<wrapper class="pf2e-td" class:name-top={$classic} class:name-left={!$classic}>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+		<!-- svelte-ignore a11y-click-events-have-key-events --/>
+		<!-- svelte-ignore a11y-mouse-events-have-key-events --/>
 		<span
 			class="pf2e-td name"
 			data-tooltip-direction="LEFT"
@@ -195,3 +200,4 @@
 		</ul>
 	</div>
 {/each}
+-->

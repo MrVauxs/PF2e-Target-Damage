@@ -1,7 +1,7 @@
 <script>
 	/* global game */
-	import { gameSettings } from "../../settings.js";
-	import { localize } from "../../lib/utils";
+	import { gameSettings } from "../settings.js";
+	import { localize } from "../lib/utils.js";
 	export let message = void 0;
 	export let html = void 0;
 	export let writableTargets = void 0;

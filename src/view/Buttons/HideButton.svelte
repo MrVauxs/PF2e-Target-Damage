@@ -1,9 +1,11 @@
 <script>
 	import { onMount } from "svelte";
 	import { localize } from "../../lib/utils";
-	export let html = void 0;
-	export let index = void 0;
-	export let writableTargets = void 0;
+	export let props = void 0;
+
+	const html = props.html;
+	const index = props.index;
+
 	import { gameSettings } from "../../settings.js";
 	import { fade } from "svelte/transition";
 
@@ -34,7 +36,7 @@
 	class="pf2e-td hide-button small-button"
 	title={!icon ? localize("pf2e-target-damage.hideButton") : localize("pf2e-target-damage.showButton")}
 	on:click|stopPropagation|preventDefault={() => hide()}
-	style={$hideButton || !$writableTargets.length ? "display: none" : ""}
+	style={$hideButton || !$props.length ? "display: none" : ""}
 >
 	{#if icon}
 		<i class="fa fa-fw fa-eye" transition:fade={{ duration: 350 }} />

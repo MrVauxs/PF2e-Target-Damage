@@ -3,8 +3,10 @@
 	import { TargetDamageTarget } from "../../lib/target";
 	import { localize } from "../../lib/utils";
 	import { gameSettings } from "../../settings.js";
-	export let message = void 0;
-	export let writableTargets = void 0;
+	export let props = void 0;
+
+	let message = props._message;
+	let writableTargets = $props;
 
 	// Settings
 	const targetButton = gameSettings.getReadableStore("targetButton");

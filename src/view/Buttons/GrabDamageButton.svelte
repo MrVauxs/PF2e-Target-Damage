@@ -1,6 +1,6 @@
 <script>
 	import { localize } from "../../lib/utils";
-	import TargetDamage from "../Damage/TargetDamage.svelte";
+	import TargetDamage from "../TargetDamage.svelte";
 	import { getFlagData } from "../../renderHooks";
 	export let targets = void 0;
 	export let message = void 0;
