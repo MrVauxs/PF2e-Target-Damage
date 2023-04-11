@@ -2,8 +2,10 @@
 	import SplashMenuApplication from "./SplashMenu/SplashMenu.js";
 	import { localize } from "../../lib/utils";
 	import { TargetDamageTarget } from "../../lib/target.js";
-	export let targets = void 0;
-	export let message = void 0;
+	export let props = void 0;
+
+	let targets = $props;
+	let message = props._message;
 
 	function onClick(e) {
 		const target = targets[0] ?? new TargetDamageTarget(Array.from(game.user.targets)[0]);

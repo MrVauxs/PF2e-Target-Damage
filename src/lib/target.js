@@ -12,6 +12,23 @@ export class TargetDamageTarget {
         this.debugOwner = target?.debugOwner; // For testing purposes
     }
 
+    get json() {
+        let prototype = {
+            id: this.id,
+            roll: this.roll,
+            damage: this.damage,
+            tokenUuid: this.tokenUuid,
+            actorUuid: this.actorUuid,
+            applied: this.applied,
+            messageUuid: this.messageUuid,
+            debugOwner: this.debugOwner,
+        }
+
+        let clean = Object.fromEntries(Object.entries(prototype).filter(([_, v]) => v != null));
+
+        return clean
+    }
+
     // returns the DOCUMENT
     get token() {
         const token = fromUuidSync(this.tokenUuid);

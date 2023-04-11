@@ -6,7 +6,6 @@
 	export let props = void 0;
 
 	let message = props._message;
-	let writableTargets = $props;
 
 	// Settings
 	const targetButton = gameSettings.getReadableStore("targetButton");
@@ -46,25 +45,17 @@
 			targetsFinal.find((target) => target.id === id)
 		);
 
-		message.update({
-			flags: {
-				"pf2e-target-damage": {
-					targets: targetsFinal.map((target) => {
-						return {
-							id: target.id,
-							tokenUuid: target.tokenUuid || target.document.uuid,
-							actorUuid: target.actorUuid || target.actor.uuid,
-							roll: target.roll,
-							damage: target.damage,
-							applied: target.applied,
-							debugOwner: target.debugOwner,
-						};
-					}),
-				},
-			},
+		$props = targetsFinal.map((target) => {
+			return {
+				id: target.id,
+				tokenUuid: target.tokenUuid || target.document.uuid,
+				actorUuid: target.actorUuid || target.actor.uuid,
+				roll: target.roll,
+				damage: target.damage,
+				applied: target.applied,
+				debugOwner: target.debugOwner,
+			};
 		});
-
-		writableTargets = targetsFinal.map((x) => new TargetDamageTarget(x));
 	}
 </script>
 

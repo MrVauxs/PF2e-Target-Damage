@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { TargetDamageTarget } from './target.js';
 
 export default class TargetDamageStore {
@@ -9,17 +9,15 @@ export default class TargetDamageStore {
             throw new Error('PF2e Target Damage | No flag found on message above.');
         }
 
-        this._targets = writable(this._message.flags['pf2e-target-damage'].targets || [])
+        this._targets = writable(this._message.flags['pf2e-target-damage'].targets.map(t => new TargetDamageTarget(t, this._message)) || [])
     }
 
     get flag() {
         return this._message.flags['pf2e-target-damage'];
     }
 
-    get targets() {
-        let targetDamageTargets = []
-        this._targets.subscribe((v) => { targetDamageTargets = v.map(v => new TargetDamageTarget(v, this._message)) })
-        return targetDamageTargets
+    get json() {
+        return get(this._targets).map(t => t.json);
     }
 
     validate(target) {
@@ -34,15 +32,37 @@ export default class TargetDamageStore {
         }
     }
 
-    updateMessage() {
-        this._targets.subscribe(targets => {
-            this._message.setFlag('pf2e-target-damage', 'targets', targets).then(() => {
-                console.log('PF2e Target Damage | Updated message flag', this.flag);
-            });
+    updateMessage(targets = this.json) {
+        const objectsEqual = (o1, o2) =>
+            typeof o1 === 'object' && Object.keys(o1).length > 0
+                ? Object.keys(o1).length === Object.keys(o2).length
+                && Object.keys(o1).every(p => objectsEqual(o1[p], o2[p]))
+                : o1 === o2;
+
+        const arraysEqual = (a1, a2) => a1.length === a2.length && a1.every((o, idx) => objectsEqual(o, a2[idx]));
+
+        if (arraysEqual(this.flag.targets, targets)) {
+            return console.log('PF2e Target Damage | No change in targets, skipping update');
+        };
+        this._message.setFlag('pf2e-target-damage', 'targets', targets).then(() => {
+            return console.log('PF2e Target Damage | Updated message flag', this.flag);
         });
     }
 
     add(target) {
+        if (target.document.documentName === "Token") {
+            target = {
+                actorUuid: target.document.actor.uuid,
+                tokenUuid: target.document.uuid,
+                id: target.document.id,
+            }
+        }
+
+        if (Array.isArray(target)) {
+            target.forEach(t => this.add(t));
+            return;
+        }
+
         this.validate(target)
         this._targets.update(v => {
             const allTargets = [...v, target];

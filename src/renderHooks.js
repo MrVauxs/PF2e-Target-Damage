@@ -4,6 +4,7 @@ import SplashButton from './view/Buttons/SplashButton.svelte';
 import TargetButton from './view/Buttons/TargetButton.svelte';
 import HideButton from './view/Buttons/HideButton.svelte';
 import TargetSaves from './view/TargetSaves.svelte';
+import Debug from "./debug.svelte"
 //import GrabDamageButton from './view/Buttons/GrabDamageButton.svelte';
 
 Hooks.on('renderChatMessage', (message, html) => {
@@ -15,6 +16,7 @@ Hooks.on('renderChatMessage', (message, html) => {
     if (props) {
         message._svelteTargetDamage = {};
 
+        return message._svelteTargetDamage.debug = new Debug({ props, target: html[0].getElementsByClassName("message-content")[0] });
         // Is a Roll.
         rolls.forEach((roll, index) => {
             props.index = index;
@@ -72,7 +74,7 @@ Hooks.on('renderChatMessage', (message, html) => {
 });
 
 Hooks.on('preDeleteChatMessage', (message) => {
-    Object.keys(message._svelteTargetDamage).forEach((key) => {
+    Object.keys(message?._svelteTargetDamage).forEach((key) => {
         if (typeof message?._svelteTargetDamage[key]?.$destroy === 'function') {
             message._svelteTargetDamage[key].$destroy();
         }

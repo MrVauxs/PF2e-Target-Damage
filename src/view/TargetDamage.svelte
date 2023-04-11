@@ -4,7 +4,7 @@
 	import { DamageRoll, localize } from "../lib/utils.js";
 	export let props = void 0;
 
-	let targets = $props;
+	let targets = props.targets;
 	let message = props._message;
 	let index = props.index;
 
@@ -83,11 +83,10 @@
 	}
 </script>
 
-<!--
 {#each targets as target}
 	<wrapper class="pf2e-td" class:name-top={$classic} class:name-left={!$classic}>
-		<!-- svelte-ignore a11y-click-events-have-key-events --/>
-		<!-- svelte-ignore a11y-mouse-events-have-key-events --/>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 		<span
 			class="pf2e-td name"
 			data-tooltip-direction="LEFT"
@@ -200,4 +199,3 @@
 		</ul>
 	</div>
 {/each}
--->
