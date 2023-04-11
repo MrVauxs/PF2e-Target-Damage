@@ -298,10 +298,29 @@ async function applyDamage(message, tokenID, multiplier, addend = 0, promptModif
 
 	const damage = multiplier < 0 ? multiplier * roll.total + addend : roll.alter(multiplier, addend);
 
+	// Get origin roll options and apply damage to a contextual clone: this may influence condition IWR, for example
+	const messageRollOptions = message.flags.pf2e.context?.options ?? [];
+	const originRollOptions = messageRollOptions
+		.filter((o) => o.startsWith("self:"))
+		.map((o) => o.replace(/^self/, "origin"));
+
 	for (const token of tokens) {
-		await token.actor?.applyDamage({
+		if (!token.actor) continue;
+
+		const ephemeralEffects =
+			multiplier > 0
+				? await extractEphemeralEffects({
+					affects: "target",
+					origin: message.actor,
+					target: token.actor,
+					item: message.item,
+					domains: ["damage-received"],
+					options: messageRollOptions,
+				})
+				: [];
+		await token.actor.getContextualClone(originRollOptions, ephemeralEffects).applyDamage({
 			damage,
-			token: token.document,
+			token,
 			skipIWR: multiplier <= 0,
 			rollOptions: new Set(message.flags.pf2e.context?.options ?? []),
 			shieldBlockRequest,

@@ -1,3 +1,7 @@
+# 2.4.10
+
+- Updated the damage function to have parity with PF2e 4.10.4.
+
 # 2.4.9
 
 - Updated the module to be compatible with PF2e 4.10.0.
