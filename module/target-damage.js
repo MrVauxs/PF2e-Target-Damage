@@ -56,7 +56,7 @@ class TargetDamageTarget {
 // Flag what targets were at the time of the roll
 Hooks.on("preCreateChatMessage", (message) => {
 	if (message?.flags?.["pf2e-target-damage"]?.targets) return;
-	if (message.rolls[0]?.options.evaluatePersistent) {
+	if (message.rolls[0]?.options.evaluatePersistent || "<div>Received fast healing</div>" === message.flavor) {
 		message.updateSource({
 			"flags.pf2e-target-damage.targets": [message.token.object].map((target) => {
 				return {
