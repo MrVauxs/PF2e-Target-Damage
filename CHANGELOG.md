@@ -1,3 +1,8 @@
+# 2.4.12
+
+- Added Scatter Support for "Select Splashed Tokens" button.
+
+
 # 2.4.11
 
 - Fixed a bug from previous update.

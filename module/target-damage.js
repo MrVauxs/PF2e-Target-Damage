@@ -429,7 +429,16 @@ Hooks.on("renderChatMessage", (message, html) => {
 							// Increase Radius Dialogue
 							let multiplier = 5;
 
-							if (message.flags.pf2e?.context?.options.includes("feat:expanded-splash")) multiplier = 10;
+							// Expanded Splash and Bomb
+							if (message.flags.pf2e?.context?.options.includes("feat:expanded-splash") && message.flags.pf2e?.context?.options.includes("bomb")) multiplier = 10;
+
+							// Scatter
+							if (message.flags.pf2e?.context?.options.includes("item:trait:scatter")) {
+								message.flags.pf2e?.context?.options.filter((o) => o.startsWith("item:trait:scatter-")).forEach((o) => {
+									const [_, radius] = o.split("-");
+									multiplier = Math.max(multiplier, Number(radius))
+								});
+							}
 
 							if (e.shiftKey) {
 								new Dialog({
