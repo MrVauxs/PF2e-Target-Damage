@@ -1,3 +1,8 @@
+# 2.4.13
+
+- Confirmed V11 Compatibility.
+- Added Thumbnail Image.
+
 # 2.4.12
 
 - Added Scatter Support for "Select Splashed Tokens" button.
