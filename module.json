@@ -86,7 +86,7 @@
 		{
 			"type": "setup",
 			"name": "Setup Screen",
-			"url": "assets/setup.webm"
+			"url": "modules/pf2e-target-damage/assets/setup.webp"
 		}
 	],
 	"url": "https://github.com/MrVauxs/PF2e-Target-Damage",
