@@ -86,7 +86,7 @@
 		{
 			"type": "setup",
 			"name": "Setup Screen",
-			"path": "assets/setup.webm"
+			"url": "assets/setup.webm"
 		}
 	],
 	"url": "https://github.com/MrVauxs/PF2e-Target-Damage",
