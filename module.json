@@ -16,7 +16,7 @@
 	],
 	"compatibility": {
 		"minimum": "10",
-		"verified": "10"
+		"verified": "11"
 	},
 	"relationships": {
 		"flags": {
@@ -80,6 +80,13 @@
 			"lang": "zh-tw",
 			"name": "正體中文",
 			"path": "languages/zh-tw.json"
+		}
+	],
+	"media": [
+		{
+			"type": "setup",
+			"name": "Setup Screen",
+			"path": "assets/setup.webm"
 		}
 	],
 	"url": "https://github.com/MrVauxs/PF2e-Target-Damage",
