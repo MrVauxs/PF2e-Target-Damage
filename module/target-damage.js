@@ -982,7 +982,9 @@ Hooks.on("renderChatMessage", (message, html) => {
 
     // Not a damage roll, proceed with Target Saves
     if (rolls.length < 1) {
-      const targetSection = $(html.find('[data-action="save"]'));
+      const targetSection = $(
+        html.find('[data-action="save"], [data-action="spell-save"]')
+      );
       targetSection.wrap(
         '<div class="spell-button pf2e-td target-section"></div>'
       );
@@ -1003,20 +1005,27 @@ Hooks.on("renderChatMessage", (message, html) => {
         const spell =
           message.item || fromUuidSync(message.flags.pf2e.origin.uuid);
         const save = spell?.system?.save?.value;
-        if (!html.find('[data-action="save"]').attr("data-dc")) return; // Message has no saving throw button
+        if (
+          !html
+            .find('[data-action="save"], [data-action="spell-save"]')
+            .attr("data-dc")
+        )
+          return; // Message has no saving throw button
         if (!save) return; // Not a saving throw spell
 
         // Add hook to Damage
-        html.find("[data-action='spellDamage']").click((e) => {
-          Hooks.once("preCreateChatMessage", (damageMessage) => {
-            damageMessage.updateSource({
-              "flags.pf2e-target-damage": {
-                origin: message.id,
-                targets: targets,
-              },
+        html
+          .find("[data-action='spellDamage'], [data-action='spell-damage']")
+          .click((e) => {
+            Hooks.once("preCreateChatMessage", (damageMessage) => {
+              damageMessage.updateSource({
+                "flags.pf2e-target-damage": {
+                  origin: message.id,
+                  targets: targets,
+                },
+              });
             });
           });
-        });
 
         const buttonTemplate = $(
           `<wrapper class="pf2e-td"><span class="pf2e-td name"></span><button class="pf2e-td save"></button></wrapper>`
@@ -1098,7 +1107,9 @@ Hooks.on("renderChatMessage", (message, html) => {
               const saveType = item.system.save.value;
 
               const dc = Number(
-                html.find('[data-action="save"]').attr("data-dc") ?? "NaN"
+                html
+                  .find('[data-action="save"], [data-action="spell-save"]')
+                  .attr("data-dc") ?? "NaN"
               );
               const itemTraits = item.system.traits?.value ?? [];
 
