@@ -1017,8 +1017,8 @@ Hooks.on("renderChatMessage", (message, html) => {
         html
           .find("[data-action='spellDamage'], [data-action='spell-damage']")
           .click((e) => {
-            Hooks.once("preCreateChatMessage", (damageMessage) => {
-              damageMessage.updateSource({
+            Hooks.once("createChatMessage", (damageMessage) => {
+              damageMessage.update({
                 "flags.pf2e-target-damage": {
                   origin: message.id,
                   targets: targets,
