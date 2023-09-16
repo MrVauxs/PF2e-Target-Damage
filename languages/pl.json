@@ -7,9 +7,9 @@
 		"splashButton": {
 			"radiusDialog": {
 				"title": "Zmień Zasięg",
-				"content": "Zasięg Plusku:"
+				"content": "Promień rozprysku:"
 			},
-			"hint": "[Klik] Wybierz tokeny dla obrażeń plusku.\n[Shift-Klik] Wyreguluj promień przed wybraniem."
+			"hint": "[Kliknij] Wybierz tokeny do zadania obrażeń rozpryskowych.\n[Shift-Click] Dostosuj promień przed wybraniem."
 		},
 		"hideButton": "Schowaj domyślne przyciski obrażeń.",
 		"settings": {
