@@ -7,9 +7,9 @@
 		"splashButton": {
 			"radiusDialog": {
 				"title": "Zmień Zasięg",
-				"content": "Zasięg Plusku:"
+				"content": "Promień rozprysku:"
 			},
-			"hint": "[Klik] Wybierz tokeny dla obrażeń plusku.\n[Shift-Klik] Wyreguluj promień przed wybraniem."
+			"hint": "[Kliknij] Wybierz tokeny do zadania obrażeń rozpryskowych.\n[Shift-Click] Dostosuj promień przed wybraniem."
 		},
 		"hideButton": "Schowaj domyślne przyciski obrażeń.",
 		"settings": {
@@ -46,6 +46,8 @@
 		"targetButton": {
 			"hint-false": "[Klik] Dodaj cele do wiadomości.\n[Shift-Klik] Wymień cele w wiadomości na teraźniejsze.",
 			"hint-true": "[Klik] Wymień cele w wiadomości na teraźniejsze.\n[Shift-Klik] Dodaj cele do wiadomości."
-		}
+		},
+		"removeTarget": "Usunąć cel? [Ctrl-Click]",
+		"applied": "Cel został przetworzony."
 	}
 }
