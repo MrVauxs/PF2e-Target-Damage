@@ -1,7 +1,7 @@
 {
 	"pf2e-target-damage": {
 		"error": {
-			"cantFindToken": "Nie można znaleźć token."
+			"cantFindToken": "Nie można znaleźć tokena."
 		},
 		"hidden": "Nieznany Token",
 		"splashButton": {
@@ -14,7 +14,7 @@
 		"hideButton": "Schowaj domyślne przyciski obrażeń.",
 		"settings": {
 			"hideNPCs": {
-				"name": "Schowaj celowane nie należące do graczy tokeny",
+				"name": "Ukrywanie celów tokenów innych niż gracza",
 				"hint": "Chowa nie należące do graczy tokeny z listy celów w rzucie obrażeń."
 			},
 			"splashButton": {
@@ -22,7 +22,7 @@
 				"hint": "Odwraca jak działa przycisk plusku poprzez celowanie (zamiast zaznaczania) tokenów dookoła celów."
 			},
 			"hideTheHidingButtons": {
-				"name": "Schowaj Przyciski Składania",
+				"name": "Ukryj składane przyciski",
 				"hint": "Chowa dodany przycisk chowające domyślne przyciski zadawania obrażeń. Jeżeli włączono którekolwiek z poniższych ustawień, nie będzie można pokazać już schowane przyciski."
 			},
 			"hideOGButtons": {
@@ -30,8 +30,8 @@
 				"hint": "Chowa domyślne przyciski zadawania obrażeń."
 			},
 			"persistentDamageInt": {
-				"name": "Integracja z obrażeniami okresowymi",
-				"hint": "Chowa domyślne przyciski zadawania obrażeń tylko dla rzutów obrażeń okresowych."
+				"name": "Integracja z obrażeniami utrzymującymi się",
+				"hint": "Chowa domyślne przyciski zadawania obrażeń tylko dla rzutów obrażeń utrzymujących się."
 			},
 			"classic": {
 				"name": "Używaj Klasycznego Ułożenia Imion",
