@@ -49,7 +49,7 @@
 				"id": "pf2e",
 				"type": "system",
 				"compatibility": {
-					"minimum": "4.10.4"
+					"minimum": "5.7.4"
 				}
 			}
 		]

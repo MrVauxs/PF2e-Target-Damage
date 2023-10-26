@@ -1,3 +1,18 @@
+# 2.4.16
+
+- Fixed compatibility with version 5.7.4 of Pathfinder 2e system.
+- Increased minimum requirements to version 5.7.4 of Pathfinder 2e system.
+- Updated Polish localization (thank you @Lioheart!)
+
+# 2.4.15
+
+- Fixed a bug regarding saving throw damage hints only applying if you roll the damage roll a second time.
+  - Please note that saving throws have to be done prior to rolling the damage roll as any subsequent saving throws will not affect the damage roll message.
+
+# 2.4.14
+
+- Fixed compatibility with version 5.3.0 of Pathfinder 2e system. (Backwards compatible.)
+
 # 2.4.13
 
 - Confirmed V11 Compatibility.
