@@ -1,6 +1,6 @@
 # 2.4.16
 
-- Fixed compatibility with version 5.9.3 of Pathfinder 2e system. (Thanks in part to @Hlaford347!)
+- Fixed compatibility with version 5.9.3 of Pathfinder 2e system.
 - Increased minimum requirements to version 5.9.3 of Pathfinder 2e system.
 - Updated Polish localization (thank you @Lioheart!)
 
