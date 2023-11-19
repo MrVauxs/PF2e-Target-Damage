@@ -43,7 +43,7 @@ class TargetDamageTarget {
   get mystified() {
     // If false, only the GM can see it and players see it mystified.
     return game.settings.get("pf2e", "metagame_tokenSetsNameVisibility")
-      ? this.token.playersCanSeeName
+      ? !!this.token?.playersCanSeeName
       : true;
   }
 
@@ -366,13 +366,28 @@ async function extractEphemeralEffects({
   ).flatMap((e) => e ?? []);
 }
 
+// https://github.com/foundryvtt/pf2e/blob/master/src/module/rules/helpers.ts#L48
+function extractNotes(rollNotes, selectors) {
+  return selectors.flatMap((s) => (rollNotes[s] ?? []).map((n) => n.clone()));
+}
+
+// https://github.com/foundryvtt/pf2e/edit/master/src/module/rules/helpers.ts#L52
+function extractDamageDice(deferredDice, selectors, options) {
+  return selectors
+    .flatMap((s) => deferredDice[s] ?? [])
+    .flatMap((d) => d(options) ?? []);
+}
+
+// Straight out of 5.9.3, fuck this.
+function extractModifiers(synthetics,selectors,options={}){const{modifierAdjustments,modifiers:syntheticModifiers}=synthetics,modifiers=Array.from(new Set(selectors)).flatMap(s=>syntheticModifiers[s]??[]).flatMap(d=>d(options)??[]);for(const modifier of modifiers)modifier.adjustments=extractModifierAdjustments(modifierAdjustments,selectors,modifier.slug);return modifiers} function applyStackingRules(modifiers){let total=0;const highestBonus={},lowestPenalty={},abilityModifiers=modifiers.filter(m=>m.type==="ability"&&!m.ignored),bestAbility=abilityModifiers.reduce((best,modifier)=>best===null||modifier.force?modifier:best.force?best:modifier.modifier>best.modifier?modifier:best,null);for(const modifier of abilityModifiers)modifier.ignored=modifier!==bestAbility;for(const modifier of modifiers){if(modifier.ignored){modifier.enabled=!1;continue}if(modifier.type==="untyped"){modifier.enabled=!0,total+=modifier.modifier;continue}modifier.modifier<0?total+=applyStacking(lowestPenalty,modifier,LOWER_PENALTY):total+=applyStacking(highestBonus,modifier,HIGHER_BONUS)}return total} function extractModifierAdjustments(adjustmentsRecord, selectors, slug) {return Array.from(new Set(selectors.flatMap((s) => adjustmentsRecord[s] ?? []))  ).filter((a) => [slug, null].includes(a.slug));}
+
 async function applyDamage(
   message,
   tokenID,
-  multiplier,
+  multiplier = 1,
   addend = 0,
-  promptModifier = false,
-  rollIndex = 0
+  promptModifier = !1,
+  rollIndex = 0,
 ) {
   if (promptModifier)
     return shiftModifyDamage(message, tokenID, multiplier, rollIndex);
@@ -382,53 +397,121 @@ async function applyDamage(
   );
   // End modif
   if (tokens.length === 0) {
-    const errorMsg = game.i18n.localize(
-      "pf2e-target-damage.error.cantFindToken"
-    );
-    ui.notifications.error(errorMsg);
+    ui.notifications.error("pf2e-target-damage.error.cantFindToken");
     return;
   }
-
-  const shieldBlockRequest = CONFIG.PF2E.chatDamageButtonShieldToggle;
-  const roll = message.rolls.at(rollIndex);
-
+  const shieldBlockRequest = CONFIG.PF2E.chatDamageButtonShieldToggle,
+    roll = message.rolls.at(rollIndex);
   if (!(roll instanceof DamageRoll))
     throw Error("Unexpected error retrieving damage roll");
-
-  const damage =
+  let damage =
     multiplier < 0
       ? multiplier * roll.total + addend
       : roll.alter(multiplier, addend);
-
-  // Get origin roll options and apply damage to a contextual clone: this may influence condition IWR, for example
-  const messageRollOptions = message.flags.pf2e.context?.options ?? [];
-  const originRollOptions = messageRollOptions
-    .filter((o) => o.startsWith("self:"))
-    .map((o) => o.replace(/^self/, "origin"));
-
+  const messageRollOptions = [...(message.flags.pf2e.context?.options ?? [])],
+    originRollOptions = messageRollOptions
+      .filter((o) => o.startsWith("self:"))
+      .map((o) => o.replace(/^self/, "origin")),
+    messageItem = message.item;
   for (const token of tokens) {
     if (!token.actor) continue;
-
-    const ephemeralEffects =
-      multiplier > 0
-        ? await extractEphemeralEffects({
-            affects: "target",
-            origin: message.actor,
-            target: token.actor,
-            item: message.item,
-            domains: ["damage-received"],
-            options: messageRollOptions,
-          })
-        : [];
-    await token.actor
-      .getContextualClone(originRollOptions, ephemeralEffects)
-      .applyDamage({
-        damage,
-        token,
-        skipIWR: multiplier <= 0,
-        rollOptions: new Set(message.flags.pf2e.context?.options ?? []),
-        shieldBlockRequest,
-      });
+    messageRollOptions.some((o) => o.startsWith("target")) ||
+      messageRollOptions.push(...token.actor.getSelfRollOptions("target"));
+    const domain = multiplier > 0 ? "damage-received" : "healing-received",
+      ephemeralEffects =
+        multiplier > 0
+          ? await extractEphemeralEffects({
+              affects: "target",
+              origin: message.actor,
+              target: token.actor,
+              item: message.item,
+              domains: [domain],
+              options: messageRollOptions,
+            })
+          : [],
+      contextClone = token.actor.getContextualClone(
+        originRollOptions,
+        ephemeralEffects
+      ),
+      applicationRollOptions = new Set([
+        ...messageRollOptions.filter((o) => !/^(?:self|target):/.test(o)),
+        ...originRollOptions,
+        ...contextClone.getSelfRollOptions(),
+      ]),
+      outcome = message.flags.pf2e.context?.outcome,
+      breakdown = [],
+      rolls = [];
+    if (typeof damage == "number" && damage < 0) {
+      const critical = outcome === "criticalSuccess",
+        resolvables = (() =>
+          messageItem?.isOfType("spell")
+            ? { spell: messageItem }
+            : messageItem?.isOfType("weapon")
+            ? { weapon: messageItem }
+            : {})(),
+        damageDice = extractDamageDice(
+          contextClone.synthetics.damageDice,
+          [domain],
+          { resolvables, test: applicationRollOptions }
+        ).filter(
+          (d) =>
+            (d.critical === null || d.critical === critical) &&
+            d.predicate.test(applicationRollOptions)
+        );
+      for (const dice of damageDice) {
+        const formula = `${dice.diceNumber}${dice.dieSize}[${dice.label}]`,
+          roll2 = await new Roll(formula).evaluate({ async: !0 });
+        (roll2._formula = `${dice.diceNumber}${dice.dieSize}`),
+          await roll2.toMessage({
+            flags: { pf2e: { suppressDamageButtons: !0 } },
+            flavor: dice.label,
+            speaker: ChatMessage.getSpeaker({ token }),
+          }),
+          breakdown.push(`${dice.label} ${dice.diceNumber}${dice.dieSize}`),
+          rolls.push(roll2);
+      }
+      rolls.length &&
+        (damage -= rolls
+          .map((roll2) => roll2.total)
+          .reduce((previous, current) => previous + current));
+      const modifiers = extractModifiers(contextClone.synthetics, [domain], {
+        resolvables,
+      }).filter(
+        (m) =>
+          (m.critical === null || m.critical === critical) &&
+          m.predicate.test(applicationRollOptions)
+      );
+      (damage -= applyStackingRules(modifiers ?? [])),
+        breakdown.push(
+          ...modifiers
+            .filter((m) => m.enabled)
+            .map((m) => `${m.label} ${signedInteger(m.modifier)}`)
+        );
+    }
+    const hasDamage =
+        typeof damage == "number" ? damage !== 0 : damage.total !== 0,
+      notes = (() =>
+        hasDamage
+          ? extractNotes(contextClone.synthetics.rollNotes, [domain])
+              .filter(
+                (n) =>
+                  (!outcome ||
+                    n.outcome.length === 0 ||
+                    n.outcome.includes(outcome)) &&
+                  n.predicate.test(applicationRollOptions)
+              )
+              .map((note) => note.text)
+          : [])();
+    await contextClone.applyDamage({
+      damage,
+      token,
+      item: message.item,
+      skipIWR: multiplier <= 0,
+      rollOptions: applicationRollOptions,
+      shieldBlockRequest,
+      breakdown,
+      notes,
+    });
   }
   toggleOffShieldBlock(message.id);
 }
