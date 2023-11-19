@@ -547,18 +547,18 @@ Hooks.on("renderChatMessage", (message, html) => {
                     "pf2e-target-damage.splashButton.radiusDialog.title"
                   ),
                   content: `<form>
-												<div class="form-group">
-													<label>${game.i18n.localize(
+    										<div class="form-group">
+    											<label>${game.i18n.localize(
                             "pf2e-target-damage.splashButton.radiusDialog.content"
                           )}</label>
-													<input type="number" name="modifier" value="" placeholder="${multiplier} feet">
-												</div>
-												</form>
-												<script type="text/javascript">
-												$(function () {
-													$(".form-group input").focus();
-												});
-												</script>`,
+    											<input type="number" name="modifier" value="" placeholder="${multiplier} feet">
+    										</div>
+    										</form>
+    										<script type="text/javascript">
+    										$(function () {
+    											$(".form-group input").focus();
+    										});
+    										</script>`,
                   buttons: {
                     ok: {
                       label: game.i18n.localize("CONTROLS.CanvasSelectAll"),
@@ -1004,7 +1004,7 @@ Hooks.on("renderChatMessage", (message, html) => {
       if (message.flags?.pf2e?.origin?.type === "spell" && targets.length) {
         const spell =
           message.item || fromUuidSync(message.flags.pf2e.origin.uuid);
-        const save = spell?.system?.save?.value;
+        const save = spell?.system?.defense?.save?.statistic;
         if (
           !html
             .find('[data-action="save"], [data-action="spell-save"]')
@@ -1104,7 +1104,7 @@ Hooks.on("renderChatMessage", (message, html) => {
               const item = spell;
               const actor = target.actor?.actor ?? target.actor;
 
-              const saveType = item.system.save.value;
+              const saveType = item.system.defense.save.statistic;
 
               const dc = Number(
                 html
@@ -1119,7 +1119,7 @@ Hooks.on("renderChatMessage", (message, html) => {
               const rollOptions = [];
               if (item.isOfType("spell")) {
                 rollOptions.push("magical", "spell");
-                if (Object.keys(item.system.damage.value).length > 0) {
+                if (Object.keys(item.system.damage).length > 0) {
                   rollOptions.push("damaging-effect");
                 }
               }
