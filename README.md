@@ -1,3 +1,5 @@
+# The development on this module has been stopped. [PF2e Toolbelt](https://github.com/reonZ/pf2e-toolbelt) has reached feature parity with PF2e Target Damage, so I gladly recommend taking up that module instead!  
+
 # PF2e Target Damage
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dflat%26url%3Dhttps://raw.githubusercontent.com/MrVauxs/PF2e-Target-Damage/master/module.json)
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fsystem%3FnameType%3Dfull%26showVersion%3D1%26style%3Dflat%26url%3Dhttps://raw.githubusercontent.com/MrVauxs/PF2e-Target-Damage/master/module.json)
@@ -11,9 +13,6 @@ A quality of life module that makes applying damage to targets and tracking savi
 A direct successor to [target-lock](https://github.com/WillNichols726/target-lock), at first a copy and then having been rewritten from the ground up.
 
 **As of version 2.4, the module is in a FINISHED state, meaning that the only likely updates to this module will be bug-fixes**. So while I appreciate new suggestions, please note they are not going to be worked in anytime soon!
-
-## Recommended Modules
-- [DF Template Enhancements](https://foundryvtt.com/packages/df-templates) - Enables you to automatically target tokens within a templates radius, speeding up AoE targeting.
 
 ## Previews
 
