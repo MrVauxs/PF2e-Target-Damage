@@ -30,7 +30,7 @@
 				"hint": "Chowa domyślne przyciski zadawania obrażeń."
 			},
 			"persistentDamageInt": {
-				"name": "Integracja z obrażeniami utrzymującymi się",
+				"name": "Integracja z obrażeniami trwałymi",
 				"hint": "Chowa domyślne przyciski zadawania obrażeń tylko dla rzutów obrażeń utrzymujących się."
 			},
 			"classic": {
