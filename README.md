@@ -1,4 +1,4 @@
-# The development on this module has been stopped. [PF2e Toolbelt](https://github.com/reonZ/pf2e-toolbelt) has most of the features of PF2e Target Damage, so I gladly recommend taking up that module instead!  
+# The development on this module has been stopped. [PF2e Toolbelt](https://github.com/reonZ/pf2e-toolbelt) has almost all of the features of PF2e Target Damage, so I gladly recommend taking up that module instead!  
 
 # PF2e Target Damage
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dflat%26url%3Dhttps://raw.githubusercontent.com/MrVauxs/PF2e-Target-Damage/master/module.json)
