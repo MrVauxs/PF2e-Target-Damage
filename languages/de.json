@@ -1,0 +1,49 @@
+{
+	"pf2e-target-damage": {
+		"applied": "Das Ziel wurde bearbeitet.",
+		"error": {
+			"cantFindToken": "Kann das Token nicht finden."
+		},
+		"noTargets": "Es wurden keine Token als Ziel ausgewählt.",
+		"hidden": "Unbekannter Token",
+		"targetButton": {
+			"hint-true": "[Klicken] Ersetzen der Ziele in der Nachricht durch aktuelle Ziele.\n[Umschalt-Klick] Aktuelle Ziele zur Nachricht hinzufügen.",
+			"hint-false": "[Klicken] Aktuelle Ziele zur Nachricht hinzufügen.\n[Umschalt-Klick] Ersetzt die Ziele in der Nachricht durch aktuelle Ziele."
+		},
+		"splashButton": {
+			"radiusDialog": {
+				"title": "Radius ändern",
+				"content": "Flächenschaden Radius:"
+			},
+			"hint": "[Klicken] Auswahl von Token für Flächenschaden.\n[Umschalt-Klick] Radius vor der Auswahl anpassen."
+		},
+		"settings": {
+			"hideTheHidingButtons": {
+				"name": "Zusammenklappbare Schaltflächen ausblenden",
+				"hint": "Blendet die hinzugefügten Schaltflächen aus, um die Reihen der Schadens-Schaltflächen zu reduzieren. Wenn Sie eine der folgenden Einstellungen aktivieren, können Sie die ausgeblendeten Schaltflächen nicht mehr einblenden."
+			},
+			"persistentDamageInt": {
+				"name": "Integrieren mit anhaltendem Schaden",
+				"hint": "Blendet die originalen PF2e-Systemschaden-Schaltflächen aus, aber nur solche mit anhaltendem Schaden."
+			},
+			"classic": {
+				"name": "Klassisches Namenslayout verwenden",
+				"hint": "Setzt die Namen oben auf die Schaltflächen, anstatt sie kompakt auf der linken Seite anzuzeigen."
+			},
+			"hideNPCs": {
+				"name": "NPC Token Ziele ausblenden",
+				"hint": "Blendet NPC-Token von der Ziel Liste aus die sich nicht im Besitz von Spieler*innen befinden."
+			},
+			"targetButton": {
+				"name": "Verhalten der Ziel-Schaltfläche ändern",
+				"hint": "Ändert das Verhalten der Ziel-Schaltfläche, um die vorhandenen Ziele zu ersetzen, anstatt sie der vorhandenen Liste hinzuzufügen."
+			},
+			"hideOGButtons": {
+				"name": "Original PF2e-Schadens-Schaltflächen ausblenden",
+				"hint": "Blendet die originalen PF2e-System-Schaltflächen aus."
+			}
+		},
+		"removeTarget": "Ziel entfernen? [Strg-Klick]",
+		"hideButton": "Ausblenden der System-Schaltflächen für Schaden."
+	}
+}
