@@ -31,7 +31,8 @@
 				"id": "pf2e",
 				"type": "system",
 				"compatibility": {
-					"minimum": "5.9.3"
+					"minimum": "5.9.3",
+					"maximum": "5.13.6"
 				}
 			}
 		]
