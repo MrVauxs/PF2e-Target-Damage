@@ -24,6 +24,11 @@
 				"id": "target-lock",
 				"type": "module",
 				"reason": "PF2e Damage Target is a successor to Target Lock, and borrows a most of its code from it. Target Lock is unmaintained and enabling both modules is not recommended."
+			},
+			{
+				"id": "pf2e-toolbelt",
+				"type": "module",
+				"reason": "PF2e Toolbelt is a successor to PF2e Damage Target. PF2e Target Damage is unmaintained and enabling both modules is not recommended."
 			}
 		],
 		"systems": [
