@@ -1,3 +1,7 @@
+Hooks.once("ready", () => {
+	ui.notifications.warn("PF2e Target Damage is no longer in development and has been superceded by PF2e Toolbelt. Please disable this module.", { permanent: true })
+})
+
 Hooks.once("init", () => {
 	function reRenderDamageButtons() {
 		const messages = game.messages
